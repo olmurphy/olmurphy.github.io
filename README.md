@@ -1,20 +1,20 @@
-[![Last Commit](https://img.shields.io/github/last-commit/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/main)
-[![Contributors](https://img.shields.io/github/contributors/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/graphs/contributors)
-[![Commit Activity](https://img.shields.io/github/commit-activity/y/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/graphs/commit-activity)
-[![Repo Size](https://img.shields.io/github/repo-size/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io)
-[![Top Language](https://img.shields.io/github/languages/top/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/search?l=YOUR_TOP_LANGUAGE)
-[![Forks](https://img.shields.io/github/forks/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/network/members)
-[![Stars](https://img.shields.io/github/stars/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/stargazers)
-[![Issues](https://img.shields.io/github/issues/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/issues)
-[![Open Issues](https://img.shields.io/github/issues-raw/https://github.com/olmurphy/olmurphy.github.io?state=open&style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/issues)
-[![Closed Issues](https://img.shields.io/github/issues-closed-raw/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/issues?q=is%3Aclosed)
-[![License](https://img.shields.io/github/license/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/https://github.com/olmurphy/olmurphy.github.io/blob/master/LICENSE)
-![Created At](https://img.shields.io/github/created-at/https://github.com/olmurphy/olmurphy.github.io?style=for-the-badge
+[![Last Commit](https://img.shields.io/github/last-commit/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/main)
+[![Contributors](https://img.shields.io/github/contributors/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/graphs/contributors)
+[![Commit Activity](https://img.shields.io/github/commit-activity/y/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/graphs/commit-activity)
+[![Repo Size](https://img.shields.io/github/repo-size/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io)
+[![Top Language](https://img.shields.io/github/languages/top/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/search?l=YOUR_TOP_LANGUAGE)
+[![Forks](https://img.shields.io/github/forks/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/network/members)
+[![Stars](https://img.shields.io/github/stars/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/stargazers)
+[![Issues](https://img.shields.io/github/issues/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/issues)
+[![Open Issues](https://img.shields.io/github/issues-raw/olmurphy/olmurphy.github.io?state=open&style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/issues)
+[![Closed Issues](https://img.shields.io/github/issues-closed-raw/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/issues?q=is%3Aclosed)
+[![License](https://img.shields.io/github/license/olmurphy/olmurphy.github.io?style=for-the-badge)](https://github.com/olmurphy/olmurphy.github.io/blob/master/LICENSE)
+![Created At](https://img.shields.io/github/created-at/olmurphy/olmurphy.github.io?style=for-the-badge
 )
 [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/owenmurphy2022/)
 [![Docker Hub](https://img.shields.io/badge/Docker-Hub-blue?logo=docker&style=for-the-badge)](https://hub.docker.com/repository/docker/owenmurphy2022v1/conversational-faiss-rag-api)
 
-<!-- Improved compatibility of back to top link: See: https://github.com/https://github.com/olmurphy/olmurphy.github.io/pull/73 -->
+<!-- Improved compatibility of back to top link: See: https://github.com/olmurphy/olmurphy.github.io/pull/73 -->
 <a id="readme-top"></a>
 
 
@@ -22,16 +22,16 @@
 <br />
 <div align="center">
 
-  <h1 align="center">Portfolio Website</h1>
+  <h1 align="center">Rag Model Implementation using FAISS Retrieval</h1>
 
   <p align="center">
-    Portfolio website showcasing my skills / talents
+    Redis Metrics Controller to run as a cron job to monitor metrics with Redis.
     <br />
-    <a href="https://github.com/https://github.com/olmurphy/olmurphy.github.io"><strong>Explore the docs » (pending)</strong></a>
+    <a href="https://github.com/olmurphy/olmurphy.github.io"><strong>Explore the docs » (pending)</strong></a>
     <br />
-    <a href="https://github.com/https://github.com/olmurphy/olmurphy.github.io/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/olmurphy/olmurphy.github.io/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
-    <a href="https://github.com/https://github.com/olmurphy/olmurphy.github.io/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/olmurphy/olmurphy.github.io/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
@@ -98,7 +98,7 @@ To run this Redis metrics application locally, follow these steps:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/https://github.com/olmurphy/olmurphy.github.io.git
+    git clone https://github.com/olmurphy/olmurphy.github.io.git
     cd conversational-faiss-rag-api
     ```
 2.  **Set Environment Variables:**
@@ -125,7 +125,7 @@ To run this Redis metrics application locally, follow these steps:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/https://github.com/olmurphy/olmurphy.github.io.git
+    git clone https://github.com/olmurphy/olmurphy.github.io.git
     cd conversational-faiss-rag-api
     ```
 
@@ -186,7 +186,7 @@ TBD
 
 ## Roadmap
 
-See the [open issues](https://github.com/https://github.com/olmurphy/olmurphy.github.io/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/olmurphy/olmurphy.github.io/issues) for a full list of proposed features (and known issues).
 
 * [ ] Implement real-time metric updates.
 * [ ] Add customizable dashboards.
@@ -216,8 +216,8 @@ Don't forget to give the project a star! Thanks again!
 
 ### Top contributors:
 
-<a href="https://github.com/https://github.com/olmurphy/olmurphy.github.io/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=https://github.com/olmurphy/olmurphy.github.io" />
+<a href="https://github.com/olmurphy/olmurphy.github.io/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=olmurphy/olmurphy.github.io" />
 </a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -236,7 +236,7 @@ Distributed under the Unlicense License. See `LICENSE.txt` for more information.
 
 Your Name - [@owenmurphy2022](https://x.com/owenmurphy2022) - owen261@icloud.com
 
-Project Link: [https://github.com/https://github.com/olmurphy/olmurphy.github.io](https://github.com/https://github.com/olmurphy/olmurphy.github.io)
+Project Link: [https://github.com/olmurphy/olmurphy.github.io](https://github.com/olmurphy/olmurphy.github.io)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
