@@ -1,9 +1,10 @@
 import "./App.scss";
+import Main from "./containers/Main";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">This is Owen's website v1</header>
+      <Main />
     </div>
   );
 }
