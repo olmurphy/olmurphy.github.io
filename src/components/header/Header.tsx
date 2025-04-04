@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import Headroom from "react-headroom";
+import darkIcon from "../../assets/icons/theme_dark_icon.svg";
+import lightIcon from "../../assets/icons/theme_light_icon.svg";
 import StyleContext from "../../contexts/StyleContext";
-import lightIcon from "../../assets/icons/theme_light_icon.svg"
-import darkIcon from "../../assets/icons/theme_dark_icon.svg"
 import {
   achievementSection,
   blogSection,
@@ -13,7 +13,6 @@ import {
   talkSection,
   workExperiences,
 } from "../../portfolio";
-import ToggleSwitch from "../toggleSwitch/ToggleSwitch";
 import "./Header.scss";
 import { ThemeIcon } from "./ThemeIcon";
 
@@ -81,7 +80,7 @@ function Header() {
               <ThemeIcon
                 src={isDark ? lightIcon : darkIcon}
               />
-            
+
             </button>
           </li>
           {/* <li>

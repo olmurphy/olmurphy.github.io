@@ -1,7 +1,7 @@
-import { createRef, useContext } from "react";
+import { useContext } from "react";
 import StyleContext from "../../contexts/StyleContext";
-import "./EducationCard.scss";
 import { School } from "../../portfolio";
+import "./EducationCard.scss";
 
 interface EducationCardProps {
   school: School
