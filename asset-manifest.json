@@ -1,17 +1,28 @@
 {
   "files": {
-    "main.css": "/static/css/main.7c432c13.css",
-    "main.js": "/static/js/main.f0359ddc.js",
-    "static/js/453.81ea7c11.chunk.js": "/static/js/453.81ea7c11.chunk.js",
+    "main.css": "/static/css/main.c8337b19.css",
+    "main.js": "/static/js/main.845b750f.js",
+    "static/js/453.ae5b59a3.chunk.js": "/static/js/453.ae5b59a3.chunk.js",
+    "static/media/fa-solid-900.ttf": "/static/media/fa-solid-900.2582b0e4bcf85eceead0.ttf",
     "static/media/Montserrat-Regular.ttf": "/static/media/Montserrat-Regular.3cd786652b8a2e9d41f2.ttf",
+    "static/media/fa-brands-400.ttf": "/static/media/fa-brands-400.1815e00441357e01619e.ttf",
+    "static/media/fa-solid-900.woff2": "/static/media/fa-solid-900.2463b90d9a316e4e5294.woff2",
+    "static/media/fa-brands-400.woff2": "/static/media/fa-brands-400.c210719e60948b211a12.woff2",
     "static/media/Agustina.woff": "/static/media/Agustina.eb0c59dda4cc308cba96.woff",
+    "static/media/baylorLogo.png": "/static/media/baylorLogo.c681814d4fef35c19f42.png",
+    "static/media/fa-regular-400.ttf": "/static/media/fa-regular-400.914997e1bdfc990d0897.ttf",
+    "static/media/fa-regular-400.woff2": "/static/media/fa-regular-400.89999bdf5d835c012025.woff2",
+    "static/media/fa-v4compatibility.ttf": "/static/media/fa-v4compatibility.da94ef451f4969af06e6.ttf",
+    "static/media/fa-v4compatibility.woff2": "/static/media/fa-v4compatibility.ea8f94e1d22e0d35ccd4.woff2",
+    "static/media/theme_light_icon.svg": "/static/media/theme_light_icon.39a0d5469245918425fbc3ad251c9fc6.svg",
+    "static/media/theme_dark_icon.svg": "/static/media/theme_dark_icon.88b482f83151c85fd750b4f9d481f3dc.svg",
     "index.html": "/index.html",
-    "main.7c432c13.css.map": "/static/css/main.7c432c13.css.map",
-    "main.f0359ddc.js.map": "/static/js/main.f0359ddc.js.map",
-    "453.81ea7c11.chunk.js.map": "/static/js/453.81ea7c11.chunk.js.map"
+    "main.c8337b19.css.map": "/static/css/main.c8337b19.css.map",
+    "main.845b750f.js.map": "/static/js/main.845b750f.js.map",
+    "453.ae5b59a3.chunk.js.map": "/static/js/453.ae5b59a3.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.7c432c13.css",
-    "static/js/main.f0359ddc.js"
+    "static/css/main.c8337b19.css",
+    "static/js/main.845b750f.js"
   ]
 }
