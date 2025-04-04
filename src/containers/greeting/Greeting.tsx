@@ -26,7 +26,7 @@ export default function Greeting() {
             <div className="button-greeting-div">
               <Button text="Contact me" href="#contact" />
               {greeting.resumeLink && (
-                <a href="https://google.com" download="Resume.pdf" className="download-link-button">
+                <a href="https://olmurphy.github.io/resume/OwenMurphy_Resume_v2.pdf" download="OwenMurphy_Resume_v2.pdf" className="download-link-button">
                   <Button text="Download my resume" />
                 </a>
               )}

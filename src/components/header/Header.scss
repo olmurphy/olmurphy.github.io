@@ -12,11 +12,13 @@
   color: $textColorDark;
 }
 
-.dark-menu li a {
+.dark-menu li a,
+.dark-menu li button {
   color: $textColorDark !important;
 }
 
-.dark-menu li a:hover {
+.dark-menu li a:hover,
+.dark-menu li button:hover {
   background-color: $buttonColor !important;
 }
 
@@ -38,14 +40,28 @@
   color: $subTitle;
 }
 
-.header li a {
+.header li a,
+.header li button {
   display: block;
   padding: 15px 20px;
   color: $textColor;
   text-decoration: none;
+  transition: .2s ease-in;
+}
+
+.header li button {
+  height: 100%;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 15px 10px;
+
 }
 
 .header li a:hover,
+.header li button:hover,
 .header .menu-btn:hover {
   background-color: $headerHoverBG;
 }

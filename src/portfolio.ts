@@ -23,10 +23,10 @@ const greeting = {
 // Social Media Links
 
 const socialMediaLinks = {
-  github: "https://github.com/olmuphy",
+  github: "https://github.com/olmurphy/",
   linkedin: "https://www.linkedin.com/in/owenmurphy2022/",
-  gmail: "olmurphy2022@gmail.com",
-  gitlab: "https://gitlab.com/saadpasta",
+  gmail: "owen261@icloud.com",
+  gitlab: "https://gitlab.com/olmurphy",
   facebook: "https://www.facebook.com/profile.php?id=100077171944784",
   medium: "https://owenmurphy2022.medium.com/",
   stackoverflow: "https://stackoverflow.com/users/13647652/owen-murphy",
@@ -115,30 +115,26 @@ https://fontawesome.com/icons?d=gallery */
 
 // Education Section
 
-const educationInfo = {
-  display: true, // Set false to hide this section, defaults to true
-  schools: [
-    {
-      schoolName: "Harvard University",
-      // logo: require("./assets/images/harvardLogo.png"),
-      subHeader: "Master of Science in Computer Science",
-      duration: "September 2017 - April 2019",
-      desc: "Participated in the research of XXX and published 3 papers.",
-      descBullets: [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-      ]
-    },
-    {
-      schoolName: "Stanford University",
-      // logo: require("./assets/images/stanfordLogo.png"),
-      subHeader: "Bachelor of Science in Computer Science",
-      duration: "September 2013 - April 2017",
-      desc: "Ranked top 10% in the program. Took courses about Software Engineering, Web Security, Operating Systems, ...",
-      descBullets: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit"]
-    }
-  ]
-};
+export interface School {
+  schoolName: string;
+  logo: string;
+  website: string;
+  subHeader: string;
+  duration: string;
+  desc: string;
+  descBullets?: string[]
+}
+
+const educationInfo: School[] = [
+  {
+    schoolName: "Baylor University",
+    logo: require("./assets/images/baylorLogo.png"),
+    website: "https://www.baylor.edu/",
+    subHeader: "Bachelor of Science in Computer Science and Mathemtics",
+    duration: "August 2018 - May 2022",
+    desc: "Graduated *Magna Cum Laude*",
+  }
+];
 
 // Your top 3 proficient stacks/tech experience
 

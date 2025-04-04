@@ -1,6 +1,7 @@
 import Header from "../components/header/Header";
 import { StyleProvider } from "../contexts/StyleContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import Education from "./education/Education";
 import Greeting from "./greeting/Greeting";
 import "./Main.scss";
 
@@ -17,6 +18,7 @@ export function Main() {
       <StyleProvider value={{ isDark: isDark, changeTheme: changeTheme }}>
         <Header />
         <Greeting />
+        <Education />
       </StyleProvider>
     </div>
   );

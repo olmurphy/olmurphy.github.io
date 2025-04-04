@@ -1,5 +1,6 @@
 import { socialMediaLinks } from "../../portfolio";
 import "./SocialMedia.scss";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function socialMedia() {
   if (!socialMediaLinks.display) {

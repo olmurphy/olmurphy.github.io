@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import Headroom from "react-headroom";
 import StyleContext from "../../contexts/StyleContext";
+import lightIcon from "../../assets/icons/theme_light_icon.svg"
+import darkIcon from "../../assets/icons/theme_dark_icon.svg"
 import {
   achievementSection,
   blogSection,
@@ -13,9 +15,10 @@ import {
 } from "../../portfolio";
 import ToggleSwitch from "../toggleSwitch/ToggleSwitch";
 import "./Header.scss";
+import { ThemeIcon } from "./ThemeIcon";
 
 function Header() {
-  const { isDark } = useContext(StyleContext);
+  const { isDark, changeTheme } = useContext(StyleContext);
   const viewExperience = workExperiences.display;
   const viewOpenSource = openSource.display;
   const viewSkills = skillsSection.display;
@@ -74,11 +77,16 @@ function Header() {
             <a href="#contact">Contact Me</a>
           </li>
           <li>
-            <span>Dark / Light</span>
+            <button onClick={() => changeTheme()}>
+              <ThemeIcon
+                src={isDark ? lightIcon : darkIcon}
+              />
+            
+            </button>
           </li>
-          <li>
+          {/* <li>
             <ToggleSwitch />
-          </li>
+          </li> */}
         </ul>
       </header>
     </Headroom>
