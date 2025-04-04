@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import Headroom from "react-headroom";
-import darkIcon from "../../assets/icons/theme_dark_icon.svg";
-import lightIcon from "../../assets/icons/theme_light_icon.svg";
+import darkIcon from "../../assets/icon/theme_dark_icon.svg";
+import lightIcon from "../../assets/icon/theme_light_icon.svg";
 import StyleContext from "../../contexts/StyleContext";
 import {
   achievementSection,
@@ -77,10 +77,7 @@ function Header() {
           </li>
           <li>
             <button onClick={() => changeTheme()}>
-              <ThemeIcon
-                src={isDark ? lightIcon : darkIcon}
-              />
-
+              <ThemeIcon src={isDark ? lightIcon : darkIcon} />
             </button>
           </li>
           {/* <li>
