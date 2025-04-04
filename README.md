@@ -188,14 +188,12 @@ TBD
 
 See the [open issues](https://github.com/olmurphy/olmurphy.github.io/issues) for a full list of proposed features (and known issues).
 
-* [ ] Implement real-time metric updates.
-* [ ] Add customizable dashboards.
-* [ ] Implement alert system for critical metrics.
-* [ ] Support for Redis Cluster monitoring.
-* [ ] Add detailed command statistics.
-* [ ] Enhance visual representation of metrics using charts and graphs.
-* [ ] Implement user authentication and authorization.
-* [ ] Add support for metric history and trend analysis.
+* [ ] Implement real-time metric updates for page visits (with IP / location) using either Google Analytics or AWS (DynamoDB, CloudWatch, API GateWay, Lambda).
+  * [ ] Add support for metric history and trend analysis.
+
+## Todo
+- Update theme icon
+- Finish out the rest of the sections.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
