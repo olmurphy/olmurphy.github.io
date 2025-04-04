@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./WorkInProgressModal.scss";
+import lastUpdatedData from "../../config/config.json";
 
 interface WorkInProgressModalProps {
   isOpen: boolean;
@@ -8,6 +9,20 @@ interface WorkInProgressModalProps {
 
 const WorkInProgressModal: React.FC<WorkInProgressModalProps> = ({ isOpen, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const [formattedDate, setFormattedDate] = useState<string>("");
+
+  useEffect(() => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      }).format(date);
+    };
+
+    setFormattedDate(formatDate(lastUpdatedData.lastUpdated));
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -74,6 +89,7 @@ const WorkInProgressModal: React.FC<WorkInProgressModalProps> = ({ isOpen, onClo
         <div className="modal-body">
           <p>This website is currently under development. Some features may not be fully functional yet.</p>
           <p>Thank you for your patience!</p>
+          <p className="last-updated">Last updated: {formattedDate}</p>
         </div>
         <div className="modal-footer">
           <button className="acknowledge-button" onClick={onClose} autoFocus>

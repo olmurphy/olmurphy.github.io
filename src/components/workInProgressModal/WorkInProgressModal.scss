@@ -63,6 +63,13 @@
   p {
     margin: 10px 0;
   }
+
+  .last-updated {
+    font-size: 0.9rem;
+    color: $subTitle;
+    font-style: italic;
+    margin-top: 15px;
+  }
 }
 
 .modal-footer {
