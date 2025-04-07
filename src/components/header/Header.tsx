@@ -11,14 +11,12 @@ import {
   resumeSection,
   skillsSection,
   talkSection,
-  workExperiences,
 } from "../../portfolio";
 import "./Header.scss";
 import { ThemeIcon } from "./ThemeIcon";
 
 function Header() {
   const { isDark, changeTheme } = useContext(StyleContext);
-  const viewExperience = workExperiences.display;
   const viewOpenSource = openSource.display;
   const viewSkills = skillsSection.display;
   const viewAchievement = achievementSection.display;
@@ -42,11 +40,9 @@ function Header() {
               <a href="#skills">Skills</a>
             </li>
           )}
-          {viewExperience && (
-            <li>
-              <a href="#experience">Work Experiences</a>
-            </li>
-          )}
+          <li>
+            <a href="#experience">Work Experiences</a>
+          </li>
           {viewOpenSource && (
             <li>
               <a href="#opensource">Open Source</a>

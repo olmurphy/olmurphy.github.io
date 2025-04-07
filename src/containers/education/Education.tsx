@@ -1,7 +1,6 @@
-import React from "react";
-import "./Education.scss";
 import EducationCard from "../../components/educationCard/EducationCard";
 import { educationInfo, School } from "../../portfolio";
+import "./Education.scss";
 
 export default function Education() {
   return (
