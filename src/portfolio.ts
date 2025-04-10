@@ -31,6 +31,7 @@ const socialMediaLinks = {
   instagram: "https://www.instagram.com/owenmurphy2022/",
   twitter: "https://x.com/owenmurphy2022",
   kaggle: "https://www.kaggle.com/owenmurphy2022",
+  linktree: "https://www.kaggle.com/owenmurphy2022",
   // Instagram, Twitter and Kaggle are also supported in the links!
   // To customize icons and social links, tweak src/components/SocialMedia
   display: true, // Set true to display this section, defaults to false

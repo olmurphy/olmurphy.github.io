@@ -1,0 +1,68 @@
+@import "../../_globalColor";
+
+.footer {
+  background-color: $lightBackground1;
+  margin-top: 30px;
+  width: 100%;
+  padding: 30px 0 20px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark-footer {
+  background-color: $darkBackground;
+  color: $textColorDark;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 0 20px 0;
+
+}
+
+.footer-social {
+  margin-bottom: 15px;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  color: $textColor;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.dark-footer .social-links a {
+  color: $textColorDark;
+}
+
+.social-links a:hover {
+  color: $buttonColor;
+}
+
+.footer-copyright {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 15px 0;
+  }
+  
+  .social-links {
+    gap: 10px;
+  }
+  
+  .social-links a {
+    font-size: 1.3rem;
+  }
+} 

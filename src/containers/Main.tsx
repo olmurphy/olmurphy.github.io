@@ -1,4 +1,5 @@
 import Header from "../components/header/Header";
+import Footer from "../components/footer/Footer";
 import { StyleProvider } from "../contexts/StyleContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import Education from "./education/Education";
@@ -22,8 +23,8 @@ export function Main() {
         <div className="main-container">
           <Experience />
           <Education />
-
         </div>
+        <Footer />
       </StyleProvider>
     </div>
   );

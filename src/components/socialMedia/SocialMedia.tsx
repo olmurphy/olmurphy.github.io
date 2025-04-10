@@ -1,11 +1,9 @@
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import { socialMediaLinks } from "../../portfolio";
 import "./SocialMedia.scss";
-import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function socialMedia() {
-  if (!socialMediaLinks.display) {
-    return null;
-  }
+
   return (
     <div className="social-media-div">
       {socialMediaLinks.github ? (
