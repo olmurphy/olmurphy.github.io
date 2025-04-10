@@ -2,7 +2,7 @@ import { useContext } from "react";
 import emoji from "react-easy-emoji";
 import Button from "../../components/button/Button";
 import SocialMedia from "../../components/socialMedia/SocialMedia";
-import StyleContext from "../../contexts/StyleContext";
+import StyleContext from "../../contexts/ThemeContext";
 import { greeting } from "../../portfolio";
 import "./Greeting.scss";
 

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import StyleContext from "../../contexts/StyleContext";
+import StyleContext from "../../contexts/ThemeContext";
 import { socialMediaLinks } from "../../portfolio";
 import "./Footer.scss";
 

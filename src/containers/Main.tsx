@@ -1,6 +1,6 @@
-import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
-import { StyleProvider } from "../contexts/StyleContext";
+import Header from "../components/header/Header";
+import { StyleProvider } from "../contexts/ThemeContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import Education from "./education/Education";
 import Experience from "./experience/Experience";

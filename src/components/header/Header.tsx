@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import darkIcon from "../../assets/icon/theme_dark_icon.svg";
 import lightIcon from "../../assets/icon/theme_light_icon.svg";
-import StyleContext from "../../contexts/StyleContext";
+import StyleContext from "../../contexts/ThemeContext";
 import Headroom from "react-headroom";
 import {
   achievementSection,
