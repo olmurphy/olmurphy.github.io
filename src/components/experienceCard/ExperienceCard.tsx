@@ -13,7 +13,8 @@ export function ExperienceCard({ experience }: Readonly<ExperienceCardProps>) {
       </div>
       <div className="timeline-dot-line">
         <div className="timeline-dot"></div>
-        {<div className="timeline-line"></div>}
+        <div className="timeline-line"></div>
+
       </div>
       <div className="timeline-card">
         <h3>{experience.company}</h3>
