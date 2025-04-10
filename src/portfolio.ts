@@ -168,44 +168,17 @@ export type WorkExperience = {
 const workExperiences: WorkExperience[] = [
   {
     role: "Software Engineer",
-    company: "Facebook",
+    company: "IBM",
     // companylogo: require("./assets/images/facebookLogo.png"),
     date: "June 2018 - Present",
     startDate: "June 2022",
     endDate: "Present",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    description: "Architected scalable GenAI platforms, driving significant user engagement and performance improvements across millions. Leveraged advanced cloud and data strategies to deliver transformative AI experiences.",
     descBullets: [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     ],
   },
-  {
-    role: "Software Engineer",
-    company: "Facebook",
-    // companylogo: require("./assets/images/facebookLogo.png"),
-    date: "June 2018 - Present",
-    startDate: "June 2022",
-    endDate: "December 2025",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    descBullets: [
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-    ],
-  },
-  // {
-  //   role: "Front-End Developer",
-  //   company: "Quora",
-  //   // companylogo: require("./assets/images/quoraLogo.png"),
-  //   date: "May 2017 – May 2018",
-  //   desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  // },
-  // {
-  //   role: "Software Engineer Intern",
-  //   company: "Airbnb",
-  //   // companylogo: require("./assets/images/airbnbLogo.png"),
-  //   date: "Jan 2015 – Sep 2015",
-  //   desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  // },
 ];
 
 /* Your Open Source Section to View Your Github Pinned Projects

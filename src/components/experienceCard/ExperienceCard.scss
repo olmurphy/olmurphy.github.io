@@ -24,6 +24,7 @@
   flex-direction: column;
   align-items: center;
   margin-right: 40px;
+  position: relative;
 }
 
 .timeline-dot {
@@ -35,15 +36,18 @@
 }
 
 .timeline-line {
-  position: relative;
+  position: absolute;
   width: 2px;
   background-color: $buttonColor;
-  flex-grow: 1;
-  margin: 0
+  top: 30px; /* Position below the dot */
+  bottom: -20px; /* Extend below the container to connect with the next item */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 0;
 }
 
 .timeline-card {
-  background-color: #f9f9f9;
+  background-color: black;
   border: 1px solid #ddd;
   padding: 15px;
   border-radius: 5px;
