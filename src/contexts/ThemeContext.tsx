@@ -83,14 +83,6 @@ export const useTheme = () => {
   return context;
 };
 
-// const ThemeContext = createContext<
-//   | {
-//       state: ThemeState;
-//       dispatch: Dispatch<ThemeAction>;
-//     }
-//   | undefined
-// >(undefined);
-
 export const StyleProvider = StyleContext.Provider;
 export const StyleConsumer = StyleContext.Consumer;
 
