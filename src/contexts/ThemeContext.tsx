@@ -1,4 +1,4 @@
-import { createContext, Dispatch, FC, useContext, useEffect, useMemo, useReducer } from "react";
+import React, { createContext, Dispatch, FC, useContext, useEffect, useMemo, useReducer } from "react";
 
 const StyleContext = createContext({
   isDark: false, // Default value for isDark
@@ -56,7 +56,7 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) =
     const themeToApply = savedTheme || state.currentTheme === "system" ? systemTheme : state.currentTheme;
     document.documentElement.className = themeToApply;
     dispatch({ type: "SET_THEME", payload: themeToApply });
-  }, []);
+  }, [state.currentTheme]);
 
   // Update theme class on the root element and save preference
   useEffect(() => {
