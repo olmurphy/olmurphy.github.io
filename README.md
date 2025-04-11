@@ -190,6 +190,10 @@ See the [open issues](https://github.com/olmurphy/olmurphy.github.io/issues) for
 
 * [ ] Implement real-time metric updates for page visits (with IP / location) using either Google Analytics or AWS (DynamoDB, CloudWatch, API GateWay, Lambda).
   * [ ] Add support for metric history and trend analysis.
+* [ ] Update with Experiences (in-depth view)
+* [ ] Add the version of the app as well as the as table on the UI with each version a link to codesandbox of that version of codebase
+
+
 
 ## Todo
 - Update theme icon
