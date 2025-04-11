@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import darkIcon from "../../assets/icon/theme_dark_icon.svg";
 import lightIcon from "../../assets/icon/theme_light_icon.svg";
 import StyleContext from "../../contexts/ThemeContext";
+import { useAnalyticsContext } from "../../contexts/AnalyticsContext";
 import {
   achievementSection,
   blogSection,
@@ -16,6 +17,7 @@ import { ThemeIcon } from "./ThemeIcon";
 
 function Header() {
   const { isDark, changeTheme } = useContext(StyleContext);
+  const { trackEvent } = useAnalyticsContext();
   const viewOpenSource = openSource.display;
   const viewSkills = skillsSection.display;
   const viewAchievement = achievementSection.display;
@@ -23,9 +25,20 @@ function Header() {
   const viewTalks = talkSection.display;
   const viewResume = resumeSection.display;
 
+  // Track theme changes
+  const handleThemeChange = () => {
+    changeTheme();
+    trackEvent('Theme', 'Toggle', isDark ? 'Light' : 'Dark');
+  };
+
+  // Track navigation clicks
+  const handleNavigation = (section: string) => {
+    trackEvent('Navigation', 'Click', section);
+  };
+
   return (
     <header className={isDark ? "dark-menu header" : "header"}>
-      <a href="/" className="logo">
+      <a href="/" className="logo" onClick={() => handleNavigation('Home')}>
         <span className="logo-name">{greeting.username}</span>
       </a>
       <input className="menu-btn" type="checkbox" id="menu-btn" />
@@ -35,42 +48,42 @@ function Header() {
       <ul className={isDark ? "dark-menu menu" : "menu"}>
         {viewSkills && (
           <li>
-            <a href="#skills">Skills</a>
+            <a href="#skills" onClick={() => handleNavigation('Skills')}>Skills</a>
           </li>
         )}
         <li>
-          <a href="#experience">Work Experiences</a>
+          <a href="#experience" onClick={() => handleNavigation('Experience')}>Work Experiences</a>
         </li>
         {viewOpenSource && (
           <li>
-            <a href="#opensource">Open Source</a>
+            <a href="#opensource" onClick={() => handleNavigation('OpenSource')}>Open Source</a>
           </li>
         )}
         {viewAchievement && (
           <li>
-            <a href="#achievements">Achievements</a>
+            <a href="#achievements" onClick={() => handleNavigation('Achievements')}>Achievements</a>
           </li>
         )}
         {viewBlog && (
           <li>
-            <a href="#blogs">Blogs</a>
+            <a href="#blogs" onClick={() => handleNavigation('Blogs')}>Blogs</a>
           </li>
         )}
         {viewTalks && (
           <li>
-            <a href="#talks">Talks</a>
+            <a href="#talks" onClick={() => handleNavigation('Talks')}>Talks</a>
           </li>
         )}
         {viewResume && (
           <li>
-            <a href="#resume">Resume</a>
+            <a href="#resume" onClick={() => handleNavigation('Resume')}>Resume</a>
           </li>
         )}
         <li>
-          <a href="#contact">Contact Me</a>
+          <a href="#contact" onClick={() => handleNavigation('Contact')}>Contact Me</a>
         </li>
         <li>
-          <button onClick={() => changeTheme()}>
+          <button onClick={handleThemeChange}>
             <ThemeIcon src={isDark ? lightIcon : darkIcon} />
           </button>
         </li>

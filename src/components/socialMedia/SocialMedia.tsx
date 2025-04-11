@@ -2,7 +2,11 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { socialMediaLinks } from "../../portfolio";
 import "./SocialMedia.scss";
 
-export default function socialMedia() {
+interface SocialMediaProps {
+  onSocialMediaClick: (platform: string) => void;
+}
+
+export default function socialMedia(props: Readonly<SocialMediaProps>) {
 
   return (
     <div className="social-media-div">

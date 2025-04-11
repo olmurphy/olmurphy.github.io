@@ -257,3 +257,7 @@ LLM
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+## Important links
+- [consentmanager](https://app.consentmanager.net/clientv2/cmps/140283/integrations)

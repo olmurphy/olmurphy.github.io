@@ -4,10 +4,11 @@ import { School } from "../../portfolio";
 import "./EducationCard.scss";
 
 interface EducationCardProps {
-  school: School
+  school: School;
+  onClick?: () => void;
 }
 
-export default function EducationCard({ school }: Readonly<EducationCardProps>) {
+export default function EducationCard({ school, onClick }: EducationCardProps) {
 
   const GetDescBullets = ({ descBullets }: { descBullets: string[] }) => {
     if (!descBullets) return null;
@@ -17,7 +18,7 @@ export default function EducationCard({ school }: Readonly<EducationCardProps>) 
       </li>
     ));
   };
-  
+
   // Simple markdown parser for basic formatting like italics
   const parseMarkdown = (text: string) => {
     // Replace *text* with <em>text</em> for italics
@@ -30,25 +31,25 @@ export default function EducationCard({ school }: Readonly<EducationCardProps>) 
       return part;
     });
   };
-  
+
   const { isDark } = useContext(StyleContext);
 
   if (!school.logo) console.error(`Image of ${school.schoolName} is missing in education section`);
   return (
-    <div>
-      <div className="education-card">
+    <>
+      <div className="education-card" onClick={onClick}>
         {school.logo && (
           <div className="education-card-left">
             <a href={school.website}>
-            <img
-              crossOrigin={"anonymous"}
-              className="education-roundedimg"
-              src={school.logo}
-              alt={school.schoolName}
-              
-            />
+              <img
+                crossOrigin={"anonymous"}
+                className="education-roundedimg"
+                src={school.logo}
+                alt={school.schoolName}
+
+              />
             </a>
-            
+
           </div>
         )}
         <div className="education-card-right">
@@ -70,6 +71,6 @@ export default function EducationCard({ school }: Readonly<EducationCardProps>) 
         </div>
       </div>
       <div className="education-card-border"></div>
-    </div>
+    </>
   );
 }
