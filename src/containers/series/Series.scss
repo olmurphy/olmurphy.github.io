@@ -1,0 +1,133 @@
+.series-page {
+  min-height: 100vh;
+  background: transparent;
+}
+
+.series-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 24px 64px;
+}
+
+.series-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.series-label {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #6c63ff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.series-title {
+  font-size: clamp(2rem, 2.5vw, 3rem);
+  margin-bottom: 16px;
+}
+
+.series-subtitle,
+.series-description {
+  max-width: 720px;
+  margin: 0 auto 16px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.series-back-link {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background-color: #6c63ff;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.series-back-link:hover {
+  background-color: #574ad4;
+  transform: translateY(-1px);
+}
+
+.series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.series-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(31, 45, 61, 0.08);
+}
+
+.series-video-wrapper,
+.series-video-placeholder {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8ff;
+}
+
+.series-video-placeholder {
+  padding: 24px;
+  text-align: center;
+  color: #666;
+}
+
+.series-card-iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  border: none;
+}
+
+.series-card-body {
+  padding: 24px;
+}
+
+.series-card-body h2 {
+  margin: 0 0 12px;
+  font-size: 1.3rem;
+}
+
+.series-card-body p {
+  margin: 0 0 16px;
+  color: #444;
+  line-height: 1.7;
+}
+
+.series-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.series-card-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eef1ff;
+  color: #3b3d63;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .series-content {
+    padding: 80px 16px 40px;
+  }
+
+  .series-card-body {
+    padding: 18px;
+  }
+}

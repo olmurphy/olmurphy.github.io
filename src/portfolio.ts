@@ -140,6 +140,49 @@ const educationInfo: School[] = [
   },
 ];
 
+export interface SeriesVideo {
+  title: string;
+  description: string;
+  videoUrl?: string;
+  tags?: string[];
+}
+
+export interface SeriesSection {
+  title: string;
+  subTitle: string;
+  description: string;
+  videos: SeriesVideo[];
+  display: boolean;
+}
+
+const seriesSection: SeriesSection = {
+  title: "Journey to Become a Polymath",
+  subTitle: "45s reels on CS, EE, Physics and Math learning milestones.",
+  description:
+    "A personal series showcasing the most important ideas and learning moments from my polymath journey. Each video is a short reel highlighting core concepts, tools, and experiments in computer science, electrical engineering, physics, and mathematics.",
+  videos: [
+    {
+      title: "CS Foundations",
+      description: "Key insights from algorithms, data structures, and system design in 45 seconds.",
+      videoUrl: "",
+      tags: ["CS", "Algorithms", "Systems"],
+    },
+    {
+      title: "EE & Hardware",
+      description: "A short reel on circuits, signal flow, and hardware fundamentals.",
+      videoUrl: "",
+      tags: ["EE", "Hardware", "Signals"],
+    },
+    {
+      title: "Math & Physics",
+      description: "Core ideas from calculus, linear algebra, and mechanics in short form.",
+      videoUrl: "",
+      tags: ["Math", "Physics", "Modeling"],
+    },
+  ],
+  display: true,
+};
+
 // Your top 3 proficiennpmt stacks/tech experience
 
 const techStack = {
@@ -379,6 +422,7 @@ export {
   bigProjects,
   achievementSection,
   blogSection,
+  seriesSection,
   talkSection,
   podcastSection,
   contactInfo,
