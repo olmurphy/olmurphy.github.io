@@ -144,6 +144,7 @@ export interface SeriesVideo {
   title: string;
   description: string;
   videoUrl?: string;
+  videoLink?: string;
   tags?: string[];
 }
 
@@ -162,22 +163,25 @@ const seriesSection: SeriesSection = {
     "A personal series showcasing the most important ideas and learning moments from my polymath journey. Each video is a short reel highlighting core concepts, tools, and experiments in computer science, electrical engineering, physics, and mathematics.",
   videos: [
     {
-      title: "CS Foundations",
-      description: "Key insights from algorithms, data structures, and system design in 45 seconds.",
-      videoUrl: "",
-      tags: ["CS", "Algorithms", "Systems"],
+      title: "SVD",
+      description: "Singular Value Decomposition explained in a short reel.",
+      videoUrl: "https://www.youtube.com/embed/jeSgi9Ltt9s",
+      videoLink: "https://www.youtube.com/shorts/jeSgi9Ltt9s",
+      tags: ["CS", "Math", "Linear Algebra"],
     },
     {
-      title: "EE & Hardware",
-      description: "A short reel on circuits, signal flow, and hardware fundamentals.",
-      videoUrl: "",
-      tags: ["EE", "Hardware", "Signals"],
+      title: "MOSFET",
+      description: "MOSFET basics and how it works in power electronics.",
+      videoUrl: "https://www.youtube.com/embed/vRqsxAWy_Js",
+      videoLink: "https://www.youtube.com/shorts/vRqsxAWy_Js",
+      tags: ["EE", "Semiconductors", "Hardware"],
     },
     {
-      title: "Math & Physics",
-      description: "Core ideas from calculus, linear algebra, and mechanics in short form.",
-      videoUrl: "",
-      tags: ["Math", "Physics", "Modeling"],
+      title: "Merkle Root",
+      description: "Merkle root explained quickly for blockchain and data integrity.",
+      videoUrl: "https://www.youtube.com/embed/n6uRkA0S8NQ",
+      videoLink: "https://www.youtube.com/shorts/n6uRkA0S8NQ",
+      tags: ["CS", "Crypto", "Blockchain"],
     },
   ],
   display: true,

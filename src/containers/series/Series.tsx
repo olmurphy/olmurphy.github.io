@@ -62,6 +62,17 @@ export default function Series() {
                     ))}
                   </div>
                 ) : null}
+                {video.videoLink ? (
+                  <a
+                    className="series-card-watch-button"
+                    href={video.videoLink}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    onClick={() => trackEvent("Video", "Watch", video.title)}
+                  >
+                    Watch on YouTube
+                  </a>
+                ) : null}
               </div>
             </article>
           ))}
