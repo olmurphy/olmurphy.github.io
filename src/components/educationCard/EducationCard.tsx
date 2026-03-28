@@ -62,7 +62,6 @@ export default function EducationCard({ school, onClick }: EducationCardProps) {
             <p className={`${isDark ? "dark-mode" : ""} education-text-duration`}>{school.duration}</p>
             <p className="education-text-desc">{parseMarkdown(school.desc)}</p>
             {school?.descBullets && <div className="education-text-bullets">
-              <div>hello?</div>
               <ul>
                 {GetDescBullets({ descBullets: school.descBullets })}
               </ul>

@@ -12,7 +12,7 @@ const greeting = {
   username: "Owen Murphy",
   title: "Hi all, I'm Owen",
   subTitle: emoji(
-    "A passionate Software Engineer 🚀 having an experience of building Web and Mobile applications with JavaScript / Reactjs / Nodejs, Java / Spring / Python / Torch and other frameworks."
+    "A passionate Software Engineer 🚀 having an experience of building Web and Mobile applications with JavaScript / Reactjs / Nodejs, Java / Spring / Python / Torch and other frameworks.",
   ),
   resumeLink: "None", // Set to empty to hide the button
   displayGreeting: true, // Set false to hide this section, defaults to true
@@ -122,16 +122,25 @@ export interface School {
 
 const educationInfo: School[] = [
   {
+    schoolName: "Georgia Institute of Technology",
+    logo: require("./assets/images/GoergiaTech.png"),
+    website: "https://www.gatech.edu/",
+    subHeader: "Master of Science - MS, Computer Science (ML Specialization)",
+    duration: "August 2025 - Present",
+    desc: "Relevant course work",
+    descBullets: ["Deep Learning", "Natural Language Processing", "Machine Learning", "Reinforcement Learning"],
+  },
+  {
     schoolName: "Baylor University",
     logo: require("./assets/images/baylorLogo.png"),
     website: "https://www.baylor.edu/",
-    subHeader: "Bachelor of Science in Computer Science and Mathemtics",
+    subHeader: "BS in CS and Mathematics",
     duration: "August 2018 - May 2022",
     desc: "Graduated *Magna Cum Laude*",
   },
 ];
 
-// Your top 3 proficient stacks/tech experience
+// Your top 3 proficiennpmt stacks/tech experience
 
 const techStack = {
   viewSkillBars: true, //Set it to true to show Proficiency Section
@@ -163,17 +172,18 @@ export type WorkExperience = {
   endDate: string;
   description: string;
   descBullets?: string[];
-}
+};
 
 const workExperiences: WorkExperience[] = [
   {
     role: "Software Engineer",
     company: "IBM",
     // companylogo: require("./assets/images/facebookLogo.png"),
-    date: "June 2018 - Present",
+    date: "June 2022 - September 2025",
     startDate: "June 2022",
-    endDate: "Present",
-    description: "Architected scalable GenAI platforms, driving significant user engagement and performance improvements across millions. Leveraged advanced cloud and data strategies to deliver transformative AI experiences.",
+    endDate: "September 2025",
+    description:
+      "Architected scalable GenAI platforms, driving significant user engagement and performance improvements across millions. Leveraged advanced cloud and data strategies to deliver transformative AI experiences.",
     descBullets: [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
