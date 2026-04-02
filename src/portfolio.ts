@@ -24,13 +24,10 @@ const socialMediaLinks = {
   github: "https://github.com/olmurphy/",
   linkedin: "https://www.linkedin.com/in/owenmurphy2022/",
   gmail: "owen261@icloud.com",
-  gitlab: "https://gitlab.com/olmurphy",
   facebook: "https://www.facebook.com/profile.php?id=100077171944784",
-  medium: "https://owenmurphy2022.medium.com/",
   stackoverflow: "https://stackoverflow.com/users/13647652/owen-murphy",
   instagram: "https://www.instagram.com/owenmurphy2022/",
   twitter: "https://x.com/owenmurphy2022",
-  kaggle: "https://www.kaggle.com/owenmurphy2022",
   linktree: "https://www.kaggle.com/owenmurphy2022",
   // Instagram, Twitter and Kaggle are also supported in the links!
   // To customize icons and social links, tweak src/components/SocialMedia
@@ -105,7 +102,7 @@ https://fontawesome.com/icons?d=gallery */
       fontAwesomeClassname: "fab fa-docker",
     },
   ],
-  display: true, // Set false to hide this section, defaults to true
+  display: false, // Set false to hide this section, defaults to true
 };
 
 // Education Section
@@ -243,7 +240,7 @@ To know how to get github key look at readme.md */
 
 const openSource = {
   showGithubProfile: "true", // Set true or false to show Contact profile using Github, defaults to true
-  display: true, // Set false to hide this section, defaults to true
+  display: false, // Set false to hide this section, defaults to true
 };
 
 // Some big projects you have worked on
@@ -276,7 +273,7 @@ const bigProjects = {
       ],
     },
   ],
-  display: true, // Set false to hide this section, defaults to true
+  display: false, // Set false to hide this section, defaults to true
 };
 
 // Achievement Section
@@ -336,7 +333,7 @@ const achievementSection = {
       ],
     },
   ],
-  display: true, // Set false to hide this section, defaults to true
+  display: false, // Set false to hide this section, defaults to true
 };
 
 // Blogs Section
@@ -359,7 +356,7 @@ const blogSection = {
         "React is a JavaScript library for building User Interface. It is maintained by Facebook and a community of individual developers and companies.",
     },
   ],
-  display: true, // Set false to hide this section, defaults to true
+  display: false, // Set false to hide this section, defaults to true
 };
 
 // Talks Sections
@@ -376,7 +373,7 @@ const talkSection = {
       event_url: "https://www.facebook.com/events/2339906106275053/",
     },
   ],
-  display: true, // Set false to hide this section, defaults to true
+  display: false, // Set false to hide this section, defaults to true
 };
 
 // Podcast Section
@@ -409,7 +406,7 @@ const contactInfo = {
 
 const twitterDetails = {
   userName: "twitter", //Replace "twitter" with your twitter username without @
-  display: true, // Set true to display this section, defaults to false
+  display: false, // Set true to display this section, defaults to false
 };
 
 const isHireable = false; // Set false if you are not looking for a job. Also isHireable will be display as Open for opportunities: Yes/No in the GitHub footer
