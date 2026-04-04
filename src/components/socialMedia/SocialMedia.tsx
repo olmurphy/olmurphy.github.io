@@ -36,12 +36,12 @@ export default function socialMedia(props: Readonly<SocialMediaProps>) {
         </a>
       ) : null}
 
-      {socialMediaLinks.gitlab ? (
+      {/* {socialMediaLinks.gitlab ? (
         <a href={socialMediaLinks.gitlab} className="icon-button gitlab" target="_blank" rel="noopener noreferrer">
           <i className="fab fa-gitlab"></i>
           <span></span>
         </a>
-      ) : null}
+      ) : null} */}
 
       {socialMediaLinks.facebook ? (
         <a href={socialMediaLinks.facebook} className="icon-button facebook" target="_blank" rel="noopener noreferrer">
@@ -69,12 +69,12 @@ export default function socialMedia(props: Readonly<SocialMediaProps>) {
         </a>
       ) : null}
 
-      {socialMediaLinks.medium ? (
+      {/* {socialMediaLinks.medium ? (
         <a href={socialMediaLinks.medium} className="icon-button medium" target="_blank" rel="noopener noreferrer">
           <i className="fab fa-medium"></i>
           <span></span>
         </a>
-      ) : null}
+      ) : null} */}
 
       {socialMediaLinks.stackoverflow ? (
         <a
@@ -88,12 +88,12 @@ export default function socialMedia(props: Readonly<SocialMediaProps>) {
         </a>
       ) : null}
 
-      {socialMediaLinks.kaggle ? (
+      {/* {socialMediaLinks.kaggle ? (
         <a href={socialMediaLinks.kaggle} className="icon-button kaggle" target="_blank" rel="noopener noreferrer">
           <i className="fab fa-kaggle"></i>
           <span></span>
         </a>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }

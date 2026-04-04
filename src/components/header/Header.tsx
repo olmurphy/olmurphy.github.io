@@ -56,7 +56,7 @@ function Header() {
         )}
         <li>
           <a href="/#experience" onClick={() => handleNavigation("Experience")}>
-            Work Experiences
+            Work Experience
           </a>
         </li>
         {viewOpenSource && (
@@ -99,11 +99,11 @@ function Header() {
             Journey
           </Link>
         </li>
-        <li>
+        {/* <li>
           <a href="/#contact" onClick={() => handleNavigation("Contact")}>
             Contact Me
           </a>
-        </li>
+        </li> */}
         <li>
           <button onClick={handleThemeChange}>
             <ThemeIcon src={isDark ? lightIcon : darkIcon} />
