@@ -1,0 +1,106 @@
+---
+interface Props {
+  legendNote: string;
+}
+
+const { legendNote } = Astro.props;
+---
+
+<div
+  class="filters"
+  id="timeline-filters"
+  role="group"
+  aria-label="Filter timeline by category"
+>
+  <button type="button" class="chip on" data-filter="all" aria-pressed="true">
+    All
+  </button>
+  <button
+    type="button"
+    class="chip"
+    data-filter="academic"
+    aria-pressed="false"
+  >
+    <span class="dot" aria-hidden="true"></span>Academic
+  </button>
+  <button type="button" class="chip" data-filter="career" aria-pressed="false">
+    <span class="dot" aria-hidden="true"></span>Career
+  </button>
+  <button
+    type="button"
+    class="chip"
+    data-filter="personal"
+    aria-pressed="false"
+  >
+    <span class="dot" aria-hidden="true"></span>Personal
+  </button>
+</div>
+<p class="legend-note">{legendNote}</p>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0 4px;
+    font-family: var(--font-sans);
+  }
+
+  .chip {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .chip:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+
+  .chip.on {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: transparent;
+    font-weight: 600;
+  }
+
+  .chip .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    border: 1.5px solid transparent;
+  }
+
+  .chip[data-filter="academic"] .dot {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .chip[data-filter="career"] .dot {
+    background: var(--color-text-muted);
+    border-color: var(--color-text-muted);
+  }
+
+  .chip[data-filter="personal"] .dot {
+    background: var(--color-accent-soft);
+    border-color: var(--color-accent);
+  }
+
+  .legend-note {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin: 6px 0 0;
+    font-family: var(--font-sans);
+  }
+</style>

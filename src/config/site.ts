@@ -19,6 +19,7 @@ export const SITE = {
 export const NAV_ITEMS: readonly NavItem[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Timeline", href: "/timeline" },
   { label: "Research", href: "/research" },
   { label: "Publications", href: "/publications" },
   { label: "Projects", href: "/projects" },

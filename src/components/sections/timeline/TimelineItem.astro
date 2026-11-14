@@ -1,0 +1,79 @@
+---
+import type { TimelineEvent } from "@data/timeline";
+import Tag from "@components/ui/Tag.astro";
+
+interface Props {
+  event: TimelineEvent;
+}
+
+const { event } = Astro.props;
+---
+
+<article
+  class:list={["t-item", { future: event.planned }]}
+  data-cat={event.category}
+>
+  <div class="t-date">
+    {event.date}
+    {event.planned && (
+      <>
+        {" "}
+        <Tag variant="status">Planned</Tag>
+      </>
+    )}
+  </div>
+  <h3>{event.title}</h3>
+  {event.description && <p class="small">{event.description}</p>}
+</article>
+
+<style>
+  .t-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .t-item::before {
+    content: "";
+    position: absolute;
+    left: -28px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--color-accent);
+    background: var(--color-bg);
+  }
+
+  .t-item[data-cat="academic"]::before {
+    background: var(--color-accent);
+  }
+
+  .t-item[data-cat="career"]::before {
+    background: var(--color-text-muted);
+    border-color: var(--color-text-muted);
+  }
+
+  .t-item[data-cat="personal"]::before {
+    background: var(--color-accent-soft);
+  }
+
+  .t-item.future::before {
+    background: var(--color-bg);
+    border-style: dashed;
+  }
+
+  .t-date {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1px;
+  }
+
+  .t-item h3 {
+    margin: 0 0 4px;
+  }
+
+  .t-item p {
+    margin-bottom: 0;
+  }
+</style>

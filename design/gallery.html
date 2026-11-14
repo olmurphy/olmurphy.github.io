@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life — Owen Li Murphy</title>
+<meta name="description" content="Personal academic website of Owen Li Murphy: deep learning, computational biology, and multi-agent systems.">
+<style>
+  /* ---------- Design tokens: edit these to re-theme the whole site ---------- */
+  :root {
+    --bg: #fcfcfa;
+    --text: #1f2328;
+    --muted: #5d6570;
+    --line: #e3e3de;
+    --accent: #1f4e79;      /* deep blue; swap for Georgia Tech gold (#b3a369) if you like */
+    --accent-soft: #eaf1f8;
+    --max: 760px;
+  }
+  /* Dark theme: used when the visitor clicks "Dark mode", or when they haven't chosen and their system is set to dark */
+  :root[data-theme="dark"] {
+    --bg: #15181c;
+    --text: #e6e8ea;
+    --muted: #9aa3ad;
+    --line: #2a2f35;
+    --accent: #7fb2e5;
+    --accent-soft: #1c2530;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c;
+      --text: #e6e8ea;
+      --muted: #9aa3ad;
+      --line: #2a2f35;
+      --accent: #7fb2e5;
+      --accent-soft: #1c2530;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", "Songti SC", serif;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Header / nav ---------- */
+  header { border-bottom: 1px solid var(--line); padding: 22px 0 0; }
+  .site-name {
+    font-size: 1.35rem; font-weight: 700; letter-spacing: .2px;
+    color: var(--text); border: none;
+  }
+  .tagline { color: var(--muted); font-size: .95rem; margin: 2px 0 14px; }
+  nav {
+    display: flex; flex-wrap: wrap; gap: 4px 20px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: .9rem;
+  }
+  nav a {
+    color: var(--muted); padding: 8px 0 10px; border-bottom: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); border-bottom-color: var(--line); }
+  nav a.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  /* Light / dark toggle button (sits at the right end of the nav) */
+  .theme-toggle {
+    margin-left: auto; align-self: center;
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ---------- Pages (one visible at a time) ---------- */
+  main { padding: 56px 0 60px; min-height: 60vh; }
+  .page { display: none; }
+  .page.active { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .page.active { animation: none; } html { scroll-behavior: auto; } }
+
+  h1 { font-size: 1.7rem; margin: 0 0 6px; line-height: 1.25; }
+  h2 {
+    font-size: 1.1rem; margin: 34px 0 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600;
+  }
+  h3 { font-size: 1.05rem; margin: 0 0 2px; }
+  p { margin: 0 0 14px; }
+  ul { padding-left: 20px; margin: 0 0 14px; }
+  li { margin-bottom: 4px; }
+  .muted { color: var(--muted); }
+  .small { font-size: .9rem; }
+
+  /* ---------- Cards / entries ---------- */
+  .entry { margin-bottom: 22px; }
+  .entry .meta { color: var(--muted); font-size: .9rem; margin-bottom: 4px; }
+  .tag {
+    display: inline-block; font-size: .72rem; padding: 1px 8px; margin-right: 4px;
+    border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .tags { margin: 6px 0 6px; }
+  .tag.status { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
+  /* Placeholders you should replace — highlighted so none slip through */
+  .todo { background: #fff3bf; color: #5c4400; padding: 0 4px; border-radius: 3px; }
+  :root[data-theme="dark"] .todo { background: #4a3d0a; color: #ffe58a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .todo { background: #4a3d0a; color: #ffe58a; } }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 20px 0 40px; color: var(--muted); font-size: .85rem;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  /* ---------- Photo gallery ---------- */
+  [hidden] { display: none !important; }
+
+  /* Filter chips (All / Places / Active / Making / Everyday) */
+  .filters {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .chip {
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .chip:hover { color: var(--text); border-color: var(--muted); }
+  .chip.on { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 600; }
+
+  /* Three photos across on a normal screen, fewer on a phone */
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 22px 14px; margin-top: 20px; }
+  .photo { margin: 0; }
+  .thumb {
+    position: relative; aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden;
+    background: var(--accent-soft); border: 1px solid var(--line); cursor: zoom-in;
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s ease; }
+  .thumb:hover img { transform: scale(1.03); }
+  .thumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  /* Shown instead of the picture until the photo file exists */
+  .thumb .ph {
+    position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+    padding: 10px; text-align: center; font-size: .8rem; cursor: default;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .thumb.empty { cursor: default; }
+  .thumb.empty .ph { display: flex; }
+  figcaption { margin-top: 8px; line-height: 1.35; }
+  .cap { display: block; font-size: .95rem; font-weight: 600; }
+  .cap-meta {
+    display: block; font-size: .8rem; color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-reduced-motion: reduce) { .thumb img { transition: none; } .thumb:hover img { transform: none; } }
+
+  /* Click a photo to see it larger; click anywhere or press Esc to close */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 50; padding: 24px; cursor: zoom-out;
+    background: rgba(10, 12, 14, .88);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .lightbox img { max-width: min(96vw, 1100px); max-height: 78vh; border-radius: 6px; }
+  .lb-cap { color: #e6e8ea; margin-top: 14px; text-align: center; font-size: .95rem; max-width: 640px; }
+  .lb-close {
+    position: absolute; top: 14px; right: 18px; background: none; border: none; color: #e6e8ea;
+    font-size: 1.8rem; line-height: 1; cursor: pointer;
+  }
+</style>
+<script>
+  // Apply a saved theme choice before the page paints, to avoid a flash of the wrong theme
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="site-name" href="portfolio.html#home">Owen Li Murphy</a>
+    <div class="tagline">Deep learning · Computational biology · Multi-agent systems</div>
+    <nav id="nav">
+      <a href="portfolio.html#home">Home</a>
+      <a href="portfolio.html#about">About</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="gallery.html" class="active">Life</a>
+      <a href="portfolio.html#research">Research</a>
+      <a href="portfolio.html#publications">Publications</a>
+      <a href="portfolio.html#projects">Projects</a>
+      <a href="portfolio.html#education">Education & Experience</a>
+      <a href="teaching.html">Teaching</a>
+      <a href="group.html">Group</a>
+      <a href="portfolio.html#learning">Learning</a>
+      <a href="portfolio.html#media">Media</a>
+      <a href="portfolio.html#contact">Contact</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode">Dark mode</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===================== LIFE / PHOTOS ===================== -->
+  <section class="page active" id="gallery">
+    <h1>Life</h1>
+    <p class="muted">Photos from outside the lab: places I've been, how I stay active, what I build, and the people around me.</p>
+
+    <!-- PHOTOS: put them in a folder named photos/ next to this file. Each tile below shows the file name it expects;
+         rename your photo to match, or change the src. Landscape JPGs about 1200 px wide (under 500 KB) work best.
+         BEFORE PUBLISHING: remove location (GPS) data from each photo, avoid shots that show your home address or ID,
+         and ask people in the photos before posting them.
+         TO ADD A PHOTO: copy one .photo block into the grid. data-cat is places, active, making, or everyday. -->
+
+    <p class="todo">Write 2–3 sentences in your own voice about life outside research: what you do on a normal weekend, and what these photos say about you.</p>
+
+    <div class="filters" id="filters">
+      <button type="button" class="chip on" data-filter="all">All</button>
+      <button type="button" class="chip" data-filter="places">Places</button>
+      <button type="button" class="chip" data-filter="active">Active</button>
+      <button type="button" class="chip" data-filter="making">Making</button>
+      <button type="button" class="chip" data-filter="everyday">Everyday</button>
+    </div>
+
+    <div class="gallery" id="gallery-grid">
+      <figure class="photo" data-cat="places">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Shanghai">
+          <img src="photos/places-shanghai.jpg" alt="Shanghai" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/places-shanghai.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+      <figure class="photo" data-cat="places">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Beijing">
+          <img src="photos/places-beijing.jpg" alt="Beijing" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/places-beijing.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+      <figure class="photo" data-cat="places">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Travel">
+          <img src="photos/places-travel.jpg" alt="Travel" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/places-travel.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+      <figure class="photo" data-cat="active">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Climbing">
+          <img src="photos/active-climbing.jpg" alt="Climbing" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/active-climbing.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+      <figure class="photo" data-cat="active">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Cycling">
+          <img src="photos/active-cycling.jpg" alt="Cycling" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/active-cycling.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+      <figure class="photo" data-cat="active">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Calisthenics">
+          <img src="photos/active-calisthenics.jpg" alt="Calisthenics" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/active-calisthenics.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+      <figure class="photo" data-cat="making">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Workbench">
+          <img src="photos/making-workbench.jpg" alt="Workbench" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/making-workbench.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+      <figure class="photo" data-cat="making">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Filming">
+          <img src="photos/making-filming.jpg" alt="Filming" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/making-filming.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+      <figure class="photo" data-cat="everyday">
+        <div class="thumb" tabindex="0" role="button" aria-label="Open photo: Friends">
+          <img src="photos/everyday-friends.jpg" alt="Friends" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.classList.add('empty');">
+          <span class="ph"><span class="todo">photos/everyday-friends.jpg</span></span>
+        </div>
+        <figcaption>
+          <span class="cap"><span class="todo">Caption: what's happening</span></span>
+          <span class="cap-meta"><span class="todo">Place · Year</span></span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button type="button" class="lb-close" id="lb-close" aria-label="Close photo">×</button>
+    <img id="lb-img" src="" alt="">
+    <div class="lb-cap" id="lb-cap"></div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Owen Li Murphy</div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Light / dark toggle. The choice is saved when the browser allows it; otherwise the site follows the system setting.
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    function systemDark() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+    function current() { return root.getAttribute('data-theme') || (systemDark() ? 'dark' : 'light'); }
+    function label() { btn.textContent = current() === 'dark' ? 'Light mode' : 'Dark mode'; }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+
+  // Filter chips: show only one category of photos.
+  (function () {
+    var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+    var photos = Array.prototype.slice.call(document.querySelectorAll('.photo'));
+    function apply(filter) {
+      chips.forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-filter') === filter); });
+      photos.forEach(function (p) { p.hidden = !(filter === 'all' || p.getAttribute('data-cat') === filter); });
+    }
+    chips.forEach(function (c) {
+      c.addEventListener('click', function () { apply(c.getAttribute('data-filter')); });
+    });
+  })();
+
+  // Lightbox: click (or press Enter on) a photo to view it larger. Photos that haven't been added yet do nothing.
+  (function () {
+    var grid = document.getElementById('gallery-grid');
+    var lb = document.getElementById('lightbox');
+    var lbImg = document.getElementById('lb-img');
+    var lbCap = document.getElementById('lb-cap');
+    function openFrom(thumb) {
+      if (!thumb || thumb.classList.contains('empty')) return;
+      var img = thumb.querySelector('img');
+      var fig = thumb.parentNode;
+      var cap = fig.querySelector('.cap').textContent.trim();
+      var meta = fig.querySelector('.cap-meta').textContent.trim();
+      lbImg.src = img.currentSrc || img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = cap + (meta ? ' — ' + meta : '');
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+    function close() { lb.hidden = true; lbImg.src = ''; document.body.style.overflow = ''; }
+    grid.addEventListener('click', function (e) {
+      var t = e.target.closest ? e.target.closest('.thumb') : null;
+      openFrom(t);
+    });
+    grid.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        var t = e.target.classList && e.target.classList.contains('thumb') ? e.target : null;
+        if (t) { e.preventDefault(); openFrom(t); }
+      }
+    });
+    lb.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lb.hidden) close(); });
+  })();
+</script>
+</body>
+</html>
