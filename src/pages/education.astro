@@ -30,6 +30,62 @@ import SkillRow from "@components/sections/education/SkillRow.astro";
     </EntryItem>
   ))}
 
+  {EDUCATION_CONTENT.visiting.length > 0 && (
+    <>
+      <h2>Visiting Appointments</h2>
+      {EDUCATION_CONTENT.visiting.map((visit) => (
+        <EntryItem
+          title={visit.role}
+          logoSrc={visit.logoSrc}
+          logoAlt={visit.institution}
+          logoHref={visit.institutionHref}
+        >
+          <Fragment slot="meta">
+            <a
+              href={visit.institutionHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {visit.institution}
+            </a>
+            {visit.institutionNote}
+            {visit.hosts && visit.hosts.length > 0 && (
+              <>
+                {" "}
+                · Collaborators:{" "}
+                {visit.hosts.map((host, idx) => (
+                  <>
+                    {idx > 0 && " & "}
+                    {host.href ? (
+                      <a
+                        href={host.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {host.name}
+                      </a>
+                    ) : (
+                      host.name
+                    )}
+                  </>
+                ))}
+              </>
+            )}{" "}
+            ·{" "}
+            {visit.todo ? (
+              <span class="todo">{visit.period}</span>
+            ) : (
+              visit.period
+            )}
+          </Fragment>
+          {visit.summary && (
+            <p class:list={["small", { todo: visit.todo }]}>{visit.summary}</p>
+          )}
+        </EntryItem>
+      ))}
+    </>
+  )}
+
   <h2>Experience</h2>
   {EDUCATION_CONTENT.experience.map((exp) => (
     <EntryItem title={exp.role} meta={`${exp.company} · ${exp.dates}`}>

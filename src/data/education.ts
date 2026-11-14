@@ -28,6 +28,23 @@ export interface SkillGroup {
   todo?: string;
 }
 
+export interface VisitingHost {
+  name: string;
+  href?: string;
+}
+
+export interface VisitingEntry {
+  role: string;
+  institution: string;
+  institutionNote?: string;
+  institutionHref: string;
+  logoSrc: string;
+  hosts?: readonly VisitingHost[];
+  period: string;
+  summary?: string;
+  todo?: boolean;
+}
+
 export const EDUCATION_CONTENT = {
   title: "Education & Experience",
   education: [
@@ -137,4 +154,19 @@ export const EDUCATION_CONTENT = {
       items: "English (native) · Mandarin Chinese (fluent)",
     },
   ] satisfies readonly SkillGroup[],
+  visiting: [
+    {
+      role: "Visiting Researcher",
+      institution:
+        "Shanghai Institute for Mathematics and Interdisciplinary Sciences (SIMIS)",
+      institutionNote: " · Affiliated with Fudan University",
+      institutionHref: "https://www.simis.cn/",
+      logoSrc: "/logos/fudan.webp",
+      hosts: [{ name: "Dr. Leon Witt" }, { name: "Dr. Lucy Klinger" }],
+      period: "2026",
+      summary:
+        "Collaborating on game-theoretic multi-agent alignment, peer prediction mechanisms, and Knowledge-Free Correlated Agreement.",
+      todo: false,
+    },
+  ] satisfies readonly VisitingEntry[],
 } as const;
