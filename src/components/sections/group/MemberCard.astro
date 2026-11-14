@@ -1,0 +1,29 @@
+---
+import type { GroupMember } from "@data/group";
+import EntryItem from "@components/ui/EntryItem.astro";
+
+interface Props {
+  member: GroupMember;
+}
+
+const { member } = Astro.props;
+const metaParts = [
+  member.period,
+  member.coAdvisor ? `Co-advised with ${member.coAdvisor}` : undefined,
+].filter(Boolean);
+---
+
+<EntryItem title={member.name} meta={metaParts.join(" · ")}>
+  <p class="small">
+    {member.researchFocus}
+    {member.nextPosition && (
+      <span class="muted"> · Next: {member.nextPosition}</span>
+    )}
+    {member.website && (
+      <>
+        {" "}
+        · <a href={member.website}>Website →</a>
+      </>
+    )}
+  </p>
+</EntryItem>

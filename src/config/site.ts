@@ -1,6 +1,9 @@
+import type { FeatureFlag } from "./features";
+
 export interface NavItem {
   label: string;
   href: string;
+  featureFlag?: FeatureFlag;
 }
 
 export const SITE = {
@@ -19,6 +22,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: "Research", href: "/research" },
   { label: "Publications", href: "/publications" },
   { label: "Projects", href: "/projects" },
+  { label: "Group", href: "/group", featureFlag: "showLabGroupPage" },
   { label: "Education & Experience", href: "/education" },
   { label: "Learning", href: "/learning" },
   { label: "Media", href: "/media" },

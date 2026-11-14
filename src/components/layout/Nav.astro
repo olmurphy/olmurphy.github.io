@@ -1,15 +1,19 @@
 ---
 import { NAV_ITEMS } from "@config/site";
+import { FEATURES } from "@config/features";
 import ThemeToggle from "./ThemeToggle.astro";
 
 const normalize = (path: string) =>
   path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
 
 const currentPath = normalize(Astro.url.pathname);
+const visibleNavItems = NAV_ITEMS.filter(
+  (item) => !item.featureFlag || FEATURES[item.featureFlag],
+);
 ---
 
 <nav aria-label="Primary navigation">
-  {NAV_ITEMS.map((item) => {
+  {visibleNavItems.map((item) => {
     const isActive = currentPath === normalize(item.href);
     return (
       <a

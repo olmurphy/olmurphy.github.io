@@ -3,6 +3,14 @@ export interface ResearchDirection {
   description: string;
 }
 
+export interface GrantEntry {
+  title: string;
+  funder: string;
+  date: string;
+  amountOrRole?: string;
+  description?: string;
+}
+
 export const RESEARCH_CONTENT = {
   title: "Research",
   subtitle: "What I work on, what I'm curious about, and where I'm headed.",
@@ -33,6 +41,9 @@ export const RESEARCH_CONTENT = {
     "Synthetic biology",
     "Precision medicine",
   ] as const,
+  grants: [] satisfies readonly GrantEntry[],
+  grantsEmptyTodo:
+    "None listed yet — add research fellowships, travel grants, or compute credits here.",
   foundations:
     "I study mathematics beyond what my coursework requires — linear algebra and matrix theory, spectral graph theory, abstract algebra, functional analysis, and differential geometry — because I believe strong theory pays off in applied ML. Alongside this I study theoretical physics, computer architecture (GPU and memory hierarchies), neuroscience, and chemistry.",
 } as const;

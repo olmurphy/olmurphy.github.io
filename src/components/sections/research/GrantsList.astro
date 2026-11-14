@@ -1,0 +1,25 @@
+---
+import { RESEARCH_CONTENT } from "@data/research";
+import EntryItem from "@components/ui/EntryItem.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
+---
+
+<section aria-labelledby="grants-heading">
+  <h2 id="grants-heading">Grants &amp; Fellowships</h2>
+  {RESEARCH_CONTENT.grants.length > 0 ? (
+    RESEARCH_CONTENT.grants.map((grant) => (
+      <EntryItem
+        title={grant.title}
+        meta={[grant.funder, grant.date, grant.amountOrRole]
+          .filter(Boolean)
+          .join(" · ")}
+      >
+        {grant.description && <p class="small">{grant.description}</p>}
+      </EntryItem>
+    ))
+  ) : (
+    <p class="muted">
+      <TodoNote>{RESEARCH_CONTENT.grantsEmptyTodo}</TodoNote>
+    </p>
+  )}
+</section>

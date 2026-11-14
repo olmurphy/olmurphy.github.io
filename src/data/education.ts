@@ -18,14 +18,6 @@ export interface AwardEntry {
   description?: string;
 }
 
-export interface GrantEntry {
-  title: string;
-  funder: string;
-  date: string;
-  amountOrRole?: string;
-  description?: string;
-}
-
 export interface SkillGroup {
   category: string;
   items?: string;
@@ -90,9 +82,6 @@ export const EDUCATION_CONTENT = {
         "Recognized consistently for maintaining a 3.9 GPA across rigorous dual-major coursework in Mathematics and Computer Science.",
     },
   ] satisfies readonly AwardEntry[],
-  grants: [] satisfies readonly GrantEntry[],
-  grantsEmptyTodo:
-    "None listed yet — add research fellowships, travel grants, or compute credits here.",
   skills: [
     {
       category: "Machine learning",

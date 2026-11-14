@@ -1,0 +1,57 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { FEATURES } from "@config/features";
+import { GROUP_CONTENT } from "@data/group";
+import Callout from "@components/ui/Callout.astro";
+import MemberCard from "@components/sections/group/MemberCard.astro";
+
+const phdStudents = GROUP_CONTENT.members.filter((m) => m.role === "phd");
+const msAndUndergrads = GROUP_CONTENT.members.filter(
+  (m) => m.role === "masters" || m.role === "undergrad",
+);
+const alumni = GROUP_CONTENT.members.filter((m) => m.role === "alumni");
+---
+
+<BaseLayout
+  title={`Group — ${SITE.name}`}
+  description="Students and researchers advised by Owen Li Murphy."
+>
+  {!FEATURES.showLabGroupPage && (
+    <meta slot="head" name="robots" content="noindex" />
+  )}
+
+  <h1>{GROUP_CONTENT.title}</h1>
+  <p class="muted">{GROUP_CONTENT.subtitle}</p>
+
+  <Callout>
+    {GROUP_CONTENT.prospectiveNote} <a href="/contact">Get in touch →</a>
+  </Callout>
+
+  {phdStudents.length > 0 && (
+    <>
+      <h2>Ph.D. Students</h2>
+      {phdStudents.map((member) => (
+        <MemberCard member={member} />
+      ))}
+    </>
+  )}
+
+  {msAndUndergrads.length > 0 && (
+    <>
+      <h2>M.S. &amp; Undergraduate Researchers</h2>
+      {msAndUndergrads.map((member) => (
+        <MemberCard member={member} />
+      ))}
+    </>
+  )}
+
+  {alumni.length > 0 && (
+    <>
+      <h2>Alumni</h2>
+      {alumni.map((member) => (
+        <MemberCard member={member} />
+      ))}
+    </>
+  )}
+</BaseLayout>
