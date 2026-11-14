@@ -367,6 +367,42 @@ import KeyValueTable from "@components/ui/KeyValueTable.astro";
 </section>
 
 ================================================================================
+FILE: src/components/sections/education/SkillRow.astro
+================================================================================
+
+---
+import type { SkillGroup } from "@data/education";
+import TodoNote from "@components/ui/TodoNote.astro";
+
+interface Props {
+  skill: SkillGroup;
+}
+
+const { skill } = Astro.props;
+---
+
+<div class="skill">
+  <span class="label">{skill.category}</span>
+  {skill.items && <span>{skill.items} </span>}
+  {skill.todo && <TodoNote>{skill.todo}</TodoNote>}
+</div>
+
+<style>
+  .skill {
+    margin-bottom: 14px;
+  }
+
+  .label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+  }
+</style>
+
+================================================================================
 FILE: src/components/sections/home/Hero.astro
 ================================================================================
 
@@ -529,14 +565,41 @@ import { RESEARCH_OVERVIEW } from "@data/home";
 </section>
 
 ================================================================================
+FILE: src/components/sections/learning/CurriculumSection.astro
+================================================================================
+
+---
+import type { LearningCategory } from "@data/learning";
+
+interface Props {
+  category: LearningCategory;
+}
+
+const { category } = Astro.props;
+---
+
+<section aria-label={category.heading}>
+  <h2>{category.heading}</h2>
+  <ul>
+    {category.items.map((item) => (
+      <li>
+        {item.title}
+        {item.book && <em>{item.book}</em>}
+        {item.suffix}
+      </li>
+    ))}
+  </ul>
+</section>
+
+================================================================================
 FILE: src/components/sections/projects/ProjectCard.astro
 ================================================================================
 
 ---
-import type { ProjectEntry } from '@data/projects';
-import Card from '@components/ui/Card.astro';
-import Tag from '@components/ui/Tag.astro';
-import TodoNote from '@components/ui/TodoNote.astro';
+import type { ProjectEntry } from "@data/projects";
+import Card from "@components/ui/Card.astro";
+import Tag from "@components/ui/Tag.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
 
 interface Props {
   project: ProjectEntry;
@@ -549,21 +612,21 @@ const { project } = Astro.props;
   <h3>{project.title}</h3>
   <div class="meta">
     {project.statusTag && <Tag variant="status">{project.statusTag}</Tag>}
-    {project.tags.map((tag) => <Tag>{tag}</Tag>)}
+    {project.tags.map((tag) => (
+      <Tag>{tag}</Tag>
+    ))}
     {project.metaTodo && <TodoNote>{project.metaTodo}</TodoNote>}
   </div>
   <p class="small">{project.summary}</p>
-  {
-    project.linkHref && project.linkLabel && (
-      <a class="small" href={project.linkHref}>
-        {project.linkTodo ? (
-          <TodoNote>{project.linkLabel}</TodoNote>
-        ) : (
-          project.linkLabel
-        )}
-      </a>
-    )
-  }
+  {project.linkHref && project.linkLabel && (
+    <a class="small" href={project.linkHref}>
+      {project.linkTodo ? (
+        <TodoNote>{project.linkLabel}</TodoNote>
+      ) : (
+        project.linkLabel
+      )}
+    </a>
+  )}
 </Card>
 
 <style>
@@ -579,10 +642,10 @@ FILE: src/components/sections/publications/PublicationItem.astro
 ================================================================================
 
 ---
-import type { PublicationEntry } from '@data/publications';
-import EntryItem from '@components/ui/EntryItem.astro';
-import Tag from '@components/ui/Tag.astro';
-import TodoNote from '@components/ui/TodoNote.astro';
+import type { PublicationEntry } from "@data/publications";
+import EntryItem from "@components/ui/EntryItem.astro";
+import Tag from "@components/ui/Tag.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
 
 interface Props {
   entry: PublicationEntry;
@@ -594,35 +657,37 @@ const { entry } = Astro.props;
 <EntryItem title={entry.title}>
   <Fragment slot="meta">
     {entry.venue}
-    {
-      entry.coAuthors && (
-        <>
-          {' '}
-          &nbsp;·&nbsp;{' '}
-          {entry.coAuthorsTodo ? (
-            <TodoNote>{entry.coAuthors}</TodoNote>
-          ) : (
-            entry.coAuthors
-          )}
-        </>
-      )
-    }
+    {entry.coAuthors && (
+      <>
+        {" "}
+        &nbsp;·&nbsp;{" "}
+        {entry.coAuthorsTodo ? (
+          <TodoNote>{entry.coAuthors}</TodoNote>
+        ) : (
+          entry.coAuthors
+        )}
+      </>
+    )}
   </Fragment>
 
   <p class="small">{entry.summary}</p>
 
   <div class="tags">
     <Tag variant="status">{entry.status}</Tag>
-    {entry.tags.map((tag) => <Tag>{tag}</Tag>)}
+    {entry.tags.map((tag) => (
+      <Tag>{tag}</Tag>
+    ))}
   </div>
 
-  {
-    entry.linkHref && entry.linkLabel && (
-      <a class="small" href={entry.linkHref}>
-        {entry.linkTodo ? <TodoNote>{entry.linkLabel}</TodoNote> : entry.linkLabel}
-      </a>
-    )
-  }
+  {entry.linkHref && entry.linkLabel && (
+    <a class="small" href={entry.linkHref}>
+      {entry.linkTodo ? (
+        <TodoNote>{entry.linkLabel}</TodoNote>
+      ) : (
+        entry.linkLabel
+      )}
+    </a>
+  )}
 </EntryItem>
 
 <style>
@@ -953,6 +1018,165 @@ export const ABOUT_CONTENT = {
 } as const;
 
 ================================================================================
+FILE: src/data/contact.ts
+================================================================================
+
+import type { KeyValueRow } from "@components/ui/KeyValueTable.astro";
+
+export const CONTACT_CONTENT = {
+  title: "Contact",
+  intro:
+    "I'm always glad to hear from researchers, prospective advisors, and fellow students.",
+  channels: [
+    {
+      label: "Email",
+      value: "owen261@icloud.com",
+      href: "mailto:owen261@icloud.com",
+    },
+    {
+      label: "Location",
+      value: "Shanghai, China (UTC+8)",
+    },
+    {
+      label: "GitHub",
+      value: "github.com/olmurphy",
+      href: "https://github.com/olmurphy",
+    },
+    {
+      label: "Google Scholar",
+      value: "Google Scholar Profile",
+      href: "https://scholar.google.com/citations?user=A667B6MAAAAJ&hl=zh-CN",
+    },
+    {
+      label: "LinkedIn",
+      value: "linkedin.com/in/owenmurphy2022",
+      href: "https://www.linkedin.com/in/owenmurphy2022/",
+    },
+    {
+      label: "CV",
+      value: "Download PDF",
+      href: "/cv.pdf",
+      todo: true,
+    },
+  ] satisfies readonly KeyValueRow[],
+} as const;
+
+================================================================================
+FILE: src/data/education.ts
+================================================================================
+
+export interface EducationEntry {
+  degree: string;
+  meta: string;
+  details?: string;
+}
+
+export interface ExperienceEntry {
+  role: string;
+  company: string;
+  dates: string;
+  summary: string;
+}
+
+export interface AwardEntry {
+  title: string;
+  issuer: string;
+  date: string;
+  description?: string;
+}
+
+export interface SkillGroup {
+  category: string;
+  items?: string;
+  todo?: string;
+}
+
+export const EDUCATION_CONTENT = {
+  title: "Education & Experience",
+  education: [
+    {
+      degree: "M.S. in Computer Science, Machine Learning specialization",
+      meta: "Georgia Institute of Technology (OMSCS) · Fall 2025 – present",
+      details:
+        "Completed: Operating Systems, Machine Learning for Trading, Machine Learning. In progress: Deep Learning (CS 7643).",
+    },
+    {
+      degree: "M.S. in Computer Science, Research Thesis Option (planned)",
+      meta: "Georgia Institute of Technology, on campus · beginning August 2027",
+    },
+    {
+      degree: "B.S. in Mathematics and Computer Science",
+      meta: "Baylor University · Aug 2018 – May 2022 · GPA 3.9",
+    },
+    {
+      degree: "Chinese Language Studies",
+      meta: "Shanghai Jiao Tong University · Two semesters (高三 equivalent); Beijing Language and Culture University · August 2025",
+      details:
+        "Intensive language acquisition and cultural immersion programs.",
+    },
+  ] satisfies readonly EducationEntry[],
+  experience: [
+    {
+      role: "AI / Software Engineer",
+      company: "Global Business AI (GBizAI)",
+      dates: "Sept 2025 – Present",
+      summary:
+        "Architecting enterprise multi-tenant chatbot management platforms and LLM streaming data planes.",
+    },
+    {
+      role: "Software Engineer",
+      company: "IBM Consulting",
+      dates: "June 2022 – Sept 2025",
+      summary:
+        "Developed high-throughput enterprise backend systems, distributed services, and machine-learning algorithm integrations over three years.",
+    },
+  ] satisfies readonly ExperienceEntry[],
+  awards: [
+    {
+      title: "Dean's Academic Honor List",
+      issuer: "Baylor University",
+      date: "2018 – 2022",
+      description:
+        "Recognized consistently for maintaining a 3.9 GPA across rigorous dual-major coursework in Mathematics and Computer Science.",
+    },
+  ] satisfies readonly AwardEntry[],
+  skills: [
+    {
+      category: "Machine learning",
+      items:
+        "PyTorch · deep learning · NLP · reinforcement learning · multi-agent systems · agent harnesses",
+    },
+    {
+      category: "Computational biology",
+      items:
+        "Single-cell & spatial omics foundations · structural biology · molecular mechanics",
+    },
+    {
+      category: "Compute & hardware",
+      items: "NVIDIA GPUs · GPU memory hierarchies · Raspberry Pi · Arduino",
+    },
+    {
+      category: "Systems & engineering",
+      items:
+        "Distributed systems · backend services · Docker · Git · Linux · Tailscale · PostgreSQL · Redis · Kafka",
+    },
+    {
+      category: "Programming",
+      items: "Python · C++ · TypeScript · JavaScript · Java",
+    },
+    {
+      category: "Research practice",
+      items:
+        "Literature review · experiment design · technical writing · science communication",
+    },
+    {
+      category: "Languages",
+      items: "English (native) · Mandarin Chinese (fluent)",
+    },
+  ] satisfies readonly SkillGroup[],
+} as const;
+
+================================================================================
 FILE: src/data/home.ts
 ================================================================================
 
@@ -1018,6 +1242,100 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
 ];
 
 ================================================================================
+FILE: src/data/learning.ts
+================================================================================
+
+export interface ReadingItem {
+  title?: string;
+  book?: string;
+  suffix?: string;
+}
+
+export interface LearningCategory {
+  heading: string;
+  items: readonly ReadingItem[];
+}
+
+export const LEARNING_CONTENT = {
+  title: "Learning",
+  subtitle:
+    "What I'm studying outside of coursework. It shows how I think, and it's a good conversation starter.",
+  reflectionTodo:
+    "Write 2–4 sentences in your own voice: what the self-study has been like, one or two things that surprised you, and how it connects to your research. This note frames the lists below.",
+  categories: [
+    {
+      heading: "Mathematics",
+      items: [
+        { title: "Graduate-level linear algebra and matrix theory" },
+        { book: "Graph Theory", suffix: " — Diestel" },
+        { book: "Abstract Algebra", suffix: " — Dummit & Foote" },
+        {
+          title: "Spectral graph theory; next: ",
+          book: "Introduction to Smooth Manifolds",
+          suffix: " — Lee",
+        },
+      ],
+    },
+    {
+      heading: "Computer science",
+      items: [
+        { book: "Computer Architecture", suffix: " — Hennessy & Patterson" },
+        { book: "Distributed Systems", suffix: " — van Steen & Tanenbaum" },
+        { book: "Computer Networking", suffix: " — Kurose & Ross" },
+        {
+          title: "Compilers (Aho et al.), HPC (Grama), cloud computing (Hwang)",
+        },
+      ],
+    },
+    {
+      heading: "Natural sciences",
+      items: [
+        { book: "Introduction to Electrodynamics", suffix: " — Griffiths" },
+        { book: "Organic Chemistry", suffix: " — Clayden" },
+        { title: "Biochemistry, genetics, and neuroscience" },
+        { title: "Robotics — Lynch & Park, Spong, Thrun" },
+      ],
+    },
+  ] satisfies readonly LearningCategory[],
+} as const;
+
+================================================================================
+FILE: src/data/media.ts
+================================================================================
+
+export const MEDIA_CONTENT = {
+  title: "Media",
+  subtitle: "Teaching, science communication, and viral technical talks.",
+  featuredTalks: [
+    {
+      title: "Blockchain Technical Breakdown & Architecture",
+      description:
+        "An in-depth technical explanation of blockchain consensus mechanisms, cryptography, and distributed architecture, reaching over 200k+ views combined across Chinese digital platforms.",
+      platform: "Douyin & Xiaohongshu",
+      stats: "200k+ views combined",
+    },
+  ],
+  seriesTitle: "Journey to Become a Polymath",
+  seriesDescription:
+    "An educational video series about learning across disciplines, published in English and Chinese on YouTube, Instagram Reels, TikTok, Xiaohongshu, and Shipinhao.",
+  links: [
+    {
+      label: "Douyin Featured Talk",
+      href: "https://www.douyin.com/user/self?from_tab_name=main&modal_id=7620062047056743731",
+      todo: false,
+    },
+    {
+      label: "Xiaohongshu Featured Talk",
+      href: "https://www.rednote.com/discovery/item/69bfe738000000002102d1bc?xsec_token=AB9Ejr8SjTOOD2pcwT1TlkptUKg7ctoh3UIVzn6vcEFAk=&xsec_source=pc_user",
+      todo: false,
+    },
+    { label: "YouTube Channel", href: "#", todo: true },
+  ],
+  editorialNote:
+    "Communicating complex mathematical and technical concepts clearly is a core pillar of my academic and engineering philosophy.",
+} as const;
+
+================================================================================
 FILE: src/data/profile.ts
 ================================================================================
 
@@ -1028,11 +1346,11 @@ export interface ProfileLink {
 }
 
 export const PROFILE_LINKS: readonly ProfileLink[] = [
-  { label: "Email", href: "/contact" },
-  { label: "Google Scholar", href: "#", todo: true },
-  { label: "GitHub", href: "#", todo: true },
-  { label: "LinkedIn", href: "#", todo: true },
-  { label: "CV (PDF)", href: "#", todo: true },
+  { label: "Email", href: "mailto:owen261@icloud.com" },
+  { label: "Google Scholar", href: "https://scholar.google.com/citations?user=A667B6MAAAAJ&hl=zh-CN" },
+  { label: "GitHub", href: "https://github.com/olmurphy" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/owenmurphy2022/" },
+  { label: "CV (PDF)", href: "/cv.pdf", todo: true },
 ];
 
 ================================================================================
@@ -1051,52 +1369,51 @@ export interface ProjectEntry {
 }
 
 export const PROJECTS_CONTENT = {
-  title: 'Projects',
+  title: "Projects",
   subtitle: "Things I've built. Research projects first, then engineering.",
   projects: [
     {
-      title: 'CIFAR-10 confidence & abstention study',
-      tags: ['Deep learning', 'Robustness', 'PyTorch'],
+      title: "CIFAR-10 confidence & abstention study",
+      tags: ["Deep learning", "Robustness", "PyTorch"],
       summary:
-        'A two-month, four-person project examining model confidence under distribution shift with AugMix-trained Wide ResNets.',
-      linkLabel: 'Report / code',
-      linkHref: '#',
-      linkTodo: true,
+        "A two-month project examining model confidence under distribution shift with AugMix-trained Wide ResNets.",
+      linkLabel: "GitHub / Code",
+      linkHref: "https://github.com/olmurphy/dl-neurips-bound",
+      linkTodo: false,
     },
     {
-      title: 'AdmissionMatch',
-      tags: ['Platform', 'Next.js', 'FastAPI', 'pgvector'],
+      title: "AdmissionMatch",
+      tags: ["Platform", "Next.js", "FastAPI", "pgvector"],
       summary:
-        'A B2B2C recruitment and matching platform for business-school applicants, built on Next.js, FastAPI, and PostgreSQL with vector search.',
+        "A B2B2C recruitment and matching platform for business-school applicants, built on Next.js, FastAPI, and PostgreSQL with vector search.",
     },
     {
-      title: 'Chatbot management platform',
-      tags: ['React', 'TypeScript', 'Systems design'],
+      title: "Chatbot management platform",
+      tags: ["React", "TypeScript", "Systems design"],
       summary:
-        'A Dify/Langflow-style interface with a canvas workflow view, designed for a scalable distributed backend.',
+        "A Dify/Langflow-style interface with a canvas workflow view, designed for a scalable distributed backend.",
     },
     {
-      title: 'AI form-filling browser extension',
-      tags: ['LLMs', 'Browser extension', 'Proposal'],
+      title: "AI form-filling browser extension",
+      tags: ["LLMs", "Browser extension", "Proposal"],
       summary:
-        'A product design for an extension that uses semantic mapping to autofill application forms across U.S. and Chinese browsers.',
+        "A product design for an extension that uses semantic mapping to autofill application forms across U.S. and Chinese browsers.",
     },
   ] satisfies readonly ProjectEntry[],
   hackathons: [
     {
-      title: 'BetterMe',
-      statusTag: '24-hour hackathon',
-      tags: ['Full-stack', 'LLMs'],
-      metaTodo: 'event name, date, result',
+      title: "BetterMe",
+      statusTag: "La French Tech Shanghai Hackathon 2025",
+      tags: ["Full-stack", "LLMs"],
       summary:
-        'A full-stack AI roleplay application designed and built end to end within a 24-hour hackathon.',
-      linkLabel: 'Demo / code',
-      linkHref: '#',
-      linkTodo: true,
+        "A full-stack AI roleplay application designed and built end to end within a 24-hour hackathon.",
+      linkLabel: "GitHub / Code",
+      linkHref: "https://github.com/olmurphy/BetterMe",
+      linkTodo: false,
     },
   ] satisfies readonly ProjectEntry[],
   hackathonPromptTodo:
-    'Add each new hackathon above this line: event, date, your role, what you built, and any placement or award.',
+    "Add each new hackathon above this line: event, date, your role, what you built, and any placement or award.",
 } as const;
 
 ================================================================================
@@ -1117,37 +1434,38 @@ export interface PublicationEntry {
 }
 
 export const PUBLICATIONS_CONTENT = {
-  title: 'Publications',
-  subtitle: 'Papers, preprints, and works in progress.',
+  title: "Publications",
+  subtitle: "Papers, preprints, and works in progress.",
   publishedEmptyTodo:
-    'None yet — when a paper is accepted, move it here and add the venue and year.',
+    "None yet — when a paper is accepted, move it here and add the venue and year.",
   underReview: [
     {
-      title: 'Multi-agent swarm governance via multi-task peer prediction',
-      venue: 'Submitted to NeurIPS 2026',
-      coAuthors: 'co-authors',
+      title: "Multi-agent swarm governance via multi-task peer prediction",
+      venue: "Submitted to NeurIPS 2026",
+      coAuthors: "co-authors",
       coAuthorsTodo: true,
       summary:
-        'Governance of AI agent swarms using multi-task peer prediction and Knowledge-Free Correlated Agreement.',
-      status: 'Under review',
-      tags: ['Game theory', 'Mechanism design', 'Multi-agent systems'],
-      linkLabel: 'preprint link',
-      linkHref: '#',
+        "Governance of AI agent swarms using multi-task peer prediction and Knowledge-Free Correlated Agreement.",
+      status: "Under review",
+      tags: ["Game theory", "Mechanism design", "Multi-agent systems"],
+      linkLabel: "preprint link",
+      linkHref: "#",
       linkTodo: true,
     },
   ] satisfies readonly PublicationEntry[],
   inProgress: [
     {
       title:
-        'Confidence and abstention of CIFAR-10 Wide ResNets under distribution shift',
-      venue: 'Georgia Tech CS 7643 Deep Learning · team project',
-      summary: 'Compares standard and AugMix training on CIFAR-10-C and CIFAR-10.1.',
-      status: 'In progress',
-      tags: ['Deep learning', 'Distribution shift', 'Selective prediction'],
+        "Confidence and abstention of CIFAR-10 Wide ResNets under distribution shift",
+      venue: "Georgia Tech CS 7643 Deep Learning · team project",
+      summary:
+        "Compares standard and AugMix training on CIFAR-10-C and CIFAR-10.1.",
+      status: "In progress",
+      tags: ["Deep learning", "Distribution shift", "Selective prediction"],
     },
   ] satisfies readonly PublicationEntry[],
   talksEmptyTodo:
-    'None yet — add any presentations here, even course or lab-group talks.',
+    "None yet — add any presentations here, even course or lab-group talks.",
 } as const;
 
 ================================================================================
@@ -1292,6 +1610,72 @@ import PersonalLife from "@components/sections/about/PersonalLife.astro";
 </BaseLayout>
 
 ================================================================================
+FILE: src/pages/contact.astro
+================================================================================
+
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { CONTACT_CONTENT } from "@data/contact";
+import KeyValueTable from "@components/ui/KeyValueTable.astro";
+---
+
+<BaseLayout
+  title={`Contact — ${SITE.name}`}
+  description="Contact details and academic profiles for Owen Li Murphy."
+>
+  <h1>{CONTACT_CONTENT.title}</h1>
+  <p>{CONTACT_CONTENT.intro}</p>
+
+  <KeyValueTable rows={CONTACT_CONTENT.channels} />
+</BaseLayout>
+
+================================================================================
+FILE: src/pages/education.astro
+================================================================================
+
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { EDUCATION_CONTENT } from "@data/education";
+import EntryItem from "@components/ui/EntryItem.astro";
+import SkillRow from "@components/sections/education/SkillRow.astro";
+---
+
+<BaseLayout
+  title={`Education & Experience — ${SITE.name}`}
+  description="Academic degrees, software engineering experience, honors, and technical skills of Owen Li Murphy."
+>
+  <h1>{EDUCATION_CONTENT.title}</h1>
+
+  <h2>Education</h2>
+  {EDUCATION_CONTENT.education.map((edu) => (
+    <EntryItem title={edu.degree} meta={edu.meta}>
+      {edu.details && <p class="small">{edu.details}</p>}
+    </EntryItem>
+  ))}
+
+  <h2>Experience</h2>
+  {EDUCATION_CONTENT.experience.map((exp) => (
+    <EntryItem title={exp.role} meta={`${exp.company} · ${exp.dates}`}>
+      <p class="small">{exp.summary}</p>
+    </EntryItem>
+  ))}
+
+  <h2>Awards &amp; Honors</h2>
+  {EDUCATION_CONTENT.awards.map((award) => (
+    <EntryItem title={award.title} meta={`${award.issuer} · ${award.date}`}>
+      {award.description && <p class="small">{award.description}</p>}
+    </EntryItem>
+  ))}
+
+  <h2>Skills</h2>
+  {EDUCATION_CONTENT.skills.map((skill) => (
+    <SkillRow skill={skill} />
+  ))}
+</BaseLayout>
+
+================================================================================
 FILE: src/pages/index.astro
 ================================================================================
 
@@ -1310,15 +1694,111 @@ import { NEWS_ITEMS } from "@data/home";
 </BaseLayout>
 
 ================================================================================
+FILE: src/pages/learning.astro
+================================================================================
+
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { LEARNING_CONTENT } from "@data/learning";
+import TodoNote from "@components/ui/TodoNote.astro";
+import CurriculumSection from "@components/sections/learning/CurriculumSection.astro";
+---
+
+<BaseLayout
+  title={`Learning — ${SITE.name}`}
+  description="Independent self-study across mathematics, computer science, and natural sciences."
+>
+  <h1>{LEARNING_CONTENT.title}</h1>
+  <p class="muted">{LEARNING_CONTENT.subtitle}</p>
+
+  <h2>What I've taken from it</h2>
+  <TodoNote as="p">{LEARNING_CONTENT.reflectionTodo}</TodoNote>
+
+  {LEARNING_CONTENT.categories.map((category) => (
+    <CurriculumSection category={category} />
+  ))}
+</BaseLayout>
+
+================================================================================
+FILE: src/pages/media.astro
+================================================================================
+
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { MEDIA_CONTENT } from "@data/media";
+import Card from "@components/ui/Card.astro";
+import Tag from "@components/ui/Tag.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
+---
+
+<BaseLayout
+  title={`Media — ${SITE.name}`}
+  description="Educational videos, viral talks, and science communication by Owen Li Murphy."
+>
+  <h1>{MEDIA_CONTENT.title}</h1>
+  <p class="muted">{MEDIA_CONTENT.subtitle}</p>
+
+  <h2>Featured Talks &amp; Presentations</h2>
+  {MEDIA_CONTENT.featuredTalks.map((talk) => (
+    <Card>
+      <h3>{talk.title}</h3>
+      <div class="meta">
+        <Tag variant="status">{talk.platform}</Tag>
+        <Tag>{talk.stats}</Tag>
+      </div>
+      <p class="small">{talk.description}</p>
+      <div class="links" style="margin-top: 10px;">
+        <a href="https://www.douyin.com/user/self?from_tab_name=main&modal_id=7620062047056743731" target="_blank" rel="noopener noreferrer" class="small">Watch on Douyin →</a>
+        &nbsp;&nbsp;
+        <a href="https://www.rednote.com/discovery/item/69bfe738000000002102d1bc?xsec_token=AB9Ejr8SjTOOD2pcwT1TlkptUKg7ctoh3UIVzn6vcEFAk=&xsec_source=pc_user" target="_blank" rel="noopener noreferrer" class="small">Watch on Xiaohongshu →</a>
+      </div>
+    </Card>
+  ))}
+
+  <h2>Series</h2>
+  <Card>
+    <h3>{MEDIA_CONTENT.seriesTitle}</h3>
+    <p class="small">{MEDIA_CONTENT.seriesDescription}</p>
+    <div class="links">
+      {MEDIA_CONTENT.links.map((link) => (
+        <a href={link.href} target="_blank" rel="noopener noreferrer">
+          {link.todo ? <TodoNote>{link.label}</TodoNote> : link.label}
+        </a>
+      ))}
+    </div>
+  </Card>
+
+  <p class="small muted">{MEDIA_CONTENT.editorialNote}</p>
+</BaseLayout>
+
+<style>
+  .meta {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 6px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+</style>
+
+================================================================================
 FILE: src/pages/projects.astro
 ================================================================================
 
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
-import { SITE } from '@config/site';
-import { PROJECTS_CONTENT } from '@data/projects';
-import ProjectCard from '@components/sections/projects/ProjectCard.astro';
-import TodoNote from '@components/ui/TodoNote.astro';
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { PROJECTS_CONTENT } from "@data/projects";
+import ProjectCard from "@components/sections/projects/ProjectCard.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
 ---
 
 <BaseLayout
@@ -1329,22 +1809,22 @@ import TodoNote from '@components/ui/TodoNote.astro';
   <p class="muted">{PROJECTS_CONTENT.subtitle}</p>
 
   <h2 class="first-heading">Projects</h2>
-  {PROJECTS_CONTENT.projects.map((project) => <ProjectCard project={project} />)}
+  {PROJECTS_CONTENT.projects.map((project) => (
+    <ProjectCard project={project} />
+  ))}
 
   <h2>Hackathons</h2>
-  {
-    PROJECTS_CONTENT.hackathons.map((hackathon) => (
-      <ProjectCard project={hackathon} />
-    ))
-  }
+  {PROJECTS_CONTENT.hackathons.map((hackathon) => (
+    <ProjectCard project={hackathon} />
+  ))}
   <p class="small muted">
     <TodoNote>{PROJECTS_CONTENT.hackathonPromptTodo}</TodoNote>
   </p>
 
   <p class="small muted">
     Tip: pick your 3–5 best and give each a one-line takeaway, plus a link to
-    code or a write-up. For a research portfolio, quality and clarity matter more
-    than quantity.
+    code or a write-up. For a research portfolio, quality and clarity matter
+    more than quantity.
   </p>
 </BaseLayout>
 
@@ -1359,11 +1839,11 @@ FILE: src/pages/publications.astro
 ================================================================================
 
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
-import { SITE } from '@config/site';
-import { PUBLICATIONS_CONTENT } from '@data/publications';
-import PublicationItem from '@components/sections/publications/PublicationItem.astro';
-import TodoNote from '@components/ui/TodoNote.astro';
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { PUBLICATIONS_CONTENT } from "@data/publications";
+import PublicationItem from "@components/sections/publications/PublicationItem.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
 ---
 
 <BaseLayout
@@ -1379,18 +1859,14 @@ import TodoNote from '@components/ui/TodoNote.astro';
   </p>
 
   <h2>Under review</h2>
-  {
-    PUBLICATIONS_CONTENT.underReview.map((paper) => (
-      <PublicationItem entry={paper} />
-    ))
-  }
+  {PUBLICATIONS_CONTENT.underReview.map((paper) => (
+    <PublicationItem entry={paper} />
+  ))}
 
   <h2>In progress</h2>
-  {
-    PUBLICATIONS_CONTENT.inProgress.map((paper) => (
-      <PublicationItem entry={paper} />
-    ))
-  }
+  {PUBLICATIONS_CONTENT.inProgress.map((paper) => (
+    <PublicationItem entry={paper} />
+  ))}
 
   <p class="small muted">
     <TodoNote>Tip:</TodoNote> once you have a preprint on arXiv, add the link

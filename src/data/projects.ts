@@ -17,10 +17,10 @@ export const PROJECTS_CONTENT = {
       title: "CIFAR-10 confidence & abstention study",
       tags: ["Deep learning", "Robustness", "PyTorch"],
       summary:
-        "A two-month, four-person project examining model confidence under distribution shift with AugMix-trained Wide ResNets.",
-      linkLabel: "Report / code",
-      linkHref: "#",
-      linkTodo: true,
+        "A two-month project examining model confidence under distribution shift with AugMix-trained Wide ResNets.",
+      linkLabel: "GitHub / Code",
+      linkHref: "https://github.com/olmurphy/dl-neurips-bound",
+      linkTodo: false,
     },
     {
       title: "AdmissionMatch",
@@ -44,14 +44,13 @@ export const PROJECTS_CONTENT = {
   hackathons: [
     {
       title: "BetterMe",
-      statusTag: "24-hour hackathon",
+      statusTag: "La French Tech Shanghai Hackathon 2025",
       tags: ["Full-stack", "LLMs"],
-      metaTodo: "event name, date, result",
       summary:
         "A full-stack AI roleplay application designed and built end to end within a 24-hour hackathon.",
-      linkLabel: "Demo / code",
-      linkHref: "#",
-      linkTodo: true,
+      linkLabel: "GitHub / Code",
+      linkHref: "https://github.com/olmurphy/BetterMe",
+      linkTodo: false,
     },
   ] satisfies readonly ProjectEntry[],
   hackathonPromptTodo:

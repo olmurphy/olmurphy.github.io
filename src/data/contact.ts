@@ -7,9 +7,8 @@ export const CONTACT_CONTENT = {
   channels: [
     {
       label: "Email",
-      value: "you@example.com",
-      href: "mailto:you@example.com",
-      todo: true,
+      value: "owen261@icloud.com",
+      href: "mailto:owen261@icloud.com",
     },
     {
       label: "Location",
@@ -17,26 +16,23 @@ export const CONTACT_CONTENT = {
     },
     {
       label: "GitHub",
-      value: "github.com/username",
-      href: "#",
-      todo: true,
+      value: "github.com/olmurphy",
+      href: "https://github.com/olmurphy",
     },
     {
       label: "Google Scholar",
-      value: "link",
-      href: "#",
-      todo: true,
+      value: "Google Scholar Profile",
+      href: "https://scholar.google.com/citations?user=A667B6MAAAAJ&hl=zh-CN",
     },
     {
       label: "LinkedIn",
-      value: "link",
-      href: "#",
-      todo: true,
+      value: "linkedin.com/in/owenmurphy2022",
+      href: "https://www.linkedin.com/in/owenmurphy2022/",
     },
     {
       label: "CV",
       value: "Download PDF",
-      href: "#",
+      href: "/cv.pdf",
       todo: true,
     },
   ] satisfies readonly KeyValueRow[],

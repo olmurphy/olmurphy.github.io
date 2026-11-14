@@ -1,16 +1,31 @@
-import type { ProfileLink } from "./profile";
-
 export const MEDIA_CONTENT = {
   title: "Media",
-  subtitle: "Teaching and communication.",
+  subtitle: "Teaching, science communication, and viral technical talks.",
+  featuredTalks: [
+    {
+      title: "Blockchain Technical Breakdown & Architecture",
+      description:
+        "An in-depth technical explanation of blockchain consensus mechanisms, cryptography, and distributed architecture, reaching over 200k+ views combined across Chinese digital platforms.",
+      platform: "Douyin & Xiaohongshu",
+      stats: "200k+ views combined",
+    },
+  ],
   seriesTitle: "Journey to Become a Polymath",
   seriesDescription:
     "An educational video series about learning across disciplines, published in English and Chinese on YouTube, Instagram Reels, TikTok, Xiaohongshu, and Shipinhao.",
   links: [
-    { label: "YouTube", href: "#", todo: true },
-    { label: "Xiaohongshu", href: "#", todo: true },
-    { label: "Embed your best episode here", href: "#", todo: true },
-  ] satisfies readonly ProfileLink[],
+    {
+      label: "Douyin Featured Talk",
+      href: "https://www.douyin.com/user/self?from_tab_name=main&modal_id=7620062047056743731",
+      todo: false,
+    },
+    {
+      label: "Xiaohongshu Featured Talk",
+      href: "https://www.rednote.com/discovery/item/69bfe738000000002102d1bc?xsec_token=AB9Ejr8SjTOOD2pcwT1TlkptUKg7ctoh3UIVzn6vcEFAk=&xsec_source=pc_user",
+      todo: false,
+    },
+    { label: "YouTube Channel", href: "#", todo: true },
+  ],
   editorialNote:
-    "Communicating clearly is a real asset for a researcher. Keep this page if you plan to continue the series; otherwise it can be folded into About.",
+    "Communicating complex mathematical and technical concepts clearly is a core pillar of my academic and engineering philosophy.",
 } as const;

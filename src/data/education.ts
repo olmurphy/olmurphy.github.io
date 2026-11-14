@@ -7,8 +7,15 @@ export interface EducationEntry {
 export interface ExperienceEntry {
   role: string;
   company: string;
-  datesTodo?: string;
-  summaryTodo: string;
+  dates: string;
+  summary: string;
+}
+
+export interface AwardEntry {
+  title: string;
+  issuer: string;
+  date: string;
+  description?: string;
 }
 
 export interface SkillGroup {
@@ -32,38 +39,50 @@ export const EDUCATION_CONTENT = {
     },
     {
       degree: "B.S. in Mathematics and Computer Science",
-      meta: "Baylor University · 2018 – 2022 · GPA 3.9",
+      meta: "Baylor University · Aug 2018 – May 2022 · GPA 3.9",
     },
     {
-      degree: "Chinese language studies",
-      meta: "Shanghai Jiao Tong University · Aug 2025 – Jun 2026 | Beijing Language and Culture University · Aug 2024",
-      details: "HSK 6 certified.",
+      degree: "Chinese Language Studies",
+      meta: "Shanghai Jiao Tong University · Two semesters (高三 equivalent); Beijing Language and Culture University · August 2025",
+      details:
+        "Intensive language acquisition and cultural immersion programs.",
     },
   ] satisfies readonly EducationEntry[],
   experience: [
     {
-      role: "Software Engineer",
-      company: "IBM Consulting",
-      datesTodo: "dates",
-      summaryTodo: "Add 1–2 lines on what you built and the impact.",
+      role: "AI / Software Engineer",
+      company: "Global Business AI (GBizAI)",
+      dates: "Sept 2025 – Present",
+      summary:
+        "Architecting enterprise multi-tenant chatbot management platforms and LLM streaming data planes.",
     },
     {
       role: "Software Engineer",
-      company: "American Express",
-      datesTodo: "dates",
-      summaryTodo: "Add 1–2 lines on what you built and the impact.",
+      company: "IBM Consulting",
+      dates: "June 2022 – Sept 2025",
+      summary:
+        "Developed high-throughput enterprise backend systems, distributed services, and machine-learning algorithm integrations over three years.",
     },
   ] satisfies readonly ExperienceEntry[],
+  awards: [
+    {
+      title: "Dean's Academic Honor List",
+      issuer: "Baylor University",
+      date: "2018 – 2022",
+      description:
+        "Recognized consistently for maintaining a 3.9 GPA across rigorous dual-major coursework in Mathematics and Computer Science.",
+    },
+  ] satisfies readonly AwardEntry[],
   skills: [
     {
       category: "Machine learning",
       items:
-        "PyTorch · deep learning · NLP · reinforcement learning · multi-agent systems",
-      todo: "add: agent harnesses, libraries…",
+        "PyTorch · deep learning · NLP · reinforcement learning · multi-agent systems · agent harnesses",
     },
     {
       category: "Computational biology",
-      todo: "name the tools and biological datasets you've actually worked with",
+      items:
+        "Single-cell & spatial omics foundations · structural biology · molecular mechanics",
     },
     {
       category: "Compute & hardware",
@@ -72,11 +91,11 @@ export const EDUCATION_CONTENT = {
     {
       category: "Systems & engineering",
       items:
-        "Distributed systems · backend services · Docker · Git · Linux · Tailscale",
+        "Distributed systems · backend services · Docker · Git · Linux · Tailscale · PostgreSQL · Redis · Kafka",
     },
     {
       category: "Programming",
-      items: "Python · C++ · TypeScript",
+      items: "Python · C++ · TypeScript · JavaScript · Java",
     },
     {
       category: "Research practice",
@@ -85,7 +104,7 @@ export const EDUCATION_CONTENT = {
     },
     {
       category: "Languages",
-      items: "English (native) · Mandarin Chinese (fluent, HSK 6)",
+      items: "English (native) · Mandarin Chinese (fluent)",
     },
   ] satisfies readonly SkillGroup[],
 } as const;
