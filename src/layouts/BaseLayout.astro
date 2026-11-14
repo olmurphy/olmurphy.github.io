@@ -101,6 +101,14 @@ const schemaPayload = JSON.stringify({
       <slot />
     </main>
     <Footer />
+    {import.meta.env.PROD && (
+      <script
+        is:inline
+        type="module"
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "358a9ada313b4eb68a86347ea41e7b51"}'
+      />
+    )}
   </body>
 </html>
 
