@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline — Owen Li Murphy</title>
+<meta name="description" content="Personal academic website of Owen Li Murphy: deep learning, computational biology, and multi-agent systems.">
+<style>
+  /* ---------- Design tokens: edit these to re-theme the whole site ---------- */
+  :root {
+    --bg: #fcfcfa;
+    --text: #1f2328;
+    --muted: #5d6570;
+    --line: #e3e3de;
+    --accent: #1f4e79;      /* deep blue; swap for Georgia Tech gold (#b3a369) if you like */
+    --accent-soft: #eaf1f8;
+    --max: 760px;
+  }
+  /* Dark theme: used when the visitor clicks "Dark mode", or when they haven't chosen and their system is set to dark */
+  :root[data-theme="dark"] {
+    --bg: #15181c;
+    --text: #e6e8ea;
+    --muted: #9aa3ad;
+    --line: #2a2f35;
+    --accent: #7fb2e5;
+    --accent-soft: #1c2530;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c;
+      --text: #e6e8ea;
+      --muted: #9aa3ad;
+      --line: #2a2f35;
+      --accent: #7fb2e5;
+      --accent-soft: #1c2530;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", "Songti SC", serif;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Header / nav ---------- */
+  header { border-bottom: 1px solid var(--line); padding: 22px 0 0; }
+  .site-name {
+    font-size: 1.35rem; font-weight: 700; letter-spacing: .2px;
+    color: var(--text); border: none;
+  }
+  .tagline { color: var(--muted); font-size: .95rem; margin: 2px 0 14px; }
+  nav {
+    display: flex; flex-wrap: wrap; gap: 4px 20px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: .9rem;
+  }
+  nav a {
+    color: var(--muted); padding: 8px 0 10px; border-bottom: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); border-bottom-color: var(--line); }
+  nav a.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  /* Light / dark toggle button (sits at the right end of the nav) */
+  .theme-toggle {
+    margin-left: auto; align-self: center;
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ---------- Pages (one visible at a time) ---------- */
+  main { padding: 56px 0 60px; min-height: 60vh; }
+  .page { display: none; }
+  .page.active { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .page.active { animation: none; } html { scroll-behavior: auto; } }
+
+  h1 { font-size: 1.7rem; margin: 0 0 6px; line-height: 1.25; }
+  h2 {
+    font-size: 1.1rem; margin: 34px 0 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600;
+  }
+  h3 { font-size: 1.05rem; margin: 0 0 2px; }
+  p { margin: 0 0 14px; }
+  ul { padding-left: 20px; margin: 0 0 14px; }
+  li { margin-bottom: 4px; }
+  .muted { color: var(--muted); }
+  .small { font-size: .9rem; }
+
+  /* ---------- Cards / entries ---------- */
+  .entry { margin-bottom: 22px; }
+  .entry .meta { color: var(--muted); font-size: .9rem; margin-bottom: 4px; }
+  .tag {
+    display: inline-block; font-size: .72rem; padding: 1px 8px; margin-right: 4px;
+    border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .tags { margin: 6px 0 6px; }
+  .tag.status { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
+  /* Placeholders you should replace — highlighted so none slip through */
+  .todo { background: #fff3bf; color: #5c4400; padding: 0 4px; border-radius: 3px; }
+  :root[data-theme="dark"] .todo { background: #4a3d0a; color: #ffe58a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .todo { background: #4a3d0a; color: #ffe58a; } }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 20px 0 40px; color: var(--muted); font-size: .85rem;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  /* ---------- Timeline ---------- */
+  [hidden] { display: none !important; }
+
+  /* Filter chips (All / Academic / Career / Personal); they double as the legend for the dots */
+  .filters {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 4px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .chip {
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .chip:hover { color: var(--text); border-color: var(--muted); }
+  .chip.on { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 600; }
+  .chip .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; border: 1.5px solid transparent; }
+  .chip[data-filter="all"] .dot { display: none; }
+  .chip[data-filter="academic"] .dot { background: var(--accent); border-color: var(--accent); }
+  .chip[data-filter="career"] .dot { background: var(--muted); border-color: var(--muted); }
+  .chip[data-filter="personal"] .dot { background: var(--accent-soft); border-color: var(--accent); }
+  .legend-note { font-size: .8rem; color: var(--muted); margin: 6px 0 0; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+
+  /* The vertical rail: one line down the left, one dot per event */
+  .timeline { position: relative; padding-left: 28px; margin-top: 8px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: var(--line);
+  }
+  .t-year {
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
+    color: var(--muted); margin: 34px 0 14px;
+  }
+  .t-group:first-child .t-year { margin-top: 18px; }
+  .t-item { position: relative; margin-bottom: 24px; }
+  .t-item::before {
+    content: ""; position: absolute; left: -28px; top: 6px; width: 14px; height: 14px;
+    border-radius: 50%; border: 2px solid var(--accent); background: var(--bg);
+  }
+  .t-item[data-cat="academic"]::before { background: var(--accent); }
+  .t-item[data-cat="career"]::before { background: var(--muted); border-color: var(--muted); }
+  .t-item[data-cat="personal"]::before { background: var(--accent-soft); }
+  /* Planned / undated events get a dashed, empty dot */
+  .t-item.future::before { background: var(--bg); border-style: dashed; }
+  .t-date {
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: .82rem; color: var(--muted); margin-bottom: 1px;
+  }
+  .t-item h3 { margin: 0 0 4px; }
+  .t-item p { margin-bottom: 0; }
+</style>
+<script>
+  // Apply a saved theme choice before the page paints, to avoid a flash of the wrong theme
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="site-name" href="portfolio.html#home">Owen Li Murphy</a>
+    <div class="tagline">Deep learning · Computational biology · Multi-agent systems</div>
+    <nav id="nav">
+      <a href="portfolio.html#home">Home</a>
+      <a href="portfolio.html#about">About</a>
+      <a href="timeline.html" class="active">Timeline</a>
+      <a href="portfolio.html#research">Research</a>
+      <a href="portfolio.html#publications">Publications</a>
+      <a href="portfolio.html#projects">Projects</a>
+      <a href="portfolio.html#education">Education & Experience</a>
+      <a href="teaching.html">Teaching</a>
+      <a href="portfolio.html#learning">Learning</a>
+      <a href="portfolio.html#media">Media</a>
+      <a href="portfolio.html#contact">Contact</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode">Dark mode</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===================== TIMELINE ===================== -->
+  <section class="page active" id="timeline">
+    <h1>Timeline</h1>
+    <p class="muted">The big moments so far, academic, career, and personal, newest first.</p>
+
+    <!-- To add an event: copy one .t-item block into the right year group. data-cat is academic, career, or personal.
+         Add class="future" for something planned. To add a new year, copy a whole .t-group block. -->
+
+    <div class="filters" id="filters">
+      <button type="button" class="chip on" data-filter="all">All</button>
+      <button type="button" class="chip" data-filter="academic"><span class="dot"></span>Academic</button>
+      <button type="button" class="chip" data-filter="career"><span class="dot"></span>Career</button>
+      <button type="button" class="chip" data-filter="personal"><span class="dot"></span>Personal</button>
+    </div>
+    <p class="legend-note">A dashed dot means planned or not yet dated.</p>
+
+    <div class="timeline">
+
+      <div class="t-group">
+        <div class="t-year">Ahead</div>
+
+        <div class="t-item future" data-cat="academic">
+          <div class="t-date">After the M.S. <span class="tag status">Planned</span></div>
+          <h3>Ph.D. in computer science or computational biology</h3>
+          <p class="small">The next step: research on reliable deep learning and deep learning for biology.</p>
+        </div>
+
+        <div class="t-item future" data-cat="academic">
+          <div class="t-date">Aug 2027 <span class="tag status">Planned</span></div>
+          <h3>Begin the in-person M.S. at Georgia Tech</h3>
+          <p class="small">On-campus M.S. in Computer Science under the Research Thesis Option.</p>
+        </div>
+
+        <div class="t-item future" data-cat="career">
+          <div class="t-date">Jan 2027 <span class="tag status">Planned</span></div>
+          <h3>CES in Las Vegas</h3>
+          <p class="small">Attending with Global Business AI to showcase the company's AI platform.</p>
+        </div>
+      </div>
+
+      <div class="t-group">
+        <div class="t-year">2026</div>
+
+        <div class="t-item" data-cat="academic">
+          <div class="t-date">Nov 2026</div>
+          <h3>Preparing Ph.D. applications</h3>
+          <p class="small">Applying in computer science and computational biology.</p>
+        </div>
+
+        <div class="t-item" data-cat="career">
+          <div class="t-date">Aug 2026</div>
+          <h3>Joined Global Business AI in Shanghai</h3>
+          <p class="small">AI and software engineer, architecting enterprise multi-tenant chatbot management platforms and LLM streaming data planes.</p>
+        </div>
+
+        <div class="t-item" data-cat="academic">
+          <div class="t-date">2026</div>
+          <h3>Submitted a paper to NeurIPS 2026</h3>
+          <p class="small">Multi-agent swarm governance via multi-task peer prediction.</p>
+        </div>
+      </div>
+
+      <div class="t-group">
+        <div class="t-year">2025</div>
+
+        <div class="t-item" data-cat="academic">
+          <div class="t-date">Fall 2025</div>
+          <h3>Began the M.S. in Computer Science at Georgia Tech</h3>
+          <p class="small">Online OMSCS program with a Machine Learning specialization. Coursework so far: Operating Systems, Machine Learning for Trading, Machine Learning, and Deep Learning (in progress).</p>
+        </div>
+
+        <div class="t-item" data-cat="academic">
+          <div class="t-date">2025 – 2026</div>
+          <h3>Studied Chinese at Shanghai Jiao Tong University</h3>
+          <p class="small">Two semesters of intensive Chinese language study.</p>
+        </div>
+
+        <div class="t-item" data-cat="career">
+          <div class="t-date">Sep 2025</div>
+          <h3>Concluded three years at IBM Consulting</h3>
+          <p class="small">Closing out a software engineering role that began in 2022.</p>
+        </div>
+
+        <div class="t-item" data-cat="academic">
+          <div class="t-date">Aug 2025</div>
+          <h3>Intensive Chinese program at Beijing Language and Culture University</h3>
+          <p class="small">One month of full-time language immersion in Beijing.</p>
+        </div>
+
+        <div class="t-item" data-cat="career">
+          <div class="t-date">2025</div>
+          <h3>Built BetterMe at the La French Tech Shanghai Hackathon</h3>
+          <p class="small">A full-stack AI roleplay application, designed and built end to end in 24 hours.</p>
+        </div>
+
+        <div class="t-item" data-cat="personal">
+          <div class="t-date"><span class="todo">confirm date</span></div>
+          <h3>Moved to Shanghai</h3>
+          <p class="small"><span class="todo">One or two lines: why you moved and what the first months were like.</span></p>
+        </div>
+      </div>
+
+      <div class="t-group">
+        <div class="t-year">2022</div>
+
+        <div class="t-item" data-cat="career">
+          <div class="t-date">Jun 2022</div>
+          <h3>Joined IBM Consulting as a software engineer</h3>
+          <p class="small">Built high-throughput enterprise backend systems, distributed services, and machine-learning integrations.</p>
+        </div>
+
+        <div class="t-item" data-cat="academic">
+          <div class="t-date">May 2022</div>
+          <h3>Graduated from Baylor University</h3>
+          <p class="small">B.S. in Mathematics and Computer Science, 3.9 GPA.</p>
+        </div>
+      </div>
+
+      <div class="t-group">
+        <div class="t-year">2018 – 2022</div>
+
+        <div class="t-item" data-cat="academic">
+          <div class="t-date">Junior year</div>
+          <h3>David and Nancy Hidy Wilson Scholarship Fund</h3>
+          <p class="small">Awarded to the top 1% of Computer Science students in the program.</p>
+        </div>
+
+        <div class="t-item" data-cat="academic">
+          <div class="t-date">Aug 2018</div>
+          <h3>Started at Baylor University</h3>
+          <p class="small">Dual major in Mathematics and Computer Science, with a place on the Dean's Academic Honor List from 2018 to 2022.</p>
+        </div>
+      </div>
+
+      <div class="t-group">
+        <div class="t-year">Add a date, then move into place</div>
+
+        <div class="t-item future" data-cat="personal">
+          <div class="t-date"><span class="todo">year</span></div>
+          <h3>Earned HSK 6 certification</h3>
+          <p class="small">The highest level of the Chinese proficiency exam.</p>
+        </div>
+
+        <div class="t-item future" data-cat="personal">
+          <div class="t-date"><span class="todo">year</span></div>
+          <h3>Started the "Journey to Become a Polymath" video series</h3>
+          <p class="small">Educational videos published in English and Chinese across YouTube, Instagram Reels, TikTok, Xiaohongshu, and Shipinhao.</p>
+        </div>
+
+        <div class="t-item future" data-cat="personal">
+          <div class="t-date"><span class="todo">year</span></div>
+          <h3>Blockchain explainer passes 200k views</h3>
+          <p class="small">A technical breakdown of blockchain architecture, reaching over 200k views combined on Douyin and Xiaohongshu.</p>
+        </div>
+
+        <div class="t-item future" data-cat="personal">
+          <div class="t-date"><span class="todo">year</span></div>
+          <h3><span class="todo">Early life: where you grew up, and the moment math or computers clicked</span></h3>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Owen Li Murphy</div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Light / dark toggle. The choice is saved when the browser allows it; otherwise the site follows the system setting.
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    function systemDark() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+    function current() { return root.getAttribute('data-theme') || (systemDark() ? 'dark' : 'light'); }
+    function label() { btn.textContent = current() === 'dark' ? 'Light mode' : 'Dark mode'; }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+
+  // Filter chips: show only one category, and hide any year with nothing left to show.
+  (function () {
+    var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+    var items = Array.prototype.slice.call(document.querySelectorAll('.t-item'));
+    var groups = Array.prototype.slice.call(document.querySelectorAll('.t-group'));
+    function apply(filter) {
+      chips.forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-filter') === filter); });
+      items.forEach(function (i) { i.hidden = !(filter === 'all' || i.getAttribute('data-cat') === filter); });
+      groups.forEach(function (g) { g.hidden = !g.querySelector('.t-item:not([hidden])'); });
+    }
+    chips.forEach(function (c) {
+      c.addEventListener('click', function () { apply(c.getAttribute('data-filter')); });
+    });
+  })();
+</script>
+</body>
+</html>

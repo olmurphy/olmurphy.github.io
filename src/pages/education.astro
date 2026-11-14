@@ -14,7 +14,18 @@ import SkillRow from "@components/sections/education/SkillRow.astro";
 
   <h2>Education</h2>
   {EDUCATION_CONTENT.education.map((edu) => (
-    <EntryItem title={edu.degree} meta={edu.meta}>
+    <EntryItem
+      title={edu.degree}
+      logoSrc={edu.logoSrc}
+      logoAlt={edu.institution}
+      logoHref={edu.institutionHref}
+    >
+      <Fragment slot="meta">
+        <a href={edu.institutionHref} target="_blank" rel="noopener noreferrer">
+          {edu.institution}
+        </a>
+        {edu.institutionSuffix} · {edu.period}
+      </Fragment>
       {edu.details && <p class="small">{edu.details}</p>}
     </EntryItem>
   ))}

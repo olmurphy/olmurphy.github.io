@@ -1,6 +1,10 @@
 export interface EducationEntry {
   degree: string;
-  meta: string;
+  institution: string;
+  institutionSuffix?: string;
+  institutionHref: string;
+  logoSrc: string;
+  period: string;
   details?: string;
 }
 
@@ -28,26 +32,43 @@ export const EDUCATION_CONTENT = {
   title: "Education & Experience",
   education: [
     {
+      degree: "M.S. in Computer Science, Research Thesis Option (planned)",
+      institution: "Georgia Institute of Technology",
+      institutionSuffix: ", on campus",
+      institutionHref: "https://www.gatech.edu/",
+      logoSrc: "/logos/gatech.svg",
+      period: "beginning August 2027",
+    },
+    {
       degree: "M.S. in Computer Science, Machine Learning specialization",
-      meta: "Georgia Institute of Technology (OMSCS) · Fall 2025 – present",
+      institution: "Georgia Institute of Technology",
+      institutionSuffix: " (OMSCS)",
+      institutionHref: "https://www.gatech.edu/",
+      logoSrc: "/logos/gatech.svg",
+      period: "Fall 2025 – present",
       details:
         "Completed: Operating Systems, Machine Learning for Trading, Machine Learning. In progress: Deep Learning (CS 7643).",
     },
     {
-      degree: "M.S. in Computer Science, Research Thesis Option (planned)",
-      meta: "Georgia Institute of Technology, on campus · beginning August 2027",
-    },
-    {
-      degree: "B.S. in Mathematics and Computer Science",
-      meta: "Baylor University · Aug 2018 – May 2022 · GPA 3.9",
-    },
-    {
       degree: "Chinese Language Studies",
-      meta: "Shanghai Jiao Tong University · Two semesters (高三 equivalent)",
+      institution: "Shanghai Jiao Tong University",
+      institutionHref: "https://en.sjtu.edu.cn/",
+      logoSrc: "/logos/sjtu.svg",
+      period: "Two semesters (高三 equivalent)",
     },
     {
       degree: "Intensive Chinese Language Program",
-      meta: "Beijing Language and Culture University · August 2025",
+      institution: "Beijing Language and Culture University",
+      institutionHref: "https://www.blcu.edu.cn/",
+      logoSrc: "/logos/blcu.svg",
+      period: "August 2025",
+    },
+    {
+      degree: "B.S. in Mathematics and Computer Science",
+      institution: "Baylor University",
+      institutionHref: "https://www.baylor.edu/",
+      logoSrc: "/logos/baylor.svg",
+      period: "Aug 2018 – May 2022 · GPA 3.9",
     },
   ] satisfies readonly EducationEntry[],
   experience: [
