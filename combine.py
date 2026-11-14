@@ -16,6 +16,7 @@ IGNORED_DIRS = {
     "venv",
     ".idea",
     ".vscode",
+    ".husky",
     "_",  # Skips Husky's auto-generated .husky/_/ internal shims
 }
 
@@ -65,6 +66,7 @@ IGNORED_FILENAMES = {
     ".env",
     ".env.production",
     ".env.local",
+    ".gitignore"
 }
 
 # Skip unexpectedly large files
