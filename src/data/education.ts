@@ -151,7 +151,7 @@ export const EDUCATION_CONTENT = {
     },
     {
       category: "Languages",
-      items: "English (native) · Mandarin Chinese (fluent)",
+      items: "English (native) · Mandarin Chinese (working proficiency)",
     },
   ] satisfies readonly SkillGroup[],
   visiting: [
