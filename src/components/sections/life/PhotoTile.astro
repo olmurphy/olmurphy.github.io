@@ -27,7 +27,21 @@ const { photo } = Astro.props;
   </div>
   <figcaption>
     <span class="cap">
-      {photo.todo ? <TodoNote>{photo.caption}</TodoNote> : photo.caption}
+      {photo.captionParts ? (
+        photo.captionParts.map((part) =>
+          part.href ? (
+            <a href={part.href} target="_blank" rel="noopener noreferrer">
+              {part.text}
+            </a>
+          ) : (
+            part.text
+          ),
+        )
+      ) : photo.todo ? (
+        <TodoNote>{photo.caption}</TodoNote>
+      ) : (
+        photo.caption
+      )}
     </span>
     <span class="cap-meta">
       {photo.todo ? <TodoNote>{photo.meta}</TodoNote> : photo.meta}

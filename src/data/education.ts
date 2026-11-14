@@ -163,7 +163,7 @@ export const EDUCATION_CONTENT = {
       institutionHref: "https://www.simis.cn/",
       logoSrc: "/logos/fudan.webp",
       hosts: [{ name: "Dr. Leon Witt" }, { name: "Dr. Lucy Klinger" }],
-      period: "2026",
+      period: "May 2026",
       summary:
         "Collaborating on game-theoretic multi-agent alignment, peer prediction mechanisms, and Knowledge-Free Correlated Agreement.",
       todo: false,
