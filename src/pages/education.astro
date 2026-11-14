@@ -3,12 +3,13 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
 import { EDUCATION_CONTENT } from "@data/education";
 import EntryItem from "@components/ui/EntryItem.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
 import SkillRow from "@components/sections/education/SkillRow.astro";
 ---
 
 <BaseLayout
   title={`Education & Experience — ${SITE.name}`}
-  description="Academic degrees, software engineering experience, honors, and technical skills of Owen Li Murphy."
+  description="Academic degrees, software engineering experience, honors, grants, and technical skills of Owen Li Murphy."
 >
   <h1>{EDUCATION_CONTENT.title}</h1>
 
@@ -32,6 +33,27 @@ import SkillRow from "@components/sections/education/SkillRow.astro";
       {award.description && <p class="small">{award.description}</p>}
     </EntryItem>
   ))}
+
+  <h2>Grants &amp; Fellowships</h2>
+  <p class="muted">
+    <TodoNote>{EDUCATION_CONTENT.grantsEmptyTodo}</TodoNote>
+  </p>
+  <!-- {EDUCATION_CONTENT.grants.length > 0 && (
+    EDUCATION_CONTENT.grants.map((grant) => (
+      <EntryItem
+        title={grant.title}
+        meta={[grant.funder, grant.date, grant.amountOrRole]
+          .filter(Boolean)
+          .join(" · ")}
+      >
+        {grant.description && <p class="small">{grant.description}</p>}
+      </EntryItem>
+    ))
+  ) : (
+    <p class="muted">
+      <TodoNote>{EDUCATION_CONTENT.grantsEmptyTodo}</TodoNote>
+    </p>
+  )} -->
 
   <h2>Skills</h2>
   {EDUCATION_CONTENT.skills.map((skill) => (

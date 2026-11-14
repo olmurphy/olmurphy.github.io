@@ -1,9 +1,16 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
-import { PROJECTS_CONTENT } from "@data/projects";
+import { FEATURES } from "@config/features";
+import { PROJECTS_CONTENT, type ProjectEntry } from "@data/projects";
 import ProjectCard from "@components/sections/projects/ProjectCard.astro";
 import TodoNote from "@components/ui/TodoNote.astro";
+
+const isVisible = (entry: ProjectEntry) =>
+  !entry.featureFlag || FEATURES[entry.featureFlag];
+
+const visibleProjects = PROJECTS_CONTENT.projects.filter(isVisible);
+const visibleHackathons = PROJECTS_CONTENT.hackathons.filter(isVisible);
 ---
 
 <BaseLayout
@@ -14,12 +21,12 @@ import TodoNote from "@components/ui/TodoNote.astro";
   <p class="muted">{PROJECTS_CONTENT.subtitle}</p>
 
   <h2 class="first-heading">Projects</h2>
-  {PROJECTS_CONTENT.projects.map((project) => (
+  {visibleProjects.map((project) => (
     <ProjectCard project={project} />
   ))}
 
   <h2>Hackathons</h2>
-  {PROJECTS_CONTENT.hackathons.map((hackathon) => (
+  {visibleHackathons.map((hackathon) => (
     <ProjectCard project={hackathon} />
   ))}
   <p class="small muted">

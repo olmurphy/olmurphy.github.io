@@ -18,6 +18,14 @@ export interface AwardEntry {
   description?: string;
 }
 
+export interface GrantEntry {
+  title: string;
+  funder: string;
+  date: string;
+  amountOrRole?: string;
+  description?: string;
+}
+
 export interface SkillGroup {
   category: string;
   items?: string;
@@ -43,9 +51,11 @@ export const EDUCATION_CONTENT = {
     },
     {
       degree: "Chinese Language Studies",
-      meta: "Shanghai Jiao Tong University · Two semesters (高三 equivalent); Beijing Language and Culture University · August 2025",
-      details:
-        "Intensive language acquisition and cultural immersion programs.",
+      meta: "Shanghai Jiao Tong University · Two semesters (高三 equivalent)",
+    },
+    {
+      degree: "Intensive Chinese Language Program",
+      meta: "Beijing Language and Culture University · August 2025",
     },
   ] satisfies readonly EducationEntry[],
   experience: [
@@ -66,6 +76,13 @@ export const EDUCATION_CONTENT = {
   ] satisfies readonly ExperienceEntry[],
   awards: [
     {
+      title: "David and Nancy Hidy Wilson Scholarship Fund",
+      issuer: "Baylor University",
+      date: "Junior Year",
+      description:
+        "Awarded to the top 1% of Computer Science students in the program.",
+    },
+    {
       title: "Dean's Academic Honor List",
       issuer: "Baylor University",
       date: "2018 – 2022",
@@ -73,6 +90,9 @@ export const EDUCATION_CONTENT = {
         "Recognized consistently for maintaining a 3.9 GPA across rigorous dual-major coursework in Mathematics and Computer Science.",
     },
   ] satisfies readonly AwardEntry[],
+  grants: [] satisfies readonly GrantEntry[],
+  grantsEmptyTodo:
+    "None listed yet — add research fellowships, travel grants, or compute credits here.",
   skills: [
     {
       category: "Machine learning",

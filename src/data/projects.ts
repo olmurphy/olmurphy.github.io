@@ -1,3 +1,5 @@
+import type { FeatureFlag } from "@config/features";
+
 export interface ProjectEntry {
   title: string;
   statusTag?: string;
@@ -7,6 +9,7 @@ export interface ProjectEntry {
   linkLabel?: string;
   linkHref?: string;
   linkTodo?: boolean;
+  featureFlag?: FeatureFlag;
 }
 
 export const PROJECTS_CONTENT = {
@@ -42,6 +45,14 @@ export const PROJECTS_CONTENT = {
     },
   ] satisfies readonly ProjectEntry[],
   hackathons: [
+    {
+      title: "MIT Reality Hack",
+      statusTag: "Upcoming · Jan 2027",
+      tags: ["XR / Spatial Computing", "AI"],
+      summary:
+        "Participating in MIT's annual XR and spatial computing hackathon in Cambridge, MA.",
+      featureFlag: "showUpcomingMitRealityHack",
+    },
     {
       title: "BetterMe",
       statusTag: "La French Tech Shanghai Hackathon 2025",
