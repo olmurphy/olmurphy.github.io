@@ -1,30 +1,22 @@
 #!/usr/bin/env python3
-"""Bundle project source files, configuration, and sensitive environment files
-
-into a single structured text file.
-"""
+"""Bundle relevant Astro project source and configuration files into a single text file."""
 
 from pathlib import Path
 
 # Directories to skip entirely
 IGNORED_DIRS = {
     ".git",
-    ".github",
-    ".terraform",
+    ".astro",
     "node_modules",
-    ".next",
+    "dist",
+    "build",
     "__pycache__",
     ".pytest_cache",
     ".venv",
     "venv",
-    "dist",
-    "build",
     ".idea",
     ".vscode",
-    "scripts",
-    "frontend",
-    "backend",
-
+    "_",  # Skips Husky's auto-generated .husky/_/ internal shims
 }
 
 # Explicitly ignore non-text, media, state, backup, and lockfiles
@@ -62,16 +54,20 @@ IGNORED_FILENAMES = {
     "package-lock.json",
     "yarn.lock",
     "pnpm-lock.yaml",
-    ".terraform.lock.hcl",
     ".DS_Store",
     "combine.py",
     "list_files.py",
     "directory_files.txt",
     "repo_dump_all.txt",
     "project_dump.txt",
+    "AGENTS.md",
+    "README.md",
+    ".env",
+    ".env.production",
+    ".env.local",
 }
 
-# Skip unexpectedly large files (e.g., bundled HTML exports or unignored artifacts)
+# Skip unexpectedly large files
 MAX_FILE_SIZE_BYTES = 512 * 1024  # 512 KB
 
 
@@ -87,7 +83,7 @@ def is_binary_file(path: Path) -> bool:
 
 def is_candidate_file(path: Path) -> bool:
     """Check whether a file should be included based on name, extension, and size."""
-    if path.name in IGNORED_FILENAMES:
+    if path.name in IGNORED_FILENAMES or path.name.startswith(".env."):
         return False
     if path.suffix.lower() in IGNORED_EXTENSIONS:
         return False
