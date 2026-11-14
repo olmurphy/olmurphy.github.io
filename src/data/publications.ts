@@ -9,6 +9,7 @@ export interface PublicationEntry {
   linkLabel?: string;
   linkHref?: string;
   linkTodo?: boolean;
+  bibtex?: string;
 }
 
 export const PUBLICATIONS_CONTENT = {

@@ -36,19 +36,81 @@ const { entry } = Astro.props;
     ))}
   </div>
 
-  {entry.linkHref && entry.linkLabel && (
-    <a class="small" href={entry.linkHref}>
-      {entry.linkTodo ? (
-        <TodoNote>{entry.linkLabel}</TodoNote>
-      ) : (
-        entry.linkLabel
-      )}
-    </a>
-  )}
+  <div class="pub-actions">
+    {entry.linkHref && entry.linkLabel && (
+      <a class="small" href={entry.linkHref}>
+        {entry.linkTodo ? (
+          <TodoNote>{entry.linkLabel}</TodoNote>
+        ) : (
+          entry.linkLabel
+        )}
+      </a>
+    )}
+
+    {entry.bibtex && (
+      <button type="button" class="bibtex-btn small" data-bibtex={entry.bibtex}>
+        Copy BibTeX
+      </button>
+    )}
+  </div>
 </EntryItem>
 
 <style>
   .tags {
     margin: 6px 0 6px;
   }
+
+  .pub-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+    font-family: var(--font-sans);
+  }
+
+  .bibtex-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 2px 10px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .bibtex-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+    background: var(--color-surface-subtle);
+  }
 </style>
+
+<script>
+  document.addEventListener("click", async (e) => {
+    const target = e.target as HTMLElement | null;
+    const btn = target?.closest<HTMLButtonElement>(".bibtex-btn");
+    if (!btn) return;
+
+    const bibtex = btn.dataset.bibtex;
+    if (!bibtex) return;
+
+    try {
+      await navigator.clipboard.writeText(bibtex);
+      const originalText = btn.textContent;
+      btn.textContent = "Copied!";
+      btn.style.color = "var(--color-accent)";
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.color = "";
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy BibTeX:", err);
+    }
+  });
+</script>
