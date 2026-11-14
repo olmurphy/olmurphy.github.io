@@ -1,0 +1,119 @@
+---
+import type { LifePhoto } from "@data/life";
+import TodoNote from "@components/ui/TodoNote.astro";
+
+interface Props {
+  photo: LifePhoto;
+}
+
+const { photo } = Astro.props;
+---
+
+<figure class="photo" data-cat={photo.category}>
+  <div
+    class="thumb"
+    tabindex="0"
+    role="button"
+    aria-label={`Open photo: ${photo.alt}`}
+  >
+    <img
+      src={photo.src}
+      alt={photo.alt}
+      loading="lazy"
+      decoding="async"
+      onerror="this.style.display='none'; this.parentElement?.classList.add('empty');"
+    />
+    <span class="ph">{photo.alt}</span>
+  </div>
+  <figcaption>
+    <span class="cap">
+      {photo.todo ? <TodoNote>{photo.caption}</TodoNote> : photo.caption}
+    </span>
+    <span class="cap-meta">
+      {photo.todo ? <TodoNote>{photo.meta}</TodoNote> : photo.meta}
+    </span>
+  </figcaption>
+</figure>
+
+<style>
+  .photo {
+    margin: 0;
+  }
+
+  .thumb {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-border);
+    cursor: zoom-in;
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+
+  .thumb:hover img {
+    transform: scale(1.03);
+  }
+
+  .thumb:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .thumb .ph {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    cursor: default;
+    font-family: var(--font-sans);
+  }
+
+  .thumb.empty {
+    cursor: default;
+  }
+
+  .thumb.empty .ph {
+    display: flex;
+  }
+
+  figcaption {
+    margin-top: 8px;
+    line-height: 1.35;
+  }
+
+  .cap {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .cap-meta {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .thumb img {
+      transition: none;
+    }
+
+    .thumb:hover img {
+      transform: none;
+    }
+  }
+</style>

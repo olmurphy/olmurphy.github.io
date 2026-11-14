@@ -41,3 +41,8 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+gcloud storage cp friends.png gs://owenmurphy2022-portfolio-media/life/everyday/friends-nyc-hendry-2024.png \
+--cache-control="public, max-age=31536000, immutable"
+
+gcloud storage cp temple-of-heaven.png gs://owenmurphy2022-portfolio-media/life/places/temple-of-heaven-2025.png --cache-control="public, max-age=31536000, immutable"

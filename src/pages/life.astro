@@ -1,0 +1,134 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { LIFE_CATEGORIES, LIFE_CONTENT } from "@data/life";
+import TodoNote from "@components/ui/TodoNote.astro";
+import LifeFilter from "@components/sections/life/LifeFilter.astro";
+import PhotoTile from "@components/sections/life/PhotoTile.astro";
+import Lightbox from "@components/sections/life/Lightbox.astro";
+
+const activeCategoryIds = new Set(LIFE_CONTENT.photos.map((p) => p.category));
+const visibleCategories = LIFE_CATEGORIES.filter((cat) =>
+  activeCategoryIds.has(cat.id),
+);
+---
+
+<BaseLayout
+  title={`Life — ${SITE.name}`}
+  description="Photos from outside the lab: places, athletics, projects, and everyday life."
+>
+  <h1>{LIFE_CONTENT.title}</h1>
+  <p class="muted">{LIFE_CONTENT.subtitle}</p>
+
+  <TodoNote as="p">{LIFE_CONTENT.introTodo}</TodoNote>
+
+  <LifeFilter categories={visibleCategories} />
+
+  <div class="gallery" id="gallery-grid">
+    {LIFE_CONTENT.photos.map((photo) => (
+      <PhotoTile photo={photo} />
+    ))}
+  </div>
+
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  [hidden] {
+    display: none !important;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px 14px;
+    margin-top: 20px;
+  }
+</style>
+
+<script>
+  const chips = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("#life-filters .chip"),
+  );
+  const photos = Array.from(
+    document.querySelectorAll<HTMLElement>("#gallery-grid .photo"),
+  );
+
+  function applyFilter(filter: string): void {
+    chips.forEach((chip) => {
+      const isSelected = chip.dataset.filter === filter;
+      chip.classList.toggle("on", isSelected);
+      chip.setAttribute("aria-pressed", String(isSelected));
+    });
+
+    photos.forEach((photo) => {
+      photo.hidden = !(filter === "all" || photo.dataset.cat === filter);
+    });
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      applyFilter(chip.dataset.filter ?? "all");
+    });
+  });
+
+  const grid = document.getElementById("gallery-grid");
+  const lightbox = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lb-img") as HTMLImageElement | null;
+  const lbCap = document.getElementById("lb-cap");
+
+  function openLightbox(thumb: HTMLElement | null): void {
+    if (
+      !thumb ||
+      thumb.classList.contains("empty") ||
+      !lightbox ||
+      !lbImg ||
+      !lbCap
+    ) {
+      return;
+    }
+    const img = thumb.querySelector("img");
+    const figure = thumb.closest("figure");
+    if (!img || !figure) return;
+
+    const cap = figure.querySelector(".cap")?.textContent?.trim() ?? "";
+    const meta = figure.querySelector(".cap-meta")?.textContent?.trim() ?? "";
+
+    lbImg.src = img.currentSrc || img.src;
+    lbImg.alt = img.alt;
+    lbCap.textContent = cap + (meta ? ` — ${meta}` : "");
+    lightbox.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox(): void {
+    if (!lightbox || !lbImg) return;
+    lightbox.hidden = true;
+    lbImg.src = "";
+    document.body.style.overflow = "";
+  }
+
+  grid?.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement | null;
+    const thumb = target?.closest<HTMLElement>(".thumb") ?? null;
+    openLightbox(thumb);
+  });
+
+  grid?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      const target = e.target as HTMLElement | null;
+      if (target?.classList.contains("thumb")) {
+        e.preventDefault();
+        openLightbox(target);
+      }
+    }
+  });
+
+  lightbox?.addEventListener("click", closeLightbox);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox && !lightbox.hidden) {
+      closeLightbox();
+    }
+  });
+</script>

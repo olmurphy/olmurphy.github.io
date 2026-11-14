@@ -1,0 +1,55 @@
+---
+---
+
+<div class="lightbox" id="lightbox" hidden>
+  <button type="button" class="lb-close" id="lb-close" aria-label="Close photo">
+    ×
+  </button>
+  <img id="lb-img" src="" alt="" />
+  <div class="lb-cap" id="lb-cap"></div>
+</div>
+
+<style>
+  [hidden] {
+    display: none !important;
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    padding: 24px;
+    cursor: zoom-out;
+    background: rgba(10, 12, 14, 0.88);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox img {
+    max-width: min(96vw, 1100px);
+    max-height: 78vh;
+    border-radius: 6px;
+  }
+
+  .lb-cap {
+    color: #e6e8ea;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 0.95rem;
+    max-width: 640px;
+  }
+
+  .lb-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    color: #e6e8ea;
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+</style>

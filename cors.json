@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://olmurphy.github.io", "http://localhost:4321"],
+    "method": ["GET", "HEAD"],
+    "responseHeader": ["Content-Type", "Cache-Control"],
+    "maxAgeSeconds": 3600
+  }
+]
