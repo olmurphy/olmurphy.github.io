@@ -1,12 +1,38 @@
 ---
 ---
 
-<div class="lightbox" id="lightbox" hidden>
+<div
+  class="lightbox"
+  id="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Photo viewer"
+  hidden
+>
   <button type="button" class="lb-close" id="lb-close" aria-label="Close photo">
     ×
   </button>
+
+  <button
+    type="button"
+    class="lb-nav lb-prev"
+    id="lb-prev"
+    aria-label="Previous photo"
+  >
+    ‹
+  </button>
+
   <img id="lb-img" src="" alt="" />
   <div class="lb-cap" id="lb-cap"></div>
+
+  <button
+    type="button"
+    class="lb-nav lb-next"
+    id="lb-next"
+    aria-label="Next photo"
+  >
+    ›
+  </button>
 </div>
 
 <style>
@@ -18,7 +44,7 @@
     position: fixed;
     inset: 0;
     z-index: 50;
-    padding: 24px;
+    padding: 24px 56px;
     cursor: zoom-out;
     background: rgba(10, 12, 14, 0.88);
     display: flex;
@@ -28,9 +54,10 @@
   }
 
   .lightbox img {
-    max-width: min(96vw, 1100px);
+    max-width: min(92vw, 1100px);
     max-height: 78vh;
     border-radius: 6px;
+    cursor: default;
   }
 
   .lb-cap {
@@ -39,17 +66,68 @@
     text-align: center;
     font-size: 0.95rem;
     max-width: 640px;
+    cursor: default;
   }
 
-  .lb-close {
+  .lb-close,
+  .lb-nav {
     position: absolute;
-    top: 14px;
-    right: 18px;
     background: none;
     border: none;
     color: #e6e8ea;
+    cursor: pointer;
+    opacity: 0.78;
+    transition: opacity var(--transition-fast);
+  }
+
+  .lb-close:hover,
+  .lb-nav:hover,
+  .lb-close:focus-visible,
+  .lb-nav:focus-visible {
+    opacity: 1;
+  }
+
+  .lb-close {
+    top: 14px;
+    right: 18px;
     font-size: 1.8rem;
     line-height: 1;
-    cursor: pointer;
+    padding: 4px 8px;
+  }
+
+  .lb-nav {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.4rem;
+    line-height: 1;
+    padding: 12px 14px;
+    user-select: none;
+  }
+
+  .lb-prev {
+    left: 10px;
+  }
+
+  .lb-next {
+    right: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .lightbox {
+      padding: 24px 16px;
+    }
+
+    .lb-nav {
+      font-size: 2rem;
+      padding: 8px 10px;
+    }
+
+    .lb-prev {
+      left: 4px;
+    }
+
+    .lb-next {
+      right: 4px;
+    }
   }
 </style>
