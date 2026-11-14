@@ -1,0 +1,21 @@
+---
+import { ABOUT_CONTENT } from "@data/about";
+import TodoNote from "@components/ui/TodoNote.astro";
+---
+
+<section aria-label="Biography">
+  <p>
+    I studied mathematics and computer science at Baylor University, then worked
+    as a software engineer, including at IBM Consulting and American Express,
+    focusing on high-throughput backend systems and machine-learning algorithms.
+    Along the way I became more interested in <em>why</em> models work than in
+    simply deploying them, which pulled me toward research.
+  </p>
+  <p>{ABOUT_CONTENT.bioParagraphs[1]}</p>
+
+  <h2>Why this field</h2>
+  <TodoNote as="p">{ABOUT_CONTENT.whyThisFieldTodo}</TodoNote>
+
+  <h2>Background &amp; story</h2>
+  <TodoNote as="p">{ABOUT_CONTENT.backgroundTodo}</TodoNote>
+</section>

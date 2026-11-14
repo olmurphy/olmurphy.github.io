@@ -1,0 +1,21 @@
+---
+import { ABOUT_CONTENT } from "@data/about";
+import KeyValueTable from "@components/ui/KeyValueTable.astro";
+---
+
+<section aria-label="Personal interests and quick facts">
+  <h2>Outside the lab</h2>
+  <ul>
+    <li>
+      Calisthenics, flexibility training, bouldering and climbing, and cycling.
+    </li>
+    <li>
+      Making educational videos — see <a href="/media">Media</a>.
+    </li>
+    <li>Tinkering with hardware: Raspberry Pi, Arduino, and a home lab.</li>
+    <li>Competitive programming (Python and C++).</li>
+  </ul>
+
+  <h2>Quick facts</h2>
+  <KeyValueTable rows={ABOUT_CONTENT.quickFacts} />
+</section>

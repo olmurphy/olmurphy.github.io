@@ -315,6 +315,277 @@ FILE: src/components/layout/ThemeToggle.astro
 </script>
 
 ================================================================================
+FILE: src/components/sections/about/BioNarrative.astro
+================================================================================
+
+---
+import { ABOUT_CONTENT } from '@data/about';
+import TodoNote from '@components/ui/TodoNote.astro';
+---
+
+<section aria-label="Biography">
+  <p>
+    I studied mathematics and computer science at Baylor University, then worked
+    as a software engineer, including at IBM Consulting and American Express,
+    focusing on high-throughput backend systems and machine-learning algorithms.
+    Along the way I became more interested in <em>why</em> models work than in
+    simply deploying them, which pulled me toward research.
+  </p>
+  <p>{ABOUT_CONTENT.bioParagraphs[1]}</p>
+
+  <h2>Why this field</h2>
+  <TodoNote as="p">{ABOUT_CONTENT.whyThisFieldTodo}</TodoNote>
+
+  <h2>Background &amp; story</h2>
+  <TodoNote as="p">{ABOUT_CONTENT.backgroundTodo}</TodoNote>
+</section>
+
+================================================================================
+FILE: src/components/sections/about/PersonalLife.astro
+================================================================================
+
+---
+import { ABOUT_CONTENT } from '@data/about';
+import KeyValueTable from '@components/ui/KeyValueTable.astro';
+---
+
+<section aria-label="Personal interests and quick facts">
+  <h2>Outside the lab</h2>
+  <ul>
+    <li>
+      Calisthenics, flexibility training, bouldering and climbing, and cycling.
+    </li>
+    <li>
+      Making educational videos — see <a href="/media">Media</a>.
+    </li>
+    <li>Tinkering with hardware: Raspberry Pi, Arduino, and a home lab.</li>
+    <li>Competitive programming (Python and C++).</li>
+  </ul>
+
+  <h2>Quick facts</h2>
+  <KeyValueTable rows={ABOUT_CONTENT.quickFacts} />
+</section>
+
+================================================================================
+FILE: src/components/sections/home/Hero.astro
+================================================================================
+
+---
+import { SITE } from "@config/site";
+import { HOME_HERO } from "@data/home";
+import { PROFILE_LINKS } from "@data/profile";
+---
+
+<section class="hero" aria-label="Introduction">
+  <div class="portrait">
+    <img
+      src={HOME_HERO.portraitSrc}
+      alt={HOME_HERO.portraitAlt}
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"
+    />
+    <span class="todo" style="display: none;">
+      {HOME_HERO.portraitPlaceholder}
+    </span>
+  </div>
+
+  <div class="hero-text">
+    <h1>{SITE.name}</h1>
+    <p class="muted subtitle">
+      {HOME_HERO.affiliation} &nbsp;·&nbsp; {SITE.chineseName}
+    </p>
+    <p>
+      I'm a software engineer and aspiring researcher working at the
+      intersection of <strong>deep learning</strong> and{" "}
+      <strong>computational biology</strong>, with a background in mathematics
+      and distributed systems. I'm preparing for a Ph.D. in computer science or
+      computational biology.
+    </p>
+
+    <div class="links">
+      {PROFILE_LINKS.map((link) => (
+        <a href={link.href} class:list={[{ todo: link.todo }]}>
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .portrait {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+    flex-shrink: 0;
+    font-family: var(--font-sans);
+    overflow: hidden;
+  }
+
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .hero-text {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .subtitle {
+    margin-bottom: 10px;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 6px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+</style>
+
+================================================================================
+FILE: src/components/sections/home/NewsList.astro
+================================================================================
+
+---
+import type { NewsItem } from "@data/home";
+
+interface Props {
+  items: readonly NewsItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section aria-labelledby="news-heading">
+  <h2 id="news-heading">News</h2>
+  <ul class="news">
+    {items.map((item) => (
+      <li>
+        <span class="date">{item.date}</span>
+        <span>{item.text}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .news li {
+    list-style: none;
+    margin-left: -20px;
+    display: flex;
+    gap: 14px;
+  }
+
+  .date {
+    color: var(--color-text-muted);
+    min-width: 78px;
+    font-size: 0.9rem;
+    font-family: var(--font-sans);
+    padding-top: 2px;
+  }
+</style>
+
+================================================================================
+FILE: src/components/sections/home/ResearchInterests.astro
+================================================================================
+
+---
+import { RESEARCH_OVERVIEW } from "@data/home";
+---
+
+<section aria-labelledby="research-interests-heading">
+  <h2 id="research-interests-heading">{RESEARCH_OVERVIEW.heading}</h2>
+  <p>{RESEARCH_OVERVIEW.intro}</p>
+  <ul>
+    {RESEARCH_OVERVIEW.pillars.map((pillar) => (
+      <li>
+        <strong>{pillar.title}:</strong> {pillar.description}
+      </li>
+    ))}
+  </ul>
+  <p class="small">
+    <a href={RESEARCH_OVERVIEW.moreHref}>{RESEARCH_OVERVIEW.moreLabel}</a>
+  </p>
+</section>
+
+================================================================================
+FILE: src/components/sections/research/FoundationsCallout.astro
+================================================================================
+
+---
+import { RESEARCH_CONTENT } from '@data/research';
+import Callout from '@components/ui/Callout.astro';
+---
+
+<section aria-label="Mathematical foundations and collaboration">
+  <h2>Mathematical foundations</h2>
+  <p>{RESEARCH_CONTENT.foundations}</p>
+
+  <Callout>
+    <strong>Prospective advisors and collaborators:</strong> I'm happy to talk
+    about research. <a href="/contact">Get in touch →</a>
+  </Callout>
+</section>
+
+================================================================================
+FILE: src/components/sections/research/ResearchDirections.astro
+================================================================================
+
+---
+import { RESEARCH_CONTENT } from '@data/research';
+import Tag from '@components/ui/Tag.astro';
+---
+
+<section aria-label="Research directions">
+  <h2>Statement</h2>
+  <p>{RESEARCH_CONTENT.statement}</p>
+
+  <h2>Current directions</h2>
+  <ul>
+    {
+      RESEARCH_CONTENT.directions.map((item) => (
+        <li>
+          <strong>{item.title}</strong> — {item.description}
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Areas I'm exploring</h2>
+  <p class="tag-list">
+    {RESEARCH_CONTENT.exploringAreas.map((area) => <Tag>{area}</Tag>)}
+  </p>
+</section>
+
+<style>
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 0;
+  }
+</style>
+
+================================================================================
 FILE: src/components/ui/Callout.astro
 ================================================================================
 
@@ -326,7 +597,7 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<aside class:list={['callout', className]}>
+<aside class:list={["callout", className]}>
   <slot />
 </aside>
 
@@ -351,7 +622,7 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<article class:list={['card', className]}>
+<article class:list={["card", className]}>
   <slot />
 </article>
 
@@ -384,7 +655,7 @@ const { title, meta } = Astro.props;
 
 <article class="entry">
   <h3>{title}</h3>
-  {(meta || Astro.slots.has('meta')) && (
+  {(meta || Astro.slots.has("meta")) && (
     <div class="meta">
       {meta}
       <slot name="meta" />
@@ -426,22 +697,20 @@ const { rows } = Astro.props;
 
 <table>
   <tbody>
-    {
-      rows.map((row) => (
-        <tr>
-          <td>{row.label}</td>
-          <td>
-            {row.href ? (
-              <a href={row.href} class:list={[{ todo: row.todo }]}>
-                {row.value}
-              </a>
-            ) : (
-              <span class:list={[{ todo: row.todo }]}>{row.value}</span>
-            )}
-          </td>
-        </tr>
-      ))
-    }
+    {rows.map((row) => (
+      <tr>
+        <td>{row.label}</td>
+        <td>
+          {row.href ? (
+            <a href={row.href} class:list={[{ todo: row.todo }]}>
+              {row.value}
+            </a>
+          ) : (
+            <span class:list={[{ todo: row.todo }]}>{row.value}</span>
+          )}
+        </td>
+      </tr>
+    ))}
   </tbody>
 </table>
 
@@ -470,13 +739,13 @@ FILE: src/components/ui/Tag.astro
 
 ---
 interface Props {
-  variant?: 'default' | 'status';
+  variant?: "default" | "status";
 }
 
-const { variant = 'default' } = Astro.props;
+const { variant = "default" } = Astro.props;
 ---
 
-<span class:list={['tag', { status: variant === 'status' }]}>
+<span class:list={["tag", { status: variant === "status" }]}>
   <slot />
 </span>
 
@@ -505,14 +774,14 @@ FILE: src/components/ui/TodoNote.astro
 
 ---
 interface Props {
-  as?: 'span' | 'p';
+  as?: "span" | "p";
   class?: string;
 }
 
-const { as: Tag = 'span', class: className } = Astro.props;
+const { as: Tag = "span", class: className } = Astro.props;
 ---
 
-<Tag class:list={['todo', className]}>
+<Tag class:list={["todo", className]}>
   <slot />
 </Tag>
 
@@ -546,6 +815,165 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: "Media", href: "/media" },
   { label: "Contact", href: "/contact" },
 ];
+
+================================================================================
+FILE: src/data/about.ts
+================================================================================
+
+import type { KeyValueRow } from '@components/ui/KeyValueTable.astro';
+
+export const ABOUT_CONTENT = {
+  title: 'About',
+  subtitle: 'The person behind the CV.',
+  bioParagraphs: [
+    'I studied mathematics and computer science at Baylor University, then worked as a software engineer, including at IBM Consulting and American Express, focusing on high-throughput backend systems and machine-learning algorithms. Along the way I became more interested in why models work than in simply deploying them, which pulled me toward research.',
+    "I now live in Shanghai, where I studied Chinese at Shanghai Jiao Tong University after an intensive program at Beijing Language and Culture University. I'm fluent in Mandarin (HSK 6) and enjoy working across both the English- and Chinese-speaking research communities.",
+  ],
+  whyThisFieldTodo:
+    'Write 3–5 sentences here in your own voice: what first pulled you toward ML and biology — a book, a problem, a moment. This is the most memorable paragraph on the site.',
+  backgroundTodo:
+    "Optional: a short paragraph on where you grew up, your family's background, and how living in the U.S. and China shaped your path. Keep it to what you're comfortable sharing publicly.",
+  quickFacts: [
+    {
+      label: 'Languages',
+      value: 'English (native), Mandarin Chinese (fluent, HSK 6)',
+    },
+    {
+      label: 'Based in',
+      value: 'Shanghai, China',
+    },
+    {
+      label: 'Next steps',
+      value: 'M.S. at Georgia Tech, then Ph.D.',
+    },
+  ] satisfies readonly KeyValueRow[],
+} as const;
+
+================================================================================
+FILE: src/data/home.ts
+================================================================================
+
+export interface ResearchPillar {
+  title: string;
+  description: string;
+}
+
+export interface NewsItem {
+  date: string;
+  text: string;
+}
+
+export const HOME_HERO = {
+  portraitSrc: "/photo.jpg",
+  portraitAlt: "Portrait of Owen Li Murphy",
+  portraitPlaceholder: "add photo.jpg",
+  affiliation: "M.S. Computer Science (Machine Learning), Georgia Tech",
+} as const;
+
+export const RESEARCH_OVERVIEW = {
+  heading: "Research interests",
+  intro:
+    "My goal is to build machine-learning methods that are reliable enough to be useful in biology, and I’m focused on three areas:",
+  pillars: [
+    {
+      title: "Computational biology",
+      description:
+        "deep learning for single-cell and spatial omics, structural biology, and computer-aided drug discovery.",
+    },
+    {
+      title: "Reliable deep learning",
+      description:
+        "confidence, abstention, and robustness under distribution shift.",
+    },
+    {
+      title: "Mathematical foundations",
+      description:
+        "spectral graph theory, differential geometry, and functional analysis as tools for understanding learning systems.",
+    },
+  ] satisfies readonly ResearchPillar[],
+  moreLabel: "More on my research →",
+  moreHref: "/research",
+} as const;
+
+export const NEWS_ITEMS: readonly NewsItem[] = [
+  {
+    date: "Nov 2026",
+    text: "Preparing Ph.D. applications in computer science and computational biology.",
+  },
+  {
+    date: "2026",
+    text: "Submitted a paper on multi-agent swarm governance to NeurIPS 2026.",
+  },
+  {
+    date: "Fall 2025",
+    text: "Began the M.S. in Computer Science (ML specialization) at Georgia Tech via OMSCS.",
+  },
+  {
+    date: "Aug 2027",
+    text: "Planning to begin the in-person M.S. at Georgia Tech (Research Thesis Option).",
+  },
+];
+
+================================================================================
+FILE: src/data/profile.ts
+================================================================================
+
+export interface ProfileLink {
+  label: string;
+  href: string;
+  todo?: boolean;
+}
+
+export const PROFILE_LINKS: readonly ProfileLink[] = [
+  { label: "Email", href: "/contact" },
+  { label: "Google Scholar", href: "#", todo: true },
+  { label: "GitHub", href: "#", todo: true },
+  { label: "LinkedIn", href: "#", todo: true },
+  { label: "CV (PDF)", href: "#", todo: true },
+];
+
+================================================================================
+FILE: src/data/research.ts
+================================================================================
+
+export interface ResearchDirection {
+  title: string;
+  description: string;
+}
+
+export const RESEARCH_CONTENT = {
+  title: 'Research',
+  subtitle: "What I work on, what I'm curious about, and where I'm headed.",
+  statement:
+    "My long-term goal is to build machine-learning methods that are reliable enough to be useful in biology and medicine. That means models that know when they don't know, that can be trusted at scale, and that respect the structure of the scientific problem they're applied to.",
+  directions: [
+    {
+      title: 'Reliable deep learning',
+      description:
+        'confidence, abstention, and robustness. Studying how well-calibrated models stay under distribution shift, comparing standard training with data-augmentation approaches such as AugMix on CIFAR-10 Wide ResNets (evaluated on CIFAR-10-C and CIFAR-10.1).',
+    },
+    {
+      title: 'Computational biology',
+      description:
+        'deep learning for the life sciences. Building the foundations to work on single-cell and spatial omics, structural biology, and computer-aided drug discovery.',
+    },
+  ] satisfies readonly ResearchDirection[],
+  exploringAreas: [
+    'Deep learning',
+    'NLP',
+    'Reinforcement learning',
+    'Single-cell & spatial omics',
+    'Structural biology',
+    'Systems biology',
+    'Drug discovery',
+    'Computational neuroscience',
+    'Phylogenetics',
+    'Synthetic biology',
+    'Precision medicine',
+  ] as const,
+  foundations:
+    'I study mathematics beyond what my coursework requires — linear algebra and matrix theory, spectral graph theory, abstract algebra, functional analysis, and differential geometry — because I believe strong theory pays off in applied ML. Alongside this I study theoretical physics, computer architecture (GPU and memory hierarchies), neuroscience, and chemistry.',
+} as const;
 
 ================================================================================
 FILE: src/layouts/BaseLayout.astro
@@ -623,25 +1051,68 @@ const { title = SITE.defaultTitle, description = SITE.defaultDescription } =
 </style>
 
 ================================================================================
+FILE: src/pages/about.astro
+================================================================================
+
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { SITE } from '@config/site';
+import { ABOUT_CONTENT } from '@data/about';
+import BioNarrative from '@components/sections/about/BioNarrative.astro';
+import PersonalLife from '@components/sections/about/PersonalLife.astro';
+---
+
+<BaseLayout
+  title={`About — ${SITE.name}`}
+  description="Background, interests, and academic path of Owen Li Murphy."
+>
+  <h1>{ABOUT_CONTENT.title}</h1>
+  <p class="muted">{ABOUT_CONTENT.subtitle}</p>
+
+  <BioNarrative />
+  <PersonalLife />
+</BaseLayout>
+
+================================================================================
 FILE: src/pages/index.astro
 ================================================================================
 
 ---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Hero from "@components/sections/home/Hero.astro";
+import ResearchInterests from "@components/sections/home/ResearchInterests.astro";
+import NewsList from "@components/sections/home/NewsList.astro";
+import { NEWS_ITEMS } from "@data/home";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-  </head>
-  <body>
-    <h1>Astro</h1>
-  </body>
-</html>
+<BaseLayout>
+  <Hero />
+  <ResearchInterests />
+  <NewsList items={NEWS_ITEMS} />
+</BaseLayout>
+
+================================================================================
+FILE: src/pages/research.astro
+================================================================================
+
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { SITE } from '@config/site';
+import { RESEARCH_CONTENT } from '@data/research';
+import ResearchDirections from '@components/sections/research/ResearchDirections.astro';
+import FoundationsCallout from '@components/sections/research/FoundationsCallout.astro';
+---
+
+<BaseLayout
+  title={`Research — ${SITE.name}`}
+  description="Research statement, active directions, and mathematical foundations of Owen Li Murphy."
+>
+  <h1>{RESEARCH_CONTENT.title}</h1>
+  <p class="muted">{RESEARCH_CONTENT.subtitle}</p>
+
+  <ResearchDirections />
+  <FoundationsCallout />
+</BaseLayout>
 
 ================================================================================
 FILE: src/styles/global.css

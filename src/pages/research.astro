@@ -1,0 +1,18 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { RESEARCH_CONTENT } from "@data/research";
+import ResearchDirections from "@components/sections/research/ResearchDirections.astro";
+import FoundationsCallout from "@components/sections/research/FoundationsCallout.astro";
+---
+
+<BaseLayout
+  title={`Research — ${SITE.name}`}
+  description="Research statement, active directions, and mathematical foundations of Owen Li Murphy."
+>
+  <h1>{RESEARCH_CONTENT.title}</h1>
+  <p class="muted">{RESEARCH_CONTENT.subtitle}</p>
+
+  <ResearchDirections />
+  <FoundationsCallout />
+</BaseLayout>

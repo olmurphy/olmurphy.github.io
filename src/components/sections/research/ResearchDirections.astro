@@ -1,0 +1,33 @@
+---
+import { RESEARCH_CONTENT } from "@data/research";
+import Tag from "@components/ui/Tag.astro";
+---
+
+<section aria-label="Research directions">
+  <h2>Statement</h2>
+  <p>{RESEARCH_CONTENT.statement}</p>
+
+  <h2>Current directions</h2>
+  <ul>
+    {RESEARCH_CONTENT.directions.map((item) => (
+      <li>
+        <strong>{item.title}</strong> — {item.description}
+      </li>
+    ))}
+  </ul>
+
+  <h2>Areas I'm exploring</h2>
+  <p class="tag-list">
+    {RESEARCH_CONTENT.exploringAreas.map((area) => (
+      <Tag>{area}</Tag>
+    ))}
+  </p>
+</section>
+
+<style>
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 0;
+  }
+</style>
