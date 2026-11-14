@@ -42,8 +42,20 @@ export const RESEARCH_OVERVIEW = {
 
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
+    date: "Aug 2027",
+    text: "Planning to begin the in-person M.S. in Computer Science (Research Thesis Option) at Georgia Tech.",
+  },
+  {
+    date: "Jan 2027",
+    text: "Attending CES in Las Vegas with Global Business AI to showcase our AI platform.",
+  },
+  {
     date: "Nov 2026",
     text: "Preparing Ph.D. applications in computer science and computational biology.",
+  },
+  {
+    date: "Aug 2026",
+    text: "Joined Global Business AI (GBizAI) in Shanghai as an AI & Software Engineer.",
   },
   {
     date: "2026",
@@ -52,9 +64,5 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
   {
     date: "Fall 2025",
     text: "Began the M.S. in Computer Science (ML specialization) at Georgia Tech via OMSCS.",
-  },
-  {
-    date: "Aug 2027",
-    text: "Planning to begin the in-person M.S. at Georgia Tech (Research Thesis Option).",
   },
 ];

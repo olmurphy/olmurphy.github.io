@@ -54,7 +54,7 @@ export const EDUCATION_CONTENT = {
     {
       role: "AI / Software Engineer",
       company: "Global Business AI (GBizAI)",
-      dates: "Sept 2025 – Present",
+      dates: "Aug 2026 – Present",
       summary:
         "Architecting enterprise multi-tenant chatbot management platforms and LLM streaming data planes.",
     },
