@@ -1,0 +1,101 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { FEATURES } from "@config/features";
+
+const quickLinks = [
+  {
+    label: "Home",
+    href: "/",
+    description: "Overview, research interests, and recent news.",
+  },
+  {
+    label: "Research",
+    href: "/research",
+    description:
+      "Research statement, directions, and mathematical foundations.",
+  },
+  {
+    label: "Publications",
+    href: "/publications",
+    description: "Papers under review and works in progress.",
+  },
+  {
+    label: "Projects",
+    href: "/projects",
+    description: "Machine learning, systems engineering, and hackathon builds.",
+  },
+  {
+    label: "Education & Experience",
+    href: "/education",
+    description: "Academic degrees, SIMIS appointment, and industry roles.",
+  },
+  ...(FEATURES.showTeachingPage
+    ? [
+        {
+          label: "Teaching",
+          href: "/teaching",
+          description: "Teaching assistantships and coursework instruction.",
+        },
+      ]
+    : []),
+  {
+    label: "Contact",
+    href: "/contact",
+    description: "Email, GitHub, Google Scholar, LinkedIn, and CV.",
+  },
+];
+---
+
+<BaseLayout
+  title={`Page Not Found — ${SITE.name}`}
+  description="The requested page could not be found."
+>
+  <meta slot="head" name="robots" content="noindex" />
+
+  <section class="not-found" aria-labelledby="not-found-heading">
+    <p class="code">404</p>
+    <h1 id="not-found-heading">Page not found</h1>
+    <p class="muted">
+      The page you’re looking for doesn’t exist or may have moved. You can jump
+      directly to one of the sections below:
+    </p>
+
+    <ul class="route-list">
+      {quickLinks.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+          <span class="muted"> — {item.description}</span>
+        </li>
+      ))}
+    </ul>
+
+    <p class="small">
+      <a href="/">← Back to home</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-top: 8px;
+  }
+
+  .code {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 4px;
+  }
+
+  .route-list {
+    margin: 22px 0 24px;
+  }
+
+  .route-list li {
+    margin-bottom: 8px;
+  }
+</style>

@@ -35,7 +35,7 @@ export const GET: APIRoute = () => {
   const lines: string[] = [
     `# ${SITE.name} (${SITE.chineseName})`,
     "",
-    `> ${SITE.tagline}. M.S. Computer Science (Machine Learning) student at Georgia Institute of Technology and AI/Software Engineer in Shanghai, preparing for a Ph.D. in computer science or computational biology.`,
+    `> ${SITE.tagline}. M.S. Computer Science (Machine Learning) student at Georgia Institute of Technology and AI/Software Engineer in Shanghai, preparing for a Masters in computer science or computational biology.`,
     "",
     "## Core Research Areas",
     ...RESEARCH_OVERVIEW.pillars.map(
