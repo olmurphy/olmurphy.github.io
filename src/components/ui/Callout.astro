@@ -1,0 +1,20 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<aside class:list={["callout", className]}>
+  <slot />
+</aside>
+
+<style>
+  .callout {
+    background: var(--color-accent-soft);
+    border-radius: var(--radius-card);
+    padding: 14px 18px;
+    margin: 0 0 18px;
+  }
+</style>

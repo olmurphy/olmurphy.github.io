@@ -1,0 +1,91 @@
+---
+import { SITE } from "@config/site";
+import { HOME_HERO } from "@data/home";
+import { PROFILE_LINKS } from "@data/profile";
+---
+
+<section class="hero" aria-label="Introduction">
+  <div class="portrait">
+    <img
+      src={HOME_HERO.portraitSrc}
+      alt={HOME_HERO.portraitAlt}
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"
+    />
+    <span class="todo" style="display: none;">
+      {HOME_HERO.portraitPlaceholder}
+    </span>
+  </div>
+
+  <div class="hero-text">
+    <h1>{SITE.name}</h1>
+    <p class="muted subtitle">
+      {HOME_HERO.affiliation} &nbsp;·&nbsp; {SITE.chineseName}
+    </p>
+    <p>
+      I'm a software engineer and aspiring researcher working at the
+      intersection of <strong>deep learning</strong> and{" "}
+      <strong>computational biology</strong>, with a background in mathematics
+      and distributed systems. I'm preparing for a Ph.D. in computer science or
+      computational biology.
+    </p>
+
+    <div class="links">
+      {PROFILE_LINKS.map((link) => (
+        <a href={link.href} class:list={[{ todo: link.todo }]}>
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .portrait {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+    flex-shrink: 0;
+    font-family: var(--font-sans);
+    overflow: hidden;
+  }
+
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .hero-text {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .subtitle {
+    margin-bottom: 10px;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 6px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+</style>

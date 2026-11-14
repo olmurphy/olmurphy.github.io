@@ -1,16 +1,13 @@
 ---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Hero from "@components/sections/home/Hero.astro";
+import ResearchInterests from "@components/sections/home/ResearchInterests.astro";
+import NewsList from "@components/sections/home/NewsList.astro";
+import { NEWS_ITEMS } from "@data/home";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-  </head>
-  <body>
-    <h1>Astro</h1>
-  </body>
-</html>
+<BaseLayout>
+  <Hero />
+  <ResearchInterests />
+  <NewsList items={NEWS_ITEMS} />
+</BaseLayout>

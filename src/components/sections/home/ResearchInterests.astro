@@ -1,0 +1,18 @@
+---
+import { RESEARCH_OVERVIEW } from "@data/home";
+---
+
+<section aria-labelledby="research-interests-heading">
+  <h2 id="research-interests-heading">{RESEARCH_OVERVIEW.heading}</h2>
+  <p>{RESEARCH_OVERVIEW.intro}</p>
+  <ul>
+    {RESEARCH_OVERVIEW.pillars.map((pillar) => (
+      <li>
+        <strong>{pillar.title}:</strong> {pillar.description}
+      </li>
+    ))}
+  </ul>
+  <p class="small">
+    <a href={RESEARCH_OVERVIEW.moreHref}>{RESEARCH_OVERVIEW.moreLabel}</a>
+  </p>
+</section>

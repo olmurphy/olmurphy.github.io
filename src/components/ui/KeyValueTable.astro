@@ -1,0 +1,52 @@
+---
+export interface KeyValueRow {
+  label: string;
+  value?: string;
+  href?: string;
+  todo?: boolean;
+}
+
+interface Props {
+  rows: readonly KeyValueRow[];
+}
+
+const { rows } = Astro.props;
+---
+
+<table>
+  <tbody>
+    {rows.map((row) => (
+      <tr>
+        <td>{row.label}</td>
+        <td>
+          {row.href ? (
+            <a href={row.href} class:list={[{ todo: row.todo }]}>
+              {row.value}
+            </a>
+          ) : (
+            <span class:list={[{ todo: row.todo }]}>{row.value}</span>
+          )}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: var(--text-base);
+  }
+
+  td {
+    padding: 6px 12px 6px 0;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  td:first-child {
+    color: var(--color-text-muted);
+    width: 38%;
+  }
+</style>

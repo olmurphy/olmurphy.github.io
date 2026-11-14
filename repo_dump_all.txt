@@ -117,13 +117,15 @@ FILE: src/components/layout/Footer.astro
 ================================================================================
 
 ---
-import { SITE } from '@config/site';
+import { SITE } from "@config/site";
 
 const year = new Date().getFullYear();
 ---
 
 <footer>
-  <div class="wrap">© {year} {SITE.name}</div>
+  <div class="wrap">
+    © {year} {SITE.name}
+  </div>
 </footer>
 
 <style>
@@ -141,13 +143,15 @@ FILE: src/components/layout/Header.astro
 ================================================================================
 
 ---
-import { SITE } from '@config/site';
-import Nav from './Nav.astro';
+import { SITE } from "@config/site";
+import Nav from "./Nav.astro";
 ---
 
 <header>
   <div class="wrap">
-    <a class="site-name" href="/">{SITE.name}</a>
+    <a class="site-name" href="/">
+      {SITE.name}
+    </a>
     <div class="tagline">{SITE.tagline}</div>
     <Nav />
   </div>
@@ -183,30 +187,28 @@ FILE: src/components/layout/Nav.astro
 ================================================================================
 
 ---
-import { NAV_ITEMS } from '@config/site';
-import ThemeToggle from './ThemeToggle.astro';
+import { NAV_ITEMS } from "@config/site";
+import ThemeToggle from "./ThemeToggle.astro";
 
 const normalize = (path: string) =>
-  path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+  path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
 
 const currentPath = normalize(Astro.url.pathname);
 ---
 
 <nav aria-label="Primary navigation">
-  {
-    NAV_ITEMS.map((item) => {
-      const isActive = currentPath === normalize(item.href);
-      return (
-        <a
-          href={item.href}
-          class:list={[{ active: isActive }]}
-          aria-current={isActive ? 'page' : undefined}
-        >
-          {item.label}
-        </a>
-      );
-    })
-  }
+  {NAV_ITEMS.map((item) => {
+    const isActive = currentPath === normalize(item.href);
+    return (
+      <a
+        href={item.href}
+        class:list={[{ active: isActive }]}
+        aria-current={isActive ? "page" : undefined}
+      >
+        {item.label}
+      </a>
+    );
+  })}
   <ThemeToggle />
 </nav>
 
@@ -278,31 +280,31 @@ FILE: src/components/layout/ThemeToggle.astro
 
 <script>
   const root = document.documentElement;
-  const btn = document.getElementById('theme-toggle');
+  const btn = document.getElementById("theme-toggle");
 
   function isSystemDark(): boolean {
     return Boolean(
       window.matchMedia &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches
+      window.matchMedia("(prefers-color-scheme: dark)").matches,
     );
   }
 
-  function getCurrentTheme(): 'light' | 'dark' {
-    const attr = root.getAttribute('data-theme');
-    if (attr === 'light' || attr === 'dark') return attr;
-    return isSystemDark() ? 'dark' : 'light';
+  function getCurrentTheme(): "light" | "dark" {
+    const attr = root.getAttribute("data-theme");
+    if (attr === "light" || attr === "dark") return attr;
+    return isSystemDark() ? "dark" : "light";
   }
 
   function syncLabel(): void {
     if (!btn) return;
-    btn.textContent = getCurrentTheme() === 'dark' ? 'Light mode' : 'Dark mode';
+    btn.textContent = getCurrentTheme() === "dark" ? "Light mode" : "Dark mode";
   }
 
-  btn?.addEventListener('click', () => {
-    const next = getCurrentTheme() === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
+  btn?.addEventListener("click", () => {
+    const next = getCurrentTheme() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
     try {
-      localStorage.setItem('theme', next);
+      localStorage.setItem("theme", next);
     } catch {
       // Ignore storage errors in restricted contexts
     }
@@ -311,6 +313,208 @@ FILE: src/components/layout/ThemeToggle.astro
 
   syncLabel();
 </script>
+
+================================================================================
+FILE: src/components/ui/Callout.astro
+================================================================================
+
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<aside class:list={['callout', className]}>
+  <slot />
+</aside>
+
+<style>
+  .callout {
+    background: var(--color-accent-soft);
+    border-radius: var(--radius-card);
+    padding: 14px 18px;
+    margin: 0 0 18px;
+  }
+</style>
+
+================================================================================
+FILE: src/components/ui/Card.astro
+================================================================================
+
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<article class:list={['card', className]}>
+  <slot />
+</article>
+
+<style>
+  .card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    transition: border-color var(--transition-fast);
+  }
+
+  .card:hover {
+    border-color: var(--color-accent);
+  }
+</style>
+
+================================================================================
+FILE: src/components/ui/EntryItem.astro
+================================================================================
+
+---
+interface Props {
+  title: string;
+  meta?: string;
+}
+
+const { title, meta } = Astro.props;
+---
+
+<article class="entry">
+  <h3>{title}</h3>
+  {(meta || Astro.slots.has('meta')) && (
+    <div class="meta">
+      {meta}
+      <slot name="meta" />
+    </div>
+  )}
+  <slot />
+</article>
+
+<style>
+  .entry {
+    margin-bottom: 22px;
+  }
+
+  .meta {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+</style>
+
+================================================================================
+FILE: src/components/ui/KeyValueTable.astro
+================================================================================
+
+---
+export interface KeyValueRow {
+  label: string;
+  value?: string;
+  href?: string;
+  todo?: boolean;
+}
+
+interface Props {
+  rows: readonly KeyValueRow[];
+}
+
+const { rows } = Astro.props;
+---
+
+<table>
+  <tbody>
+    {
+      rows.map((row) => (
+        <tr>
+          <td>{row.label}</td>
+          <td>
+            {row.href ? (
+              <a href={row.href} class:list={[{ todo: row.todo }]}>
+                {row.value}
+              </a>
+            ) : (
+              <span class:list={[{ todo: row.todo }]}>{row.value}</span>
+            )}
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: var(--text-base);
+  }
+
+  td {
+    padding: 6px 12px 6px 0;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  td:first-child {
+    color: var(--color-text-muted);
+    width: 38%;
+  }
+</style>
+
+================================================================================
+FILE: src/components/ui/Tag.astro
+================================================================================
+
+---
+interface Props {
+  variant?: 'default' | 'status';
+}
+
+const { variant = 'default' } = Astro.props;
+---
+
+<span class:list={['tag', { status: variant === 'status' }]}>
+  <slot />
+</span>
+
+<style>
+  .tag {
+    display: inline-block;
+    font-size: var(--text-xs);
+    padding: 1px 8px;
+    margin-right: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+  }
+
+  .tag.status {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: transparent;
+  }
+</style>
+
+================================================================================
+FILE: src/components/ui/TodoNote.astro
+================================================================================
+
+---
+interface Props {
+  as?: 'span' | 'p';
+  class?: string;
+}
+
+const { as: Tag = 'span', class: className } = Astro.props;
+---
+
+<Tag class:list={['todo', className]}>
+  <slot />
+</Tag>
 
 ================================================================================
 FILE: src/config/site.ts
@@ -348,20 +552,18 @@ FILE: src/layouts/BaseLayout.astro
 ================================================================================
 
 ---
-import { SITE } from '@config/site';
-import Header from '@components/layout/Header.astro';
-import Footer from '@components/layout/Footer.astro';
-import '@styles/global.css';
+import { SITE } from "@config/site";
+import Header from "@components/layout/Header.astro";
+import Footer from "@components/layout/Footer.astro";
+import "@styles/global.css";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const {
-  title = SITE.defaultTitle,
-  description = SITE.defaultDescription,
-} = Astro.props;
+const { title = SITE.defaultTitle, description = SITE.defaultDescription } =
+  Astro.props;
 ---
 
 <!doctype html>
@@ -376,9 +578,9 @@ const {
     <meta name="description" content={description} />
     <script is:inline>
       try {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light' || savedTheme === 'dark') {
-          document.documentElement.setAttribute('data-theme', savedTheme);
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light" || savedTheme === "dark") {
+          document.documentElement.setAttribute("data-theme", savedTheme);
         }
       } catch {}
     </script>
