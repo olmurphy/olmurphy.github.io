@@ -1,0 +1,40 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { PUBLICATIONS_CONTENT } from "@data/publications";
+import PublicationItem from "@components/sections/publications/PublicationItem.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
+---
+
+<BaseLayout
+  title={`Publications — ${SITE.name}`}
+  description="Papers, preprints, and works in progress by Owen Li Murphy."
+>
+  <h1>{PUBLICATIONS_CONTENT.title}</h1>
+  <p class="muted">{PUBLICATIONS_CONTENT.subtitle}</p>
+
+  <h2>Published &amp; accepted</h2>
+  <p class="muted">
+    <TodoNote>{PUBLICATIONS_CONTENT.publishedEmptyTodo}</TodoNote>
+  </p>
+
+  <h2>Under review</h2>
+  {PUBLICATIONS_CONTENT.underReview.map((paper) => (
+    <PublicationItem entry={paper} />
+  ))}
+
+  <h2>In progress</h2>
+  {PUBLICATIONS_CONTENT.inProgress.map((paper) => (
+    <PublicationItem entry={paper} />
+  ))}
+
+  <p class="small muted">
+    <TodoNote>Tip:</TodoNote> once you have a preprint on arXiv, add the link
+    here. Preprints count — list them even before acceptance.
+  </p>
+
+  <h2>Talks &amp; posters</h2>
+  <p class="muted">
+    <TodoNote>{PUBLICATIONS_CONTENT.talksEmptyTodo}</TodoNote>
+  </p>
+</BaseLayout>

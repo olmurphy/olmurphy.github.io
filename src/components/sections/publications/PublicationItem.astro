@@ -1,0 +1,54 @@
+---
+import type { PublicationEntry } from "@data/publications";
+import EntryItem from "@components/ui/EntryItem.astro";
+import Tag from "@components/ui/Tag.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
+
+interface Props {
+  entry: PublicationEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<EntryItem title={entry.title}>
+  <Fragment slot="meta">
+    {entry.venue}
+    {entry.coAuthors && (
+      <>
+        {" "}
+        &nbsp;·&nbsp;{" "}
+        {entry.coAuthorsTodo ? (
+          <TodoNote>{entry.coAuthors}</TodoNote>
+        ) : (
+          entry.coAuthors
+        )}
+      </>
+    )}
+  </Fragment>
+
+  <p class="small">{entry.summary}</p>
+
+  <div class="tags">
+    <Tag variant="status">{entry.status}</Tag>
+    {entry.tags.map((tag) => (
+      <Tag>{tag}</Tag>
+    ))}
+  </div>
+
+  {entry.linkHref && entry.linkLabel && (
+    <a class="small" href={entry.linkHref}>
+      {entry.linkTodo ? (
+        <TodoNote>{entry.linkLabel}</TodoNote>
+      ) : (
+        entry.linkLabel
+      )}
+    </a>
+  )}
+</EntryItem>
+
+<style>
+  .tags {
+    margin: 6px 0 6px;
+  }
+</style>
