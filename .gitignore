@@ -1,3 +1,6 @@
+# user defined
+repo_dump_all.txt
+
 # build output
 dist/
 # generated types
