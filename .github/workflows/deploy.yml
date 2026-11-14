@@ -21,8 +21,6 @@ jobs:
         with:
           node-version: 22
           cache: 'pnpm'
-      - name: Install, build, and upload your site
-        uses: withastro/action@v3
 
   deploy:
     needs: build
