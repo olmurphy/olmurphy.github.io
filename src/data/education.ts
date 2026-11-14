@@ -48,14 +48,14 @@ export interface VisitingEntry {
 export const EDUCATION_CONTENT = {
   title: "Education & Experience",
   education: [
-    {
-      degree: "M.S. in Computer Science, Research Thesis Track (planned)",
-      institution: "Georgia Institute of Technology",
-      institutionSuffix: ", on campus",
-      institutionHref: "https://www.gatech.edu/",
-      logoSrc: "/logos/gatech.webp",
-      period: "beginning August 2027",
-    },
+    // {
+    //   degree: "M.S. in Computer Science, Research Thesis Track (planned)",
+    //   institution: "Georgia Institute of Technology",
+    //   institutionSuffix: ", on campus",
+    //   institutionHref: "https://www.gatech.edu/",
+    //   logoSrc: "/logos/gatech.webp",
+    //   period: "beginning August 2027",
+    // },
     {
       degree: "M.S. in Computer Science, Machine Learning specialization",
       institution: "Georgia Institute of Technology",

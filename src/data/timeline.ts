@@ -33,14 +33,14 @@ export const TIMELINE_CONTENT = {
           category: "academic",
           planned: true,
         },
-        {
-          date: "Aug 2027",
-          title: "Begin the in-person M.S. at Georgia Tech",
-          description:
-            "On-campus M.S. in Computer Science under the Research Thesis Track.",
-          category: "academic",
-          planned: true,
-        },
+        // {
+        //   date: "Aug 2027",
+        //   title: "Begin the in-person M.S. at Georgia Tech",
+        //   description:
+        //     "On-campus M.S. in Computer Science under the Research Thesis Track.",
+        //   category: "academic",
+        //   planned: true,
+        // },
         {
           date: "Jan 2027",
           title: "MIT Reality Hack",
