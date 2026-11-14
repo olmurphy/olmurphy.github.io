@@ -1,0 +1,113 @@
+---
+import type { FeaturedTalk } from "@data/media";
+import Card from "@components/ui/Card.astro";
+import Tag from "@components/ui/Tag.astro";
+
+interface Props {
+  talk: FeaturedTalk;
+}
+
+const { talk } = Astro.props;
+const embedSrc = talk.douyinVideoId
+  ? `https://open.douyin.com/player/video?vid=${talk.douyinVideoId}&autoplay=0`
+  : undefined;
+---
+
+<Card>
+  <div class:list={["talk-layout", { "has-embed": Boolean(embedSrc) }]}>
+    <div class="talk-body">
+      <h3>{talk.title}</h3>
+      <div class="meta">
+        <Tag variant="status">{talk.platform}</Tag>
+        <Tag>{talk.stats}</Tag>
+      </div>
+      <p class="small">{talk.description}</p>
+      <div class="links">
+        {talk.links.map((link) => (
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="small"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    {embedSrc && (
+      <div class="talk-embed">
+        <iframe
+          src={embedSrc}
+          title={`${talk.title} — Douyin video`}
+          scrolling="no"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          allowfullscreen
+        />
+      </div>
+    )}
+  </div>
+</Card>
+
+<style>
+  .talk-layout.has-embed {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .talk-body {
+    text-align: left;
+  }
+
+  .meta {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin: 4px 0 10px;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 12px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+
+  .talk-embed {
+    position: relative;
+    width: 180px;
+    height: 320px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: #000;
+    justify-self: end;
+  }
+
+  .talk-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 360px;
+    height: 640px;
+    transform: scale(0.5);
+    transform-origin: top left;
+    border: 0;
+    overflow: hidden;
+  }
+
+  @media (max-width: 600px) {
+    .talk-layout.has-embed {
+      grid-template-columns: 1fr;
+    }
+
+    .talk-embed {
+      justify-self: start;
+    }
+  }
+</style>

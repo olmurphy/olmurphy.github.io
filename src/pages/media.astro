@@ -2,8 +2,8 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
 import { MEDIA_CONTENT } from "@data/media";
+import FeaturedTalkCard from "@components/sections/media/FeaturedTalkCard.astro";
 import Card from "@components/ui/Card.astro";
-import Tag from "@components/ui/Tag.astro";
 import TodoNote from "@components/ui/TodoNote.astro";
 ---
 
@@ -16,33 +16,7 @@ import TodoNote from "@components/ui/TodoNote.astro";
 
   <h2>Featured Talks &amp; Presentations</h2>
   {MEDIA_CONTENT.featuredTalks.map((talk) => (
-    <Card>
-      <h3>{talk.title}</h3>
-      <div class="meta">
-        <Tag variant="status">{talk.platform}</Tag>
-        <Tag>{talk.stats}</Tag>
-      </div>
-      <p class="small">{talk.description}</p>
-      <div class="links" style="margin-top: 10px;">
-        <a
-          href="https://www.douyin.com/user/self?from_tab_name=main&modal_id=7620062047056743731"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="small"
-        >
-          Watch on Douyin →
-        </a>
-        &nbsp;&nbsp;
-        <a
-          href="https://www.rednote.com/discovery/item/69bfe738000000002102d1bc?xsec_token=AB9Ejr8SjTOOD2pcwT1TlkptUKg7ctoh3UIVzn6vcEFAk=&xsec_source=pc_user"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="small"
-        >
-          Watch on Xiaohongshu →
-        </a>
-      </div>
-    </Card>
+    <FeaturedTalkCard talk={talk} />
   ))}
 
   <h2>Series</h2>
@@ -62,11 +36,6 @@ import TodoNote from "@components/ui/TodoNote.astro";
 </BaseLayout>
 
 <style>
-  .meta {
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-  }
   .links {
     display: flex;
     flex-wrap: wrap;
