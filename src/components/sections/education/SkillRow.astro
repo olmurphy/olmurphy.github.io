@@ -1,0 +1,31 @@
+---
+import type { SkillGroup } from "@data/education";
+import TodoNote from "@components/ui/TodoNote.astro";
+
+interface Props {
+  skill: SkillGroup;
+}
+
+const { skill } = Astro.props;
+---
+
+<div class="skill">
+  <span class="label">{skill.category}</span>
+  {skill.items && <span>{skill.items} </span>}
+  {skill.todo && <TodoNote>{skill.todo}</TodoNote>}
+</div>
+
+<style>
+  .skill {
+    margin-bottom: 14px;
+  }
+
+  .label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+  }
+</style>

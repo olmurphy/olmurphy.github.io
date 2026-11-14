@@ -1,0 +1,22 @@
+---
+import type { LearningCategory } from "@data/learning";
+
+interface Props {
+  category: LearningCategory;
+}
+
+const { category } = Astro.props;
+---
+
+<section aria-label={category.heading}>
+  <h2>{category.heading}</h2>
+  <ul>
+    {category.items.map((item) => (
+      <li>
+        {item.title}
+        {item.book && <em>{item.book}</em>}
+        {item.suffix}
+      </li>
+    ))}
+  </ul>
+</section>

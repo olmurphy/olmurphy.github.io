@@ -1,0 +1,40 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { MEDIA_CONTENT } from "@data/media";
+import Card from "@components/ui/Card.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
+---
+
+<BaseLayout
+  title={`Media — ${SITE.name}`}
+  description="Educational videos and science communication by Owen Li Murphy."
+>
+  <h1>{MEDIA_CONTENT.title}</h1>
+  <p class="muted">{MEDIA_CONTENT.subtitle}</p>
+
+  <Card>
+    <h3>{MEDIA_CONTENT.seriesTitle}</h3>
+    <p class="small">{MEDIA_CONTENT.seriesDescription}</p>
+    <div class="links">
+      {MEDIA_CONTENT.links.map((link) => (
+        <a href={link.href}>
+          {link.todo ? <TodoNote>{link.label}</TodoNote> : link.label}
+        </a>
+      ))}
+    </div>
+  </Card>
+
+  <p class="small muted">{MEDIA_CONTENT.editorialNote}</p>
+</BaseLayout>
+
+<style>
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 6px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+</style>

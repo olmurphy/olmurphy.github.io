@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { LEARNING_CONTENT } from "@data/learning";
+import TodoNote from "@components/ui/TodoNote.astro";
+import CurriculumSection from "@components/sections/learning/CurriculumSection.astro";
+---
+
+<BaseLayout
+  title={`Learning — ${SITE.name}`}
+  description="Independent self-study across mathematics, computer science, and natural sciences."
+>
+  <h1>{LEARNING_CONTENT.title}</h1>
+  <p class="muted">{LEARNING_CONTENT.subtitle}</p>
+
+  <h2>What I've taken from it</h2>
+  <TodoNote as="p">{LEARNING_CONTENT.reflectionTodo}</TodoNote>
+
+  {LEARNING_CONTENT.categories.map((category) => (
+    <CurriculumSection category={category} />
+  ))}
+</BaseLayout>

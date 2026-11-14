@@ -1,0 +1,16 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { CONTACT_CONTENT } from "@data/contact";
+import KeyValueTable from "@components/ui/KeyValueTable.astro";
+---
+
+<BaseLayout
+  title={`Contact — ${SITE.name}`}
+  description="Contact details and academic profiles for Owen Li Murphy."
+>
+  <h1>{CONTACT_CONTENT.title}</h1>
+  <p>{CONTACT_CONTENT.intro}</p>
+
+  <KeyValueTable rows={CONTACT_CONTENT.channels} />
+</BaseLayout>

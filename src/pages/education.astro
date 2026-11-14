@@ -1,0 +1,45 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { EDUCATION_CONTENT } from "@data/education";
+import EntryItem from "@components/ui/EntryItem.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
+import SkillRow from "@components/sections/education/SkillRow.astro";
+---
+
+<BaseLayout
+  title={`Education & Experience — ${SITE.name}`}
+  description="Academic degrees, software engineering experience, and technical skills of Owen Li Murphy."
+>
+  <h1>{EDUCATION_CONTENT.title}</h1>
+
+  <h2>Education</h2>
+  {EDUCATION_CONTENT.education.map((edu) => (
+    <EntryItem title={edu.degree} meta={edu.meta}>
+      {edu.details && <p class="small">{edu.details}</p>}
+    </EntryItem>
+  ))}
+
+  <h2>Experience</h2>
+  {EDUCATION_CONTENT.experience.map((exp) => (
+    <EntryItem title={exp.role}>
+      <Fragment slot="meta">
+        {exp.company}
+        {exp.datesTodo && (
+          <>
+            {" "}
+            &nbsp;·&nbsp; <TodoNote>{exp.datesTodo}</TodoNote>
+          </>
+        )}
+      </Fragment>
+      <TodoNote as="p" class="small">
+        {exp.summaryTodo}
+      </TodoNote>
+    </EntryItem>
+  ))}
+
+  <h2>Skills</h2>
+  {EDUCATION_CONTENT.skills.map((skill) => (
+    <SkillRow skill={skill} />
+  ))}
+</BaseLayout>
