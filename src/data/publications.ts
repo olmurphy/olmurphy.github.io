@@ -14,21 +14,16 @@ export interface PublicationEntry {
 export const PUBLICATIONS_CONTENT = {
   title: "Publications",
   subtitle: "Papers, preprints, and works in progress.",
-  publishedEmptyTodo:
-    "None yet — when a paper is accepted, move it here and add the venue and year.",
+  published: [] satisfies readonly PublicationEntry[],
   underReview: [
     {
       title: "Multi-agent swarm governance via multi-task peer prediction",
       venue: "Submitted to NeurIPS 2026",
-      coAuthors: "co-authors",
-      coAuthorsTodo: true,
+      coAuthors: "with SIMIS & Fudan/Tsinghua collaborators",
       summary:
         "Governance of AI agent swarms using multi-task peer prediction and Knowledge-Free Correlated Agreement.",
       status: "Under review",
       tags: ["Game theory", "Mechanism design", "Multi-agent systems"],
-      linkLabel: "preprint link",
-      linkHref: "#",
-      linkTodo: true,
     },
   ] satisfies readonly PublicationEntry[],
   inProgress: [
@@ -42,6 +37,5 @@ export const PUBLICATIONS_CONTENT = {
       tags: ["Deep learning", "Distribution shift", "Selective prediction"],
     },
   ] satisfies readonly PublicationEntry[],
-  talksEmptyTodo:
-    "None yet — add any presentations here, even course or lab-group talks.",
+  talks: [] satisfies readonly PublicationEntry[],
 } as const;

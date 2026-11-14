@@ -13,8 +13,8 @@ export const LEARNING_CONTENT = {
   title: "Learning",
   subtitle:
     "What I'm studying outside of coursework. It shows how I think, and it's a good conversation starter.",
-  reflectionTodo:
-    "Write 2–4 sentences in your own voice: what the self-study has been like, one or two things that surprised you, and how it connects to your research. This note frames the lists below.",
+  reflection:
+    "Self-studying textbooks from first principles—from spectral graph theory and matrix analysis down to GPU memory hierarchies and biochemistry—has changed how I read ML papers. Seeing the same variational, spectral, and dynamical structures reappear across electrodynamics, statistical physics, and molecular systems helps me strip away library abstractions and focus on underlying mathematical mechanisms.",
   categories: [
     {
       heading: "Mathematics",

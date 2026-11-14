@@ -2,39 +2,51 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
 import { PUBLICATIONS_CONTENT } from "@data/publications";
+import { buildPublicationsJsonLd } from "@data/schema";
 import PublicationItem from "@components/sections/publications/PublicationItem.astro";
-import TodoNote from "@components/ui/TodoNote.astro";
 ---
 
 <BaseLayout
   title={`Publications — ${SITE.name}`}
   description="Papers, preprints, and works in progress by Owen Li Murphy."
+  jsonLd={buildPublicationsJsonLd()}
 >
   <h1>{PUBLICATIONS_CONTENT.title}</h1>
   <p class="muted">{PUBLICATIONS_CONTENT.subtitle}</p>
 
-  <h2>Published &amp; accepted</h2>
-  <p class="muted">
-    <TodoNote>{PUBLICATIONS_CONTENT.publishedEmptyTodo}</TodoNote>
-  </p>
+  {PUBLICATIONS_CONTENT.published.length > 0 && (
+    <>
+      <h2>Published &amp; accepted</h2>
+      {PUBLICATIONS_CONTENT.published.map((paper) => (
+        <PublicationItem entry={paper} />
+      ))}
+    </>
+  )}
 
-  <h2>Under review</h2>
-  {PUBLICATIONS_CONTENT.underReview.map((paper) => (
-    <PublicationItem entry={paper} />
-  ))}
+  {PUBLICATIONS_CONTENT.underReview.length > 0 && (
+    <>
+      <h2>Under review</h2>
+      {PUBLICATIONS_CONTENT.underReview.map((paper) => (
+        <PublicationItem entry={paper} />
+      ))}
+    </>
+  )}
 
-  <h2>In progress</h2>
-  {PUBLICATIONS_CONTENT.inProgress.map((paper) => (
-    <PublicationItem entry={paper} />
-  ))}
+  {PUBLICATIONS_CONTENT.inProgress.length > 0 && (
+    <>
+      <h2>In progress</h2>
+      {PUBLICATIONS_CONTENT.inProgress.map((paper) => (
+        <PublicationItem entry={paper} />
+      ))}
+    </>
+  )}
 
-  <p class="small muted">
-    <TodoNote>Tip:</TodoNote> once you have a preprint on arXiv, add the link
-    here. Preprints count — list them even before acceptance.
-  </p>
-
-  <h2>Talks &amp; posters</h2>
-  <p class="muted">
-    <TodoNote>{PUBLICATIONS_CONTENT.talksEmptyTodo}</TodoNote>
-  </p>
+  {PUBLICATIONS_CONTENT.talks.length > 0 && (
+    <>
+      <h2>Talks &amp; posters</h2>
+      {PUBLICATIONS_CONTENT.talks.map((talk) => (
+        <PublicationItem entry={talk} />
+      ))}
+    </>
+  )}
 </BaseLayout>

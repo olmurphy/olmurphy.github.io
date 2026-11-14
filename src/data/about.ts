@@ -4,13 +4,13 @@ export const ABOUT_CONTENT = {
   title: "About",
   subtitle: "The person behind the CV.",
   bioParagraphs: [
-    "I studied mathematics and computer science at Baylor University, then worked as a software engineer, including at IBM Consulting and American Express, focusing on high-throughput backend systems and machine-learning algorithms. Along the way I became more interested in why models work than in simply deploying them, which pulled me toward research.",
-    "I now live in Shanghai, where I studied Chinese at Shanghai Jiao Tong University after an intensive program at Beijing Language and Culture University. I have professional proficiency in Mandarin and enjoy working across both the English- and Chinese-speaking research communities.",
+    "I studied mathematics and computer science at Baylor University, then worked as a software engineer at IBM Consulting and later as an AI and software engineer at Global Business AI, focusing on high-throughput distributed systems and machine-learning infrastructure. Along the way I became more interested in why models behave the way they do than in simply deploying them, which pulled me toward research.",
+    "I now live in Shanghai, where I studied Chinese at Shanghai Jiao Tong University. I have working proficiency in Mandarin and enjoy collaborating across both the English- and Chinese-speaking research communities.",
   ],
-  whyThisFieldTodo:
-    "Write 3–5 sentences here in your own voice: what first pulled you toward ML and biology — a book, a problem, a moment. This is the most memorable paragraph on the site.",
-  backgroundTodo:
-    "Optional: a short paragraph on where you grew up, your family's background, and how living in the U.S. and China shaped your path. Keep it to what you're comfortable sharing publicly.",
+  whyThisField:
+    "Working on production ML infrastructure made clear how often modern models fail silently under distribution shift—a limitation that becomes critical in biology and medicine, where false confidence carries real experimental and clinical cost. My background in pure mathematics and distributed systems drew me toward building learning methods that are both theoretically grounded and reliable at scale, particularly for modeling single-cell systems, molecular structure, and multi-agent dynamics.",
+  background:
+    "I grew up in the United States and studied mathematics and computer science at Baylor before moving to New York to start my engineering career. Returning to China as an adoptee—first for language immersion in Beijing and now living and working in Shanghai—shaped how I think across cultures and academic traditions, and solidified my goal of pursuing graduate research in the U.S.",
   quickFacts: [
     {
       label: "Languages",
@@ -22,7 +22,7 @@ export const ABOUT_CONTENT = {
     },
     {
       label: "Next steps",
-      value: "M.S. at Georgia Tech, then Ph.D.",
+      value: "On-campus M.S. at Georgia Tech (Aug 2027), then Ph.D.",
     },
   ] satisfies readonly KeyValueRow[],
 } as const;

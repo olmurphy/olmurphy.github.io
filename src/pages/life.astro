@@ -2,7 +2,6 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
 import { LIFE_CATEGORIES, LIFE_CONTENT } from "@data/life";
-import TodoNote from "@components/ui/TodoNote.astro";
 import LifeFilter from "@components/sections/life/LifeFilter.astro";
 import PhotoTile from "@components/sections/life/PhotoTile.astro";
 import Lightbox from "@components/sections/life/Lightbox.astro";
@@ -20,7 +19,7 @@ const visibleCategories = LIFE_CATEGORIES.filter((cat) =>
   <h1>{LIFE_CONTENT.title}</h1>
   <p class="muted">{LIFE_CONTENT.subtitle}</p>
 
-  <TodoNote as="p">{LIFE_CONTENT.introTodo}</TodoNote>
+  <p>{LIFE_CONTENT.intro}</p>
 
   <LifeFilter categories={visibleCategories} />
 
