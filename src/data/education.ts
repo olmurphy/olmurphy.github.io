@@ -32,11 +32,11 @@ export const EDUCATION_CONTENT = {
   title: "Education & Experience",
   education: [
     {
-      degree: "M.S. in Computer Science, Research Thesis Option (planned)",
+      degree: "M.S. in Computer Science, Research Thesis Track (planned)",
       institution: "Georgia Institute of Technology",
       institutionSuffix: ", on campus",
       institutionHref: "https://www.gatech.edu/",
-      logoSrc: "/logos/gatech.svg",
+      logoSrc: "/logos/gatech.webp",
       period: "beginning August 2027",
     },
     {
@@ -44,7 +44,7 @@ export const EDUCATION_CONTENT = {
       institution: "Georgia Institute of Technology",
       institutionSuffix: " (OMSCS)",
       institutionHref: "https://www.gatech.edu/",
-      logoSrc: "/logos/gatech.svg",
+      logoSrc: "/logos/gatech.webp",
       period: "Fall 2025 – present",
       details:
         "Completed: Operating Systems, Machine Learning for Trading, Machine Learning. In progress: Deep Learning (CS 7643).",
@@ -53,21 +53,21 @@ export const EDUCATION_CONTENT = {
       degree: "Chinese Language Studies",
       institution: "Shanghai Jiao Tong University",
       institutionHref: "https://en.sjtu.edu.cn/",
-      logoSrc: "/logos/sjtu.svg",
+      logoSrc: "/logos/sjtu.webp",
       period: "Two semesters (高三 equivalent)",
     },
     {
       degree: "Intensive Chinese Language Program",
       institution: "Beijing Language and Culture University",
       institutionHref: "https://www.blcu.edu.cn/",
-      logoSrc: "/logos/blcu.svg",
+      logoSrc: "/logos/blcu.webp",
       period: "August 2025",
     },
     {
       degree: "B.S. in Mathematics and Computer Science",
       institution: "Baylor University",
       institutionHref: "https://www.baylor.edu/",
-      logoSrc: "/logos/baylor.svg",
+      logoSrc: "/logos/baylor.webp",
       period: "Aug 2018 – May 2022 · GPA 3.9",
     },
   ] satisfies readonly EducationEntry[],

@@ -43,7 +43,7 @@ export const RESEARCH_OVERVIEW = {
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
     date: "Aug 2027",
-    text: "Planning to begin the in-person M.S. in Computer Science (Research Thesis Option) at Georgia Tech.",
+    text: "Planning to begin the in-person M.S. in Computer Science (Research Thesis Track) at Georgia Tech.",
   },
   {
     date: "Jan 2027",

@@ -10,6 +10,7 @@ EXCLUDED_DIRS = {
     "venv",
     "dist",
     "build",
+    ".husky",
 }
 
 EXCLUDED_FILES = {

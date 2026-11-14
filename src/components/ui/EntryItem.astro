@@ -28,26 +28,10 @@ const fallbackInitials = logoAlt
           aria-label={logoAlt}
           class="logo-link"
         >
-          <img
-            src={logoSrc}
-            alt={logoAlt}
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-          />
-          <span class="logo-fallback" style="display: none;">
-            {fallbackInitials}
-          </span>
+          <img src={logoSrc} alt={logoAlt} width="38" height="38" />
         </a>
       ) : (
-        <>
-          <img
-            src={logoSrc}
-            alt={logoAlt}
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-          />
-          <span class="logo-fallback" style="display: none;">
-            {fallbackInitials}
-          </span>
-        </>
+        <img src={logoSrc} alt={logoAlt} width="38" height="38" />
       )}
     </div>
   )}
@@ -76,11 +60,11 @@ const fallbackInitials = logoAlt
   }
 
   .logo-wrap {
-    width: 38px;
-    height: 38px;
-    margin-top: 3px;
+    width: 42px;
+    height: 42px;
+    margin-top: 2px;
     flex-shrink: 0;
-    border-radius: 6px;
+    border-radius: 50%;
     border: 1px solid var(--color-border);
     background: #ffffff;
     overflow: hidden;
@@ -106,7 +90,7 @@ const fallbackInitials = logoAlt
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 4px;
+    padding: 2px;
   }
 
   .logo-fallback {
