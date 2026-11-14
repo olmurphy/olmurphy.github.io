@@ -1,0 +1,52 @@
+---
+import { NAV_ITEMS } from "@config/site";
+import ThemeToggle from "./ThemeToggle.astro";
+
+const normalize = (path: string) =>
+  path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+
+const currentPath = normalize(Astro.url.pathname);
+---
+
+<nav aria-label="Primary navigation">
+  {NAV_ITEMS.map((item) => {
+    const isActive = currentPath === normalize(item.href);
+    return (
+      <a
+        href={item.href}
+        class:list={[{ active: isActive }]}
+        aria-current={isActive ? "page" : undefined}
+      >
+        {item.label}
+      </a>
+    );
+  })}
+  <ThemeToggle />
+</nav>
+
+<style>
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+
+  nav a {
+    color: var(--color-text-muted);
+    padding: 8px 0 10px;
+    border-bottom: 2px solid transparent;
+  }
+
+  nav a:hover {
+    color: var(--color-text);
+    border-bottom-color: var(--color-border);
+  }
+
+  nav a.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+    font-weight: 600;
+  }
+</style>

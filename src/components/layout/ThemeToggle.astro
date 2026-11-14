@@ -1,0 +1,70 @@
+---
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  id="theme-toggle"
+  aria-label="Switch between light and dark mode"
+>
+  Dark mode
+</button>
+
+<style>
+  .theme-toggle {
+    margin-left: auto;
+    align-self: center;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById("theme-toggle");
+
+  function isSystemDark(): boolean {
+    return Boolean(
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches,
+    );
+  }
+
+  function getCurrentTheme(): "light" | "dark" {
+    const attr = root.getAttribute("data-theme");
+    if (attr === "light" || attr === "dark") return attr;
+    return isSystemDark() ? "dark" : "light";
+  }
+
+  function syncLabel(): void {
+    if (!btn) return;
+    btn.textContent = getCurrentTheme() === "dark" ? "Light mode" : "Dark mode";
+  }
+
+  btn?.addEventListener("click", () => {
+    const next = getCurrentTheme() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try {
+      localStorage.setItem("theme", next);
+    } catch {
+      // Ignore storage errors in restricted contexts
+    }
+    syncLabel();
+  });
+
+  syncLabel();
+</script>

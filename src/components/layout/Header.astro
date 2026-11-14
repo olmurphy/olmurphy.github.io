@@ -1,0 +1,39 @@
+---
+import { SITE } from "@config/site";
+import Nav from "./Nav.astro";
+---
+
+<header>
+  <div class="wrap">
+    <a class="site-name" href="/">
+      {SITE.name}
+    </a>
+    <div class="tagline">{SITE.tagline}</div>
+    <Nav />
+  </div>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--color-border);
+    padding: 22px 0 0;
+  }
+
+  .site-name {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--color-text);
+    border: none;
+  }
+
+  .site-name:hover {
+    border: none;
+  }
+
+  .tagline {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    margin: 2px 0 14px;
+  }
+</style>

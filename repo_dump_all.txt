@@ -26,8 +26,6 @@ jobs:
         with:
           node-version: 22
           cache: 'pnpm'
-      - name: Install, build, and upload your site
-        uses: withastro/action@v3
 
   deploy:
     needs: build
@@ -115,6 +113,206 @@ minimumReleaseAgeExclude:
   - astro@7.4.12
 
 ================================================================================
+FILE: src/components/layout/Footer.astro
+================================================================================
+
+---
+import { SITE } from '@config/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="wrap">© {year} {SITE.name}</div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--color-border);
+    padding: 20px 0 40px;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+  }
+</style>
+
+================================================================================
+FILE: src/components/layout/Header.astro
+================================================================================
+
+---
+import { SITE } from '@config/site';
+import Nav from './Nav.astro';
+---
+
+<header>
+  <div class="wrap">
+    <a class="site-name" href="/">{SITE.name}</a>
+    <div class="tagline">{SITE.tagline}</div>
+    <Nav />
+  </div>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--color-border);
+    padding: 22px 0 0;
+  }
+
+  .site-name {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--color-text);
+    border: none;
+  }
+
+  .site-name:hover {
+    border: none;
+  }
+
+  .tagline {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    margin: 2px 0 14px;
+  }
+</style>
+
+================================================================================
+FILE: src/components/layout/Nav.astro
+================================================================================
+
+---
+import { NAV_ITEMS } from '@config/site';
+import ThemeToggle from './ThemeToggle.astro';
+
+const normalize = (path: string) =>
+  path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+
+const currentPath = normalize(Astro.url.pathname);
+---
+
+<nav aria-label="Primary navigation">
+  {
+    NAV_ITEMS.map((item) => {
+      const isActive = currentPath === normalize(item.href);
+      return (
+        <a
+          href={item.href}
+          class:list={[{ active: isActive }]}
+          aria-current={isActive ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      );
+    })
+  }
+  <ThemeToggle />
+</nav>
+
+<style>
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+
+  nav a {
+    color: var(--color-text-muted);
+    padding: 8px 0 10px;
+    border-bottom: 2px solid transparent;
+  }
+
+  nav a:hover {
+    color: var(--color-text);
+    border-bottom-color: var(--color-border);
+  }
+
+  nav a.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+    font-weight: 600;
+  }
+</style>
+
+================================================================================
+FILE: src/components/layout/ThemeToggle.astro
+================================================================================
+
+---
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  id="theme-toggle"
+  aria-label="Switch between light and dark mode"
+>
+  Dark mode
+</button>
+
+<style>
+  .theme-toggle {
+    margin-left: auto;
+    align-self: center;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+
+  function isSystemDark(): boolean {
+    return Boolean(
+      window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+    );
+  }
+
+  function getCurrentTheme(): 'light' | 'dark' {
+    const attr = root.getAttribute('data-theme');
+    if (attr === 'light' || attr === 'dark') return attr;
+    return isSystemDark() ? 'dark' : 'light';
+  }
+
+  function syncLabel(): void {
+    if (!btn) return;
+    btn.textContent = getCurrentTheme() === 'dark' ? 'Light mode' : 'Dark mode';
+  }
+
+  btn?.addEventListener('click', () => {
+    const next = getCurrentTheme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      // Ignore storage errors in restricted contexts
+    }
+    syncLabel();
+  });
+
+  syncLabel();
+</script>
+
+================================================================================
 FILE: src/config/site.ts
 ================================================================================
 
@@ -144,6 +342,83 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: "Media", href: "/media" },
   { label: "Contact", href: "/contact" },
 ];
+
+================================================================================
+FILE: src/layouts/BaseLayout.astro
+================================================================================
+
+---
+import { SITE } from '@config/site';
+import Header from '@components/layout/Header.astro';
+import Footer from '@components/layout/Footer.astro';
+import '@styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = SITE.defaultTitle,
+  description = SITE.defaultDescription,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <script is:inline>
+      try {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <Header />
+    <main class="wrap page-enter">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    padding: 56px 0 60px;
+    min-height: 60vh;
+  }
+
+  .page-enter {
+    animation: fade var(--transition-page);
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-enter {
+      animation: none;
+    }
+  }
+</style>
 
 ================================================================================
 FILE: src/pages/index.astro
