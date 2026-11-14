@@ -3,6 +3,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
 import { FEATURES } from "@config/features";
 import { PROJECTS_CONTENT, type ProjectEntry } from "@data/projects";
+import { buildProjectsJsonLd } from "@data/schema";
 import ProjectCard from "@components/sections/projects/ProjectCard.astro";
 import TodoNote from "@components/ui/TodoNote.astro";
 
@@ -16,6 +17,7 @@ const visibleHackathons = PROJECTS_CONTENT.hackathons.filter(isVisible);
 <BaseLayout
   title={`Projects — ${SITE.name}`}
   description="Research and software engineering projects by Owen Li Murphy."
+  jsonLd={buildProjectsJsonLd()}
 >
   <h1>{PROJECTS_CONTENT.title}</h1>
   <p class="muted">{PROJECTS_CONTENT.subtitle}</p>

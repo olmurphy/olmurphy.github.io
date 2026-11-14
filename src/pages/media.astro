@@ -2,6 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
 import { MEDIA_CONTENT } from "@data/media";
+import { buildMediaJsonLd } from "@data/schema";
 import FeaturedTalkCard from "@components/sections/media/FeaturedTalkCard.astro";
 import Card from "@components/ui/Card.astro";
 import TodoNote from "@components/ui/TodoNote.astro";
@@ -10,6 +11,7 @@ import TodoNote from "@components/ui/TodoNote.astro";
 <BaseLayout
   title={`Media — ${SITE.name}`}
   description="Educational videos, viral talks, and science communication by Owen Li Murphy."
+  jsonLd={buildMediaJsonLd()}
 >
   <h1>{MEDIA_CONTENT.title}</h1>
   <p class="muted">{MEDIA_CONTENT.subtitle}</p>
