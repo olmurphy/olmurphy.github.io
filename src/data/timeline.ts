@@ -104,7 +104,7 @@ export const TIMELINE_CONTENT = {
           category: "academic",
         },
         {
-          date: "Sep 13, 2026",
+          date: "Sep 13, 2025",
           title: "Moved to Shanghai",
           description:
             "Relocated to Shanghai full-time to immerse in the language, culture, and local AI research ecosystem.",

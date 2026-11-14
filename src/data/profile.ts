@@ -12,5 +12,5 @@ export const PROFILE_LINKS: readonly ProfileLink[] = [
   },
   { label: "GitHub", href: "https://github.com/olmurphy" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/owenmurphy2022/" },
-  { label: "CV (PDF)", href: "/cv.pdf", todo: true },
+  { label: "CV (PDF)", href: "Owen_Li_Murphy_Resume.pdf", todo: false },
 ];

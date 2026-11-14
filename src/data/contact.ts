@@ -32,8 +32,8 @@ export const CONTACT_CONTENT = {
     {
       label: "CV",
       value: "Download PDF",
-      href: "/cv.pdf",
-      todo: true,
+      href: "Owen_Li_Murphy_Resume.pdf",
+      todo: false,
     },
   ] satisfies readonly KeyValueRow[],
 } as const;
