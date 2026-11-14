@@ -90,6 +90,13 @@ export const TIMELINE_CONTENT = {
       year: "2025",
       events: [
         {
+          date: "Oct 2025",
+          title: "Joined Move Crew Shanghai run club",
+          description:
+            "Began running with Move Crew in Shanghai, integrating into the local running community and weekly runs.",
+          category: "personal",
+        },
+        {
           date: "Sep 2025 – Jun 2026",
           title: "Studied Chinese at Shanghai Jiao Tong University",
           description:
