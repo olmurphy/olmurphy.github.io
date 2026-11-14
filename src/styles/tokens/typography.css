@@ -1,0 +1,32 @@
+:root {
+  /* Font Families */
+  --font-serif: Georgia, "Times New Roman", "Songti SC", serif;
+  --font-sans: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+
+  /* Type Scale */
+  --text-xs: 0.72rem;
+  --text-sm: 0.85rem;
+  --text-base: 0.95rem;
+  --text-body: 17px;
+  --text-lg: 1.05rem;
+  --text-xl: 1.1rem;
+  --text-2xl: 1.35rem;
+  --text-3xl: 1.7rem;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-body: 1.65;
+
+  /* Layout & Spacing */
+  --container-max: 760px;
+  --container-pad: 20px;
+
+  /* Radii */
+  --radius-sm: 3px;
+  --radius-card: 8px;
+  --radius-pill: 999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-page: 0.25s ease;
+}

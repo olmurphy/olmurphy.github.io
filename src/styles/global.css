@@ -1,0 +1,97 @@
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition-fast);
+}
+
+a:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+h1 {
+  font-size: var(--text-3xl);
+  margin: 0 0 6px;
+  line-height: var(--leading-tight);
+}
+
+h2 {
+  font-size: var(--text-xl);
+  margin: 34px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+h3 {
+  font-size: var(--text-lg);
+  margin: 0 0 2px;
+}
+
+p {
+  margin: 0 0 14px;
+}
+
+ul {
+  padding-left: 20px;
+  margin: 0 0 14px;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+/* Shared Layout & Typography Utilities */
+.wrap {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.small {
+  font-size: 0.9rem;
+}
+
+.todo {
+  background: var(--color-todo-bg);
+  color: var(--color-todo-text);
+  padding: 0 4px;
+  border-radius: var(--radius-sm);
+}

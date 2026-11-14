@@ -1,0 +1,54 @@
+:root {
+  /* Surfaces */
+  --color-bg: #fcfcfa;
+  --color-surface-subtle: #eaf1f8;
+
+  /* Typography */
+  --color-text: #1f2328;
+  --color-text-muted: #5d6570;
+
+  /* Borders & Dividers */
+  --color-border: #e3e3de;
+
+  /* Brand / Accent (swap --color-accent to #b3a369 for Georgia Tech gold) */
+  --color-accent: #1f4e79;
+  --color-accent-soft: #eaf1f8;
+
+  /* Draft / Placeholder Highlight */
+  --color-todo-bg: #fff3bf;
+  --color-todo-text: #5c4400;
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #15181c;
+  --color-surface-subtle: #1c2530;
+
+  --color-text: #e6e8ea;
+  --color-text-muted: #9aa3ad;
+
+  --color-border: #2a2f35;
+
+  --color-accent: #7fb2e5;
+  --color-accent-soft: #1c2530;
+
+  --color-todo-bg: #4a3d0a;
+  --color-todo-text: #ffe58a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #15181c;
+    --color-surface-subtle: #1c2530;
+
+    --color-text: #e6e8ea;
+    --color-text-muted: #9aa3ad;
+
+    --color-border: #2a2f35;
+
+    --color-accent: #7fb2e5;
+    --color-accent-soft: #1c2530;
+
+    --color-todo-bg: #4a3d0a;
+    --color-todo-text: #ffe58a;
+  }
+}
