@@ -1,0 +1,2 @@
+#!/bin/sh
+exec "$HOME/.git-templates/hooks/prepare-commit-msg" "$@"
