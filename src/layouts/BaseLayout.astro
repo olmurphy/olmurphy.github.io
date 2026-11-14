@@ -1,5 +1,6 @@
 ---
 import { SITE } from "@config/site";
+import { buildGlobalGraph, type JsonLdObject } from "@data/schema";
 import Header from "@components/layout/Header.astro";
 import Footer from "@components/layout/Footer.astro";
 import "@styles/global.css";
@@ -7,10 +8,43 @@ import "@styles/global.css";
 interface Props {
   title?: string;
   description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: "website" | "profile" | "article";
+  twitterCard?: "summary" | "summary_large_image";
+  jsonLd?: JsonLdObject | readonly JsonLdObject[];
 }
 
-const { title = SITE.defaultTitle, description = SITE.defaultDescription } =
-  Astro.props;
+const {
+  title = SITE.defaultTitle,
+  description = SITE.defaultDescription,
+  canonical,
+  ogImage = SITE.defaultOgImage,
+  ogImageAlt = SITE.defaultOgImageAlt,
+  ogType = "website",
+  twitterCard = "summary",
+  jsonLd,
+} = Astro.props;
+
+const siteBase = Astro.site ?? new URL(SITE.url);
+const normalizedPath =
+  Astro.url.pathname.length > 1 && Astro.url.pathname.endsWith("/")
+    ? Astro.url.pathname.slice(0, -1)
+    : Astro.url.pathname;
+
+const canonicalURL = canonical
+  ? new URL(canonical, siteBase).toString()
+  : new URL(normalizedPath, siteBase).toString();
+
+const resolvedOgImage = new URL(ogImage, siteBase).toString();
+
+const extraNodes = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+
+const schemaPayload = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [...buildGlobalGraph(), ...extraNodes],
+}).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
@@ -19,10 +53,39 @@ const { title = SITE.defaultTitle, description = SITE.defaultDescription } =
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content={`${SITE.name} (${SITE.chineseName})`} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content={twitterCard} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={resolvedOgImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={schemaPayload} />
+    <!-- Page-specific head injections (e.g., noindex, profile tags) -->
+    <slot name="head" />
+
     <script is:inline>
       try {
         const savedTheme = localStorage.getItem("theme");

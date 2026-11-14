@@ -51,7 +51,7 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
   },
   {
     date: "Nov 2026",
-    text: "Preparing Ph.D. applications in computer science and computational biology.",
+    text: "Preparing M.S. applications in computer science and computational biology.",
   },
   {
     date: "Aug 2026",

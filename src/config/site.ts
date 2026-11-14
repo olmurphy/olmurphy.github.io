@@ -14,6 +14,8 @@ export const SITE = {
   defaultDescription:
     "Personal academic website of Owen Li Murphy: deep learning, computational biology, and multi-agent systems.",
   url: "https://olmurphy.github.io",
+  defaultOgImage: "/photo.jpg",
+  defaultOgImageAlt: "Portrait of Owen Li Murphy",
 } as const;
 
 export const NAV_ITEMS: readonly NavItem[] = [
