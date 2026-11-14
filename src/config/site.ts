@@ -22,6 +22,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: "Research", href: "/research" },
   { label: "Publications", href: "/publications" },
   { label: "Projects", href: "/projects" },
+  { label: "Teaching", href: "/teaching", featureFlag: "showTeachingPage" },
   { label: "Group", href: "/group", featureFlag: "showLabGroupPage" },
   { label: "Education & Experience", href: "/education" },
   { label: "Learning", href: "/learning" },

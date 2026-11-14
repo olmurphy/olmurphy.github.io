@@ -1,0 +1,62 @@
+---
+import type { CourseEntry } from "@data/teaching";
+import EntryItem from "@components/ui/EntryItem.astro";
+import Tag from "@components/ui/Tag.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
+
+interface Props {
+  course: CourseEntry;
+}
+
+const { course } = Astro.props;
+---
+
+<EntryItem title={course.title}>
+  <Fragment slot="meta">
+    {course.institution} · {course.role} · {course.term}
+    {course.instructorName && (
+      <>
+        {" "}
+        · Instructor:{" "}
+        {course.instructorHref ? (
+          <a
+            href={course.instructorHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {course.instructorName}
+          </a>
+        ) : (
+          course.instructorName
+        )}
+      </>
+    )}
+  </Fragment>
+
+  <p class="small">
+    {course.todo ? <TodoNote>{course.summary}</TodoNote> : course.summary}
+  </p>
+
+  <div class="tags">
+    <Tag variant="status">{course.status}</Tag>
+    {course.tags.map((tag) => (
+      <Tag>{tag}</Tag>
+    ))}
+  </div>
+
+  {course.materialsHref && course.materialsLabel && (
+    <a class="small" href={course.materialsHref}>
+      {course.todo ? (
+        <TodoNote>{course.materialsLabel}</TodoNote>
+      ) : (
+        course.materialsLabel
+      )}
+    </a>
+  )}
+</EntryItem>
+
+<style>
+  .tags {
+    margin: 6px 0 6px;
+  }
+</style>

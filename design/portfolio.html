@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Owen Li Murphy — Machine Learning & Computational Biology</title>
+<meta name="description" content="Personal academic website of Owen Li Murphy: deep learning, computational biology, and multi-agent systems.">
+<style>
+  /* ---------- Design tokens: edit these to re-theme the whole site ---------- */
+  :root {
+    --bg: #fcfcfa;
+    --text: #1f2328;
+    --muted: #5d6570;
+    --line: #e3e3de;
+    --accent: #1f4e79;      /* deep blue; swap for Georgia Tech gold (#b3a369) if you like */
+    --accent-soft: #eaf1f8;
+    --max: 760px;
+  }
+  /* Dark theme: used when the visitor clicks "Dark mode", or when they haven't chosen and their system is set to dark */
+  :root[data-theme="dark"] {
+    --bg: #15181c;
+    --text: #e6e8ea;
+    --muted: #9aa3ad;
+    --line: #2a2f35;
+    --accent: #7fb2e5;
+    --accent-soft: #1c2530;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c;
+      --text: #e6e8ea;
+      --muted: #9aa3ad;
+      --line: #2a2f35;
+      --accent: #7fb2e5;
+      --accent-soft: #1c2530;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", "Songti SC", serif;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Header / nav ---------- */
+  header { border-bottom: 1px solid var(--line); padding: 22px 0 0; }
+  .site-name {
+    font-size: 1.35rem; font-weight: 700; letter-spacing: .2px;
+    color: var(--text); border: none;
+  }
+  .tagline { color: var(--muted); font-size: .95rem; margin: 2px 0 14px; }
+  nav {
+    display: flex; flex-wrap: wrap; gap: 4px 20px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: .9rem;
+  }
+  nav a {
+    color: var(--muted); padding: 8px 0 10px; border-bottom: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); border-bottom-color: var(--line); }
+  nav a.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  /* Light / dark toggle button (sits at the right end of the nav) */
+  .theme-toggle {
+    margin-left: auto; align-self: center;
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ---------- Pages (one visible at a time) ---------- */
+  main { padding: 56px 0 60px; min-height: 60vh; }
+  .page { display: none; }
+  .page.active { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .page.active { animation: none; } html { scroll-behavior: auto; } }
+
+  h1 { font-size: 1.7rem; margin: 0 0 6px; line-height: 1.25; }
+  h2 {
+    font-size: 1.1rem; margin: 34px 0 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600;
+  }
+  h3 { font-size: 1.05rem; margin: 0 0 2px; }
+  p { margin: 0 0 14px; }
+  ul { padding-left: 20px; margin: 0 0 14px; }
+  li { margin-bottom: 4px; }
+  .muted { color: var(--muted); }
+  .small { font-size: .9rem; }
+
+  /* ---------- Home ---------- */
+  .hero { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+  .portrait {
+    width: 170px; height: 170px; border-radius: 50%;
+    background: var(--accent-soft); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: .8rem; text-align: center; flex-shrink: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .hero-text { flex: 1; min-width: 260px; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 6px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: .9rem; }
+
+  .news li { list-style: none; margin-left: -20px; display: flex; gap: 14px; }
+  .news .date { color: var(--muted); min-width: 78px; font-size: .9rem;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; padding-top: 2px; }
+
+  /* ---------- Cards / entries ---------- */
+  .entry { margin-bottom: 22px; }
+  .entry .meta { color: var(--muted); font-size: .9rem; margin-bottom: 4px; }
+  .tag {
+    display: inline-block; font-size: .72rem; padding: 1px 8px; margin-right: 4px;
+    border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .card {
+    border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; margin-bottom: 14px;
+    transition: border-color .15s ease;
+  }
+  .card:hover { border-color: var(--accent); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .grid .card { margin: 0; }
+
+  .callout { background: var(--accent-soft); border-radius: 8px; padding: 14px 18px; margin: 0 0 18px; }
+
+  /* Publication tags: status (filled) + topic (outlined) */
+  .tags { margin: 6px 0 6px; }
+  .tag.status { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
+  /* Skills: plain labeled lines instead of a grid, so the list can grow without redesign */
+  .skill { margin-bottom: 14px; }
+  .skill .label {
+    display: block; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  /* Placeholders you should replace — highlighted so none slip through */
+  .todo { background: #fff3bf; color: #5c4400; padding: 0 4px; border-radius: 3px; }
+  :root[data-theme="dark"] .todo { background: #4a3d0a; color: #ffe58a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .todo { background: #4a3d0a; color: #ffe58a; } }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 20px 0 40px; color: var(--muted); font-size: .85rem;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  td { padding: 6px 12px 6px 0; vertical-align: top; border-bottom: 1px solid var(--line); }
+  td:first-child { color: var(--muted); width: 38%; }
+</style>
+<script>
+  // Apply a saved theme choice before the page paints, to avoid a flash of the wrong theme
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="site-name" href="#home">Owen Li Murphy</a>
+    <div class="tagline">Deep learning · Computational biology · Multi-agent systems</div>
+    <nav id="nav">
+      <a href="#home" data-page="home">Home</a>
+      <a href="#about" data-page="about">About</a>
+      <a href="#research" data-page="research">Research</a>
+      <a href="#publications" data-page="publications">Publications</a>
+      <a href="#projects" data-page="projects">Projects</a>
+      <a href="#education" data-page="education">Education & Experience</a>
+      <a href="#learning" data-page="learning">Learning</a>
+      <a href="#media" data-page="media">Media</a>
+      <a href="#contact" data-page="contact">Contact</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode">Dark mode</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===================== HOME ===================== -->
+  <section class="page" id="home">
+    <div class="hero">
+      <div class="portrait">
+        <!-- Put your photo in the same folder as this file and name it photo.jpg (or change the file name below).
+             Until the file is there, the yellow placeholder shows instead. -->
+        <img src="photo.jpg" alt="Portrait of Owen Li Murphy"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span class="todo" style="display:none">add photo.jpg</span>
+      </div>
+      <div class="hero-text">
+        <h1>Owen Li Murphy</h1>
+        <p class="muted" style="margin-bottom:10px">M.S. Computer Science (Machine Learning), Georgia Tech &nbsp;·&nbsp; 李晓党</p>
+        <p>
+          I'm a software engineer and aspiring researcher working at the intersection of
+          <strong>deep learning</strong> and <strong>computational biology</strong>, with a background in
+          mathematics and distributed systems. I'm preparing for a Ph.D. in computer science or computational biology.
+        </p>
+        <div class="links">
+          <a href="#contact">Email</a>
+          <a href="#" class="todo">Google Scholar</a>
+          <a href="#" class="todo">GitHub</a>
+          <a href="#" class="todo">LinkedIn</a>
+          <a href="#" class="todo">CV (PDF)</a>
+        </div>
+      </div>
+    </div>
+
+    <h2>Research interests</h2>
+    <p>
+      My goal is to build machine-learning methods that are reliable enough to be useful in biology, and I'm focused on three areas:
+    </p>
+    <ul>
+      <li><strong>Computational biology:</strong> deep learning for single-cell and spatial omics, structural biology, and computer-aided drug discovery.</li>
+      <li><strong>Reliable deep learning:</strong> confidence, abstention, and robustness under distribution shift.</li>
+      <li><strong>Mathematical foundations:</strong> spectral graph theory, differential geometry, and functional analysis as tools for understanding learning systems.</li>
+    </ul>
+    <p class="small"><a href="#research">More on my research →</a></p>
+
+    <h2>News</h2>
+    <ul class="news">
+      <li><span class="date">Nov 2026</span><span>Preparing Ph.D. applications in computer science and computational biology.</span></li>
+      <li><span class="date">2026</span><span>Submitted a paper on multi-agent swarm governance to NeurIPS 2026.</span></li>
+      <li><span class="date">Fall 2025</span><span>Began the M.S. in Computer Science (ML specialization) at Georgia Tech via OMSCS.</span></li>
+      <li><span class="date">Aug 2027</span><span>Planning to begin the in-person M.S. at Georgia Tech (Research Thesis Option).</span></li>
+    </ul>
+    <p class="small muted">Edit or add rows in the News list in the HTML — keep it to 3–5 recent items.</p>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="page" id="about">
+    <h1>About</h1>
+    <p class="muted">The person behind the CV.</p>
+
+    <p>
+      I studied mathematics and computer science at Baylor University, then worked as a software engineer, including at
+      IBM Consulting and American Express, focusing on high-throughput backend systems and machine-learning algorithms.
+      Along the way I became more interested in <em>why</em> models work than in simply deploying them, which pulled me toward research.
+    </p>
+    <p>
+      I now live in Shanghai, where I studied Chinese at Shanghai Jiao Tong University after an intensive program at
+      Beijing Language and Culture University. I'm fluent in Mandarin (HSK 6) and enjoy working across both the
+      English- and Chinese-speaking research communities.
+    </p>
+
+    <h2>Why this field</h2>
+    <p class="todo">Write 3–5 sentences here in your own voice: what first pulled you toward ML and biology — a book, a problem, a moment. This is the most memorable paragraph on the site.</p>
+
+    <h2>Background & story</h2>
+    <p class="todo">Optional: a short paragraph on where you grew up, your family's background, and how living in the U.S. and China shaped your path. Keep it to what you're comfortable sharing publicly.</p>
+
+    <h2>Outside the lab</h2>
+    <ul>
+      <li>Calisthenics, flexibility training, bouldering and climbing, and cycling.</li>
+      <li>Making educational videos — see <a href="#media">Media</a>.</li>
+      <li>Tinkering with hardware: Raspberry Pi, Arduino, and a home lab.</li>
+      <li>Competitive programming (Python and C++).</li>
+    </ul>
+
+    <h2>Quick facts</h2>
+    <table>
+      <tr><td>Languages</td><td>English (native), Mandarin Chinese (fluent, HSK 6)</td></tr>
+      <tr><td>Based in</td><td>Shanghai, China</td></tr>
+      <tr><td>Next steps</td><td>M.S. at Georgia Tech, then Ph.D.</td></tr>
+    </table>
+  </section>
+
+  <!-- ===================== RESEARCH ===================== -->
+  <section class="page" id="research">
+    <h1>Research</h1>
+    <p class="muted">What I work on, what I'm curious about, and where I'm headed.</p>
+
+    <h2>Statement</h2>
+    <p>
+      My long-term goal is to build machine-learning methods that are reliable enough to be useful in biology and medicine.
+      That means models that know when they don't know, that can be trusted at scale, and that respect the structure of the
+      scientific problem they're applied to.
+    </p>
+
+    <h2>Current directions</h2>
+    <ul>
+      <li><strong>Reliable deep learning</strong> — confidence, abstention, and robustness. Studying how well-calibrated models stay under distribution shift, comparing standard training with data-augmentation approaches such as AugMix on CIFAR-10 Wide ResNets (evaluated on CIFAR-10-C and CIFAR-10.1).</li>
+      <li><strong>Computational biology</strong> — deep learning for the life sciences. Building the foundations to work on single-cell and spatial omics, structural biology, and computer-aided drug discovery.</li>
+    </ul>
+
+    <h2>Areas I'm exploring</h2>
+    <p>
+      <span class="tag">Deep learning</span><span class="tag">NLP</span><span class="tag">Reinforcement learning</span>
+      <span class="tag">Single-cell & spatial omics</span><span class="tag">Structural biology</span>
+      <span class="tag">Systems biology</span><span class="tag">Drug discovery</span>
+      <span class="tag">Computational neuroscience</span><span class="tag">Phylogenetics</span>
+      <span class="tag">Synthetic biology</span><span class="tag">Precision medicine</span>
+    </p>
+
+    <h2>Mathematical foundations</h2>
+    <p>
+      I study mathematics beyond what my coursework requires — linear algebra and matrix theory, spectral graph theory,
+      abstract algebra, functional analysis, and differential geometry — because I believe strong theory pays off in applied ML.
+      Alongside this I study theoretical physics, computer architecture (GPU and memory hierarchies), neuroscience, and chemistry.
+    </p>
+
+    <div class="callout">
+      <strong>Prospective advisors and collaborators:</strong> I'm happy to talk about research. <a href="#contact">Get in touch →</a>
+    </div>
+  </section>
+
+  <!-- ===================== PUBLICATIONS ===================== -->
+  <section class="page" id="publications">
+    <h1>Publications</h1>
+    <p class="muted">Papers, preprints, and works in progress.</p>
+
+    <h2>Published & accepted</h2>
+    <p class="muted"><span class="todo">None yet — when a paper is accepted, move it here and add the venue and year.</span></p>
+
+    <h2>Under review</h2>
+    <div class="entry">
+      <h3>Multi-agent swarm governance via multi-task peer prediction</h3>
+      <div class="meta">Submitted to NeurIPS 2026 &nbsp;·&nbsp; <span class="todo">co-authors</span></div>
+      <p class="small">Governance of AI agent swarms using multi-task peer prediction and Knowledge-Free Correlated Agreement.</p>
+      <div class="tags">
+        <span class="tag status">Under review</span>
+        <span class="tag">Game theory</span><span class="tag">Mechanism design</span><span class="tag">Multi-agent systems</span>
+      </div>
+      <a class="small" href="#"><span class="todo">preprint link</span></a>
+    </div>
+
+    <h2>In progress</h2>
+    <div class="entry">
+      <h3>Confidence and abstention of CIFAR-10 Wide ResNets under distribution shift</h3>
+      <div class="meta">Georgia Tech CS 7643 Deep Learning · team project</div>
+      <p class="small">Compares standard and AugMix training on CIFAR-10-C and CIFAR-10.1.</p>
+      <div class="tags">
+        <span class="tag status">In progress</span>
+        <span class="tag">Deep learning</span><span class="tag">Distribution shift</span><span class="tag">Selective prediction</span>
+      </div>
+    </div>
+
+    <p class="small muted">
+      <span class="todo">Tip:</span> once you have a preprint on arXiv, add the link here. Preprints count — list them even before acceptance.
+    </p>
+
+    <h2>Talks & posters</h2>
+    <p class="muted"><span class="todo">None yet — add any presentations here, even course or lab-group talks.</span></p>
+  </section>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section class="page" id="projects">
+    <h1>Projects</h1>
+    <p class="muted">Things I've built. Research projects first, then engineering.</p>
+
+    <h2 style="margin-top:22px">Projects</h2>
+    <div class="card">
+      <h3>CIFAR-10 confidence & abstention study</h3>
+      <div class="meta"><span class="tag">Deep learning</span><span class="tag">Robustness</span><span class="tag">PyTorch</span></div>
+      <p class="small">A two-month, four-person project examining model confidence under distribution shift with AugMix-trained Wide ResNets.</p>
+      <a class="small" href="#"><span class="todo">Report / code</span></a>
+    </div>
+
+    <div class="card">
+      <h3>AdmissionMatch</h3>
+      <div class="meta"><span class="tag">Platform</span><span class="tag">Next.js</span><span class="tag">FastAPI</span><span class="tag">pgvector</span></div>
+      <p class="small">A B2B2C recruitment and matching platform for business-school applicants, built on Next.js, FastAPI, and PostgreSQL with vector search.</p>
+    </div>
+
+    <div class="card">
+      <h3>Chatbot management platform</h3>
+      <div class="meta"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Systems design</span></div>
+      <p class="small">A Dify/Langflow-style interface with a canvas workflow view, designed for a scalable distributed backend.</p>
+    </div>
+
+    <div class="card">
+      <h3>AI form-filling browser extension</h3>
+      <div class="meta"><span class="tag">LLMs</span><span class="tag">Browser extension</span><span class="tag">Proposal</span></div>
+      <p class="small">A product design for an extension that uses semantic mapping to autofill application forms across U.S. and Chinese browsers.</p>
+    </div>
+
+    <h2>Hackathons</h2>
+    <div class="card">
+      <h3>BetterMe</h3>
+      <div class="meta"><span class="tag status">24-hour hackathon</span><span class="tag">Full-stack</span><span class="tag">LLMs</span> <span class="todo">event name, date, result</span></div>
+      <p class="small">A full-stack AI roleplay application designed and built end to end within a 24-hour hackathon.</p>
+      <a class="small" href="#"><span class="todo">Demo / code</span></a>
+    </div>
+    <p class="small muted"><span class="todo">Add each new hackathon above this line: event, date, your role, what you built, and any placement or award.</span></p>
+
+    <p class="small muted">Tip: pick your 3–5 best and give each a one-line takeaway, plus a link to code or a write-up. For a research portfolio, quality and clarity matter more than quantity.</p>
+  </section>
+
+  <!-- ===================== EDUCATION & EXPERIENCE ===================== -->
+  <section class="page" id="education">
+    <h1>Education & Experience</h1>
+
+    <h2>Education</h2>
+    <div class="entry">
+      <h3>M.S. in Computer Science, Machine Learning specialization</h3>
+      <div class="meta">Georgia Institute of Technology (OMSCS) · Fall 2025 – present</div>
+      <p class="small">Completed: Operating Systems, Machine Learning for Trading, Machine Learning. In progress: Deep Learning (CS 7643).</p>
+    </div>
+    <div class="entry">
+      <h3>M.S. in Computer Science, Research Thesis Option (planned)</h3>
+      <div class="meta">Georgia Institute of Technology, on campus · beginning August 2027</div>
+    </div>
+    <div class="entry">
+      <h3>B.S. in Mathematics and Computer Science</h3>
+      <div class="meta">Baylor University · 2018 – 2022 · GPA 3.9</div>
+    </div>
+    <div class="entry">
+      <h3>Chinese language studies</h3>
+      <div class="meta">Shanghai Jiao Tong University · Aug 2025 – Jun 2026 &nbsp;|&nbsp; Beijing Language and Culture University · Aug 2024</div>
+      <p class="small">HSK 6 certified.</p>
+    </div>
+
+    <h2>Experience</h2>
+    <div class="entry">
+      <h3>Software Engineer</h3>
+      <div class="meta">IBM Consulting · <span class="todo">dates</span></div>
+      <p class="small todo">Add 1–2 lines on what you built and the impact.</p>
+    </div>
+    <div class="entry">
+      <h3>Software Engineer</h3>
+      <div class="meta">American Express · <span class="todo">dates</span></div>
+      <p class="small todo">Add 1–2 lines on what you built and the impact.</p>
+    </div>
+
+    <h2>Skills</h2>
+    <div class="skill">
+      <span class="label">Machine learning</span>
+      PyTorch · deep learning · NLP · reinforcement learning · multi-agent systems <span class="todo">add: agent harnesses, libraries…</span>
+    </div>
+    <div class="skill">
+      <span class="label">Computational biology</span>
+      <span class="todo">name the tools and biological datasets you've actually worked with</span>
+    </div>
+    <div class="skill">
+      <span class="label">Compute & hardware</span>
+      NVIDIA GPUs · GPU memory hierarchies · Raspberry Pi · Arduino
+    </div>
+    <div class="skill">
+      <span class="label">Systems & engineering</span>
+      Distributed systems · backend services · Docker · Git · Linux · Tailscale
+    </div>
+    <div class="skill">
+      <span class="label">Programming</span>
+      Python · C++ · TypeScript
+    </div>
+    <div class="skill">
+      <span class="label">Research practice</span>
+      Literature review · experiment design · technical writing · science communication
+    </div>
+    <div class="skill">
+      <span class="label">Languages</span>
+      English (native) · Mandarin Chinese (fluent, HSK 6)
+    </div>
+  </section>
+
+  <!-- ===================== LEARNING ===================== -->
+  <section class="page" id="learning">
+    <h1>Learning</h1>
+    <p class="muted">What I'm studying outside of coursework. It shows how I think, and it's a good conversation starter.</p>
+
+    <h2>What I've taken from it</h2>
+    <p class="todo">Write 2–4 sentences in your own voice: what the self-study has been like, one or two things that surprised you, and how it connects to your research. This note frames the lists below.</p>
+
+    <h2>Mathematics</h2>
+    <ul>
+      <li>Graduate-level linear algebra and matrix theory</li>
+      <li><em>Graph Theory</em> — Diestel</li>
+      <li><em>Abstract Algebra</em> — Dummit & Foote</li>
+      <li>Spectral graph theory; next: <em>Introduction to Smooth Manifolds</em> — Lee</li>
+    </ul>
+
+    <h2>Computer science</h2>
+    <ul>
+      <li><em>Computer Architecture</em> — Hennessy & Patterson</li>
+      <li><em>Distributed Systems</em> — van Steen & Tanenbaum</li>
+      <li><em>Computer Networking</em> — Kurose & Ross</li>
+      <li>Compilers (Aho et al.), HPC (Grama), cloud computing (Hwang)</li>
+    </ul>
+
+    <h2>Natural sciences</h2>
+    <ul>
+      <li><em>Introduction to Electrodynamics</em> — Griffiths</li>
+      <li><em>Organic Chemistry</em> — Clayden</li>
+      <li>Biochemistry, genetics, and neuroscience</li>
+      <li>Robotics — Lynch & Park, Spong, Thrun</li>
+    </ul>
+  </section>
+
+  <!-- ===================== MEDIA ===================== -->
+  <section class="page" id="media">
+    <h1>Media</h1>
+    <p class="muted">Teaching and communication.</p>
+
+    <div class="card">
+      <h3>Journey to Become a Polymath</h3>
+      <p class="small">
+        An educational video series about learning across disciplines, published in English and Chinese on
+        YouTube, Instagram Reels, TikTok, Xiaohongshu, and Shipinhao.
+      </p>
+      <div class="links">
+        <a href="#"><span class="todo">YouTube</span></a>
+        <a href="#"><span class="todo">Xiaohongshu</span></a>
+        <a href="#"><span class="todo">Embed your best episode here</span></a>
+      </div>
+    </div>
+
+    <p class="small muted">
+      Communicating clearly is a real asset for a researcher. Keep this page if you plan to continue the series; otherwise it can be folded into About.
+    </p>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section class="page" id="contact">
+    <h1>Contact</h1>
+    <p>
+      I'm always glad to hear from researchers, prospective advisors, and fellow students.
+    </p>
+    <table>
+      <tr><td>Email</td><td><a href="mailto:you@example.com" class="todo">you@example.com</a></td></tr>
+      <tr><td>Location</td><td>Shanghai, China (UTC+8)</td></tr>
+      <tr><td>GitHub</td><td><a href="#" class="todo">github.com/username</a></td></tr>
+      <tr><td>Google Scholar</td><td><a href="#" class="todo">link</a></td></tr>
+      <tr><td>LinkedIn</td><td><a href="#" class="todo">link</a></td></tr>
+      <tr><td>CV</td><td><a href="#" class="todo">Download PDF</a></td></tr>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Owen Li Murphy</div>
+</footer>
+
+<script>
+  // Simple hash-based tab switching: #home, #about, #research, ...
+  (function () {
+    var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+    var ids = pages.map(function (p) { return p.id; });
+
+    function show() {
+      var id = (location.hash || '#home').slice(1);
+      if (ids.indexOf(id) === -1) id = 'home';
+      pages.forEach(function (p) { p.classList.toggle('active', p.id === id); });
+      links.forEach(function (a) { a.classList.toggle('active', a.dataset.page === id); });
+      window.scrollTo(0, 0);
+    }
+    window.addEventListener('hashchange', show);
+    show();
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Light / dark toggle. The choice is saved when the browser allows it; otherwise the site follows the system setting.
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    function systemDark() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+    function current() { return root.getAttribute('data-theme') || (systemDark() ? 'dark' : 'light'); }
+    function label() { btn.textContent = current() === 'dark' ? 'Light mode' : 'Dark mode'; }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+</script>
+</body>
+</html>

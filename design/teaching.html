@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teaching — Owen Li Murphy</title>
+<meta name="description" content="Personal academic website of Owen Li Murphy: deep learning, computational biology, and multi-agent systems.">
+<style>
+  /* ---------- Design tokens: edit these to re-theme the whole site ---------- */
+  :root {
+    --bg: #fcfcfa;
+    --text: #1f2328;
+    --muted: #5d6570;
+    --line: #e3e3de;
+    --accent: #1f4e79;      /* deep blue; swap for Georgia Tech gold (#b3a369) if you like */
+    --accent-soft: #eaf1f8;
+    --max: 760px;
+  }
+  /* Dark theme: used when the visitor clicks "Dark mode", or when they haven't chosen and their system is set to dark */
+  :root[data-theme="dark"] {
+    --bg: #15181c;
+    --text: #e6e8ea;
+    --muted: #9aa3ad;
+    --line: #2a2f35;
+    --accent: #7fb2e5;
+    --accent-soft: #1c2530;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c;
+      --text: #e6e8ea;
+      --muted: #9aa3ad;
+      --line: #2a2f35;
+      --accent: #7fb2e5;
+      --accent-soft: #1c2530;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", "Songti SC", serif;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Header / nav ---------- */
+  header { border-bottom: 1px solid var(--line); padding: 22px 0 0; }
+  .site-name {
+    font-size: 1.35rem; font-weight: 700; letter-spacing: .2px;
+    color: var(--text); border: none;
+  }
+  .tagline { color: var(--muted); font-size: .95rem; margin: 2px 0 14px; }
+  nav {
+    display: flex; flex-wrap: wrap; gap: 4px 20px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: .9rem;
+  }
+  nav a {
+    color: var(--muted); padding: 8px 0 10px; border-bottom: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); border-bottom-color: var(--line); }
+  nav a.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  /* Light / dark toggle button (sits at the right end of the nav) */
+  .theme-toggle {
+    margin-left: auto; align-self: center;
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ---------- Pages (one visible at a time) ---------- */
+  main { padding: 56px 0 60px; min-height: 60vh; }
+  .page { display: none; }
+  .page.active { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .page.active { animation: none; } html { scroll-behavior: auto; } }
+
+  h1 { font-size: 1.7rem; margin: 0 0 6px; line-height: 1.25; }
+  h2 {
+    font-size: 1.1rem; margin: 34px 0 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600;
+  }
+  h3 { font-size: 1.05rem; margin: 0 0 2px; }
+  p { margin: 0 0 14px; }
+  ul { padding-left: 20px; margin: 0 0 14px; }
+  li { margin-bottom: 4px; }
+  .muted { color: var(--muted); }
+  .small { font-size: .9rem; }
+
+  /* ---------- Home ---------- */
+  .hero { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+  .portrait {
+    width: 170px; height: 170px; border-radius: 50%;
+    background: var(--accent-soft); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: .8rem; text-align: center; flex-shrink: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .hero-text { flex: 1; min-width: 260px; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 6px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: .9rem; }
+
+  .news li { list-style: none; margin-left: -20px; display: flex; gap: 14px; }
+  .news .date { color: var(--muted); min-width: 78px; font-size: .9rem;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; padding-top: 2px; }
+
+  /* ---------- Cards / entries ---------- */
+  .entry { margin-bottom: 22px; }
+  .entry .meta { color: var(--muted); font-size: .9rem; margin-bottom: 4px; }
+  .tag {
+    display: inline-block; font-size: .72rem; padding: 1px 8px; margin-right: 4px;
+    border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .card {
+    border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; margin-bottom: 14px;
+    transition: border-color .15s ease;
+  }
+  .card:hover { border-color: var(--accent); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .grid .card { margin: 0; }
+
+  .callout { background: var(--accent-soft); border-radius: 8px; padding: 14px 18px; margin: 0 0 18px; }
+
+  /* Publication tags: status (filled) + topic (outlined) */
+  .tags { margin: 6px 0 6px; }
+  .tag.status { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
+  /* Skills: plain labeled lines instead of a grid, so the list can grow without redesign */
+  .skill { margin-bottom: 14px; }
+  .skill .label {
+    display: block; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  /* Placeholders you should replace — highlighted so none slip through */
+  .todo { background: #fff3bf; color: #5c4400; padding: 0 4px; border-radius: 3px; }
+  :root[data-theme="dark"] .todo { background: #4a3d0a; color: #ffe58a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .todo { background: #4a3d0a; color: #ffe58a; } }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 20px 0 40px; color: var(--muted); font-size: .85rem;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  td { padding: 6px 12px 6px 0; vertical-align: top; border-bottom: 1px solid var(--line); }
+  td:first-child { color: var(--muted); width: 38%; }
+</style>
+<script>
+  // Apply a saved theme choice before the page paints, to avoid a flash of the wrong theme
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="site-name" href="portfolio.html#home">Owen Li Murphy</a>
+    <div class="tagline">Deep learning · Computational biology · Multi-agent systems</div>
+    <nav id="nav">
+      <a href="portfolio.html#home">Home</a>
+      <a href="portfolio.html#about">About</a>
+      <a href="portfolio.html#research">Research</a>
+      <a href="portfolio.html#publications">Publications</a>
+      <a href="portfolio.html#projects">Projects</a>
+      <a href="portfolio.html#education">Education & Experience</a>
+      <a href="teaching.html" class="active">Teaching</a>
+      <a href="portfolio.html#learning">Learning</a>
+      <a href="portfolio.html#media">Media</a>
+      <a href="portfolio.html#contact">Contact</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode">Dark mode</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===================== TEACHING ===================== -->
+  <section class="page active" id="teaching">
+    <h1>Teaching</h1>
+    <p class="muted">Classes I'm teaching now and classes I've taught in the past.</p>
+
+    <!-- To add a class, copy one of the .entry blocks below and paste it at the top of the right section (newest first). -->
+
+    <h2>Currently teaching</h2>
+    <div class="entry">
+      <h3><span class="todo">Course title</span></h3>
+      <div class="meta"><span class="todo">Institution</span> · <span class="todo">Role (instructor / TA / tutor)</span> · <span class="todo">Term, e.g. Fall 2026 – present</span></div>
+      <p class="small"><span class="todo">Two sentences: what the class covers, who the students are, and what you do in it.</span></p>
+      <div class="tags">
+        <span class="tag status">Current</span>
+        <span class="tag"><span class="todo">Topic</span></span><span class="tag"><span class="todo">Level</span></span>
+      </div>
+      <a class="small" href="#"><span class="todo">Syllabus / materials</span></a>
+    </div>
+
+    <h2>Previously taught</h2>
+    <div class="entry">
+      <h3><span class="todo">Course title</span></h3>
+      <div class="meta"><span class="todo">Institution</span> · <span class="todo">Role</span> · <span class="todo">Term, e.g. Spring 2026</span></div>
+      <p class="small"><span class="todo">Two sentences on the class and what you did.</span></p>
+      <div class="tags">
+        <span class="tag status">Completed</span>
+        <span class="tag"><span class="todo">Topic</span></span><span class="tag"><span class="todo">Level</span></span>
+      </div>
+      <a class="small" href="#"><span class="todo">Syllabus / materials</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Owen Li Murphy</div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Light / dark toggle. The choice is saved when the browser allows it; otherwise the site follows the system setting.
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    function systemDark() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+    function current() { return root.getAttribute('data-theme') || (systemDark() ? 'dark' : 'light'); }
+    function label() { btn.textContent = current() === 'dark' ? 'Light mode' : 'Dark mode'; }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+</script>
+</body>
+</html>
