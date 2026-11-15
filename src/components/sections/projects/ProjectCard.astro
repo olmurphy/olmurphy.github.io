@@ -14,13 +14,34 @@ const { project } = Astro.props;
 <Card>
   <h3>{project.title}</h3>
   <div class="meta">
-    {project.statusTag && <Tag variant="status">{project.statusTag}</Tag>}
+    {project.statusTag && (
+      <Tag variant="status" href={project.statusHref}>
+        {project.statusTag}
+      </Tag>
+    )}
     {project.tags.map((tag) => (
       <Tag>{tag}</Tag>
     ))}
     {project.metaTodo && <TodoNote>{project.metaTodo}</TodoNote>}
   </div>
   <p class="small">{project.summary}</p>
+  {project.team && project.team.length > 0 && (
+    <p class="small team">
+      <span class="muted">Team:</span>{" "}
+      {project.team.map((member, idx) => (
+        <>
+          {idx > 0 && ", "}
+          {member.href ? (
+            <a href={member.href} target="_blank" rel="noopener noreferrer">
+              {member.name}
+            </a>
+          ) : (
+            member.name
+          )}
+        </>
+      ))}
+    </p>
+  )}
   {project.linkHref && project.linkLabel && (
     <a class="small" href={project.linkHref}>
       {project.linkTodo ? (
@@ -37,5 +58,9 @@ const { project } = Astro.props;
     color: var(--color-text-muted);
     font-size: 0.9rem;
     margin-bottom: 4px;
+  }
+
+  .team {
+    margin-top: -6px;
   }
 </style>

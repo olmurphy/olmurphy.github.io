@@ -22,8 +22,30 @@ const { event } = Astro.props;
       </>
     )}
   </div>
-  <h3>{event.title}</h3>
-  {event.description && <p class="small">{event.description}</p>}
+  <h3>
+    {event.eventHref ? (
+      <a href={event.eventHref} target="_blank" rel="noopener noreferrer">
+        {event.title}
+      </a>
+    ) : (
+      event.title
+    )}
+  </h3>
+  {(event.descriptionParts || event.description) && (
+    <p class="small">
+      {event.descriptionParts
+        ? event.descriptionParts.map((part) =>
+            part.href ? (
+              <a href={part.href} target="_blank" rel="noopener noreferrer">
+                {part.text}
+              </a>
+            ) : (
+              part.text
+            ),
+          )
+        : event.description}
+    </p>
+  )}
 </article>
 
 <style>

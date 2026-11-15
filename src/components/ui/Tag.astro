@@ -1,14 +1,27 @@
 ---
 interface Props {
   variant?: "default" | "status";
+  href?: string;
 }
 
-const { variant = "default" } = Astro.props;
+const { variant = "default", href } = Astro.props;
+const isExternal = href?.startsWith("http");
 ---
 
-<span class:list={["tag", { status: variant === "status" }]}>
-  <slot />
-</span>
+{href ? (
+  <a
+    href={href}
+    target={isExternal ? "_blank" : undefined}
+    rel={isExternal ? "noopener noreferrer" : undefined}
+    class:list={["tag", "tag-link", { status: variant === "status" }]}
+  >
+    <slot />
+  </a>
+) : (
+  <span class:list={["tag", { status: variant === "status" }]}>
+    <slot />
+  </span>
+)}
 
 <style>
   .tag {
@@ -26,5 +39,18 @@ const { variant = "default" } = Astro.props;
     background: var(--color-accent-soft);
     color: var(--color-accent);
     border-color: transparent;
+  }
+
+  .tag-link {
+    text-decoration: none;
+    transition:
+      border-color var(--transition-fast),
+      background-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .tag-link:hover {
+    border-color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
   }
 </style>

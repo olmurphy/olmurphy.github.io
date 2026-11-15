@@ -1,11 +1,18 @@
 import type { FeatureFlag } from "@config/features";
 
+export interface TeamMember {
+  name: string;
+  href?: string;
+}
+
 export interface ProjectEntry {
   title: string;
   statusTag?: string;
+  statusHref?: string;
   tags: readonly string[];
   metaTodo?: string;
   summary: string;
+  team?: readonly TeamMember[];
   linkLabel?: string;
   linkHref?: string;
   linkTodo?: boolean;
@@ -55,10 +62,24 @@ export const PROJECTS_CONTENT = {
     },
     {
       title: "BetterMe",
-      statusTag: "La French Tech Shanghai Hackathon 2025",
+      statusTag: "La French Tech Shanghai Hackathon · Jan 2026",
+      statusHref:
+        "https://www.frenchtechshanghai.com/upcoming-events/grow-ft-hackathon-2026/",
       tags: ["Full-stack", "LLMs"],
       summary:
-        "A full-stack AI roleplay application designed and built end to end within a 24-hour hackathon.",
+        "An AI avatar master trainer built for L'Oréal to deliver consistent onboarding, product Q&A, and sales coaching across multi-location retail floor teams—built end to end within 24 hours.",
+      team: [
+        { name: "Rahul Bura", href: "https://www.linkedin.com/in/rahulbura/" },
+        {
+          name: "Yasmine Kennou Filali",
+          href: "https://www.linkedin.com/in/yasmine-kennou-filali/",
+        },
+        {
+          name: "Charles Yin",
+          href: "https://www.linkedin.com/in/charles-yin-748386122/",
+        },
+        { name: "Yves B." },
+      ],
       linkLabel: "GitHub / Code",
       linkHref: "https://github.com/olmurphy/BetterMe",
       linkTodo: false,

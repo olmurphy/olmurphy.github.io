@@ -2,10 +2,17 @@ import type { FeatureFlag } from "@config/features";
 
 export type TimelineCategory = "academic" | "career" | "personal";
 
+export interface DescriptionPart {
+  text: string;
+  href?: string;
+}
+
 export interface TimelineEvent {
   date: string;
   title: string;
+  eventHref?: string;
   description?: string;
+  descriptionParts?: readonly DescriptionPart[];
   category: TimelineCategory;
   planned?: boolean;
   featureFlag?: FeatureFlag;
@@ -71,7 +78,7 @@ export const TIMELINE_CONTENT = {
           category: "academic",
         },
         {
-          date: "Aug 2026",
+          date: "Aug 10, 2026",
           title: "Joined Global Business AI in Shanghai",
           description:
             "AI and software engineer, architecting enterprise multi-tenant chatbot management platforms and LLM streaming data planes.",
@@ -84,13 +91,42 @@ export const TIMELINE_CONTENT = {
             "Collaborated with Dr. Leon Witt and Dr. Lucy Klinger at SIMIS (affiliated with Fudan University) and submitted a paper on multi-agent swarm governance via multi-task peer prediction.",
           category: "academic",
         },
+        {
+          date: "Jan 16-17, 2026",
+          title: "Built BetterMe at the La French Tech Shanghai Hackathon",
+          eventHref:
+            "https://www.frenchtechshanghai.com/upcoming-events/grow-ft-hackathon-2026/",
+          description:
+            "Designed and built a full-stack AI roleplay application end to end within 24 hours with Rahul Bura, Yasmine Kennou Filali, Charles Yin, and Yves B.",
+          descriptionParts: [
+            {
+              text: "Designed and built a full-stack AI roleplay application end to end within 24 hours with ",
+            },
+            {
+              text: "Rahul Bura",
+              href: "https://www.linkedin.com/in/rahulbura/",
+            },
+            { text: ", " },
+            {
+              text: "Yasmine Kennou Filali",
+              href: "https://www.linkedin.com/in/yasmine-kennou-filali/",
+            },
+            { text: ", " },
+            {
+              text: "Charles Yin",
+              href: "https://www.linkedin.com/in/charles-yin-748386122/",
+            },
+            { text: ", and Yves B." },
+          ],
+          category: "career",
+        },
       ],
     },
     {
       year: "2025",
       events: [
         {
-          date: "Oct 2025",
+          date: "Oct 19, 2025",
           title: "Joined Move Crew Shanghai run club",
           description:
             "Began running with Move Crew in Shanghai, integrating into the local running community and weekly runs.",
@@ -111,7 +147,7 @@ export const TIMELINE_CONTENT = {
           category: "personal",
         },
         {
-          date: "Sep 2025",
+          date: "Sep 13, 2025",
           title: "Concluded three years at IBM Consulting",
           description:
             "Wrapped up a software engineering role focused on distributed cloud backends and enterprise systems.",
@@ -131,13 +167,6 @@ export const TIMELINE_CONTENT = {
             "Traveled to Beijing to study Chinese intensively at Beijing Language and Culture University (北京语言大学).",
           category: "personal",
         },
-        {
-          date: "2025",
-          title: "Built BetterMe at the La French Tech Shanghai Hackathon",
-          description:
-            "Designed and built a full-stack AI roleplay application end to end within 24 hours.",
-          category: "career",
-        },
       ],
     },
     {
@@ -151,14 +180,14 @@ export const TIMELINE_CONTENT = {
           category: "career",
         },
         {
-          date: "May 2022",
+          date: "May 15, 2022",
           title: "Moved to New York",
           description:
             "Relocated to New York after graduating from college to begin my software engineering career.",
           category: "personal",
         },
         {
-          date: "May 2022",
+          date: "May 14, 2022",
           title: "Graduated from Baylor University",
           description:
             "Earned a B.S. in Mathematics and Computer Science with a 3.9 GPA.",
