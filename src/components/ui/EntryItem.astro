@@ -8,13 +8,6 @@ interface Props {
 }
 
 const { title, meta, logoSrc, logoAlt = "", logoHref } = Astro.props;
-const fallbackInitials = logoAlt
-  .split(/\s+/)
-  .filter(Boolean)
-  .slice(0, 2)
-  .map((w) => w[0])
-  .join("")
-  .toUpperCase();
 ---
 
 <article class:list={["entry", { "has-logo": Boolean(logoSrc) }]}>
