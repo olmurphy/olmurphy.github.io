@@ -13,6 +13,17 @@ export interface FeaturedTalk {
   links: readonly MediaLink[];
 }
 
+export interface PressItem {
+  title: string;
+  titleEn?: string; // English translation of a non-English title
+  outlet: string;
+  date: string;
+  language: "中文" | "English";
+  kind: string; // "Student spotlight" | "Interview" | ...
+  summary: string; // one or two sentences in English
+  href: string;
+}
+
 export const MEDIA_CONTENT = {
   title: "Media",
   subtitle: "Teaching, science communication, and viral technical talks.",
@@ -58,4 +69,18 @@ export const MEDIA_CONTENT = {
   ] satisfies readonly MediaLink[],
   editorialNote:
     "Communicating complex mathematical and technical concepts clearly is a core pillar of my academic and engineering philosophy.",
+  press: [
+    {
+      title: "【留学生风采】- 从德克萨斯到上海，寻根而行",
+      titleEn:
+        "International Student Spotlight: From Texas to Shanghai, Tracing My Roots",
+      outlet: "留学生事务办公室", // replace with the 公众号 account name
+      date: "2026", // replace with the publish date, e.g. "Nov 2026"
+      language: "中文",
+      kind: "Student spotlight",
+      summary:
+        "A first-person profile of my move from Texas to Shanghai: learning Chinese with spaced repetition, the La French Tech hackathon, the Move Crew run club, and my plans for a research career.",
+      href: "https://mp.weixin.qq.com/s/AWw6Eon2wAx_Q4VqlWeH4g",
+    },
+  ] satisfies readonly PressItem[],
 } as const;

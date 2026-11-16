@@ -5,6 +5,8 @@ import { MEDIA_CONTENT } from "@data/media";
 import { buildMediaJsonLd } from "@data/schema";
 import FeaturedTalkCard from "@components/sections/media/FeaturedTalkCard.astro";
 import Card from "@components/ui/Card.astro";
+import EntryItem from "@components/ui/EntryItem.astro";
+import Tag from "@components/ui/Tag.astro";
 import TodoNote from "@components/ui/TodoNote.astro";
 ---
 
@@ -33,7 +35,29 @@ import TodoNote from "@components/ui/TodoNote.astro";
       ))}
     </div>
   </Card>
-
+  {MEDIA_CONTENT.press.length > 0 && (
+    <>
+      <h2>Press &amp; Features</h2>
+      {MEDIA_CONTENT.press.map((item) => (
+        <EntryItem title={item.title} meta={`${item.outlet} · ${item.date}`}>
+          {item.titleEn && <p class="small muted">{item.titleEn}</p>}
+          <p class="small">{item.summary}</p>
+          <div class="tags">
+            <Tag variant="status">{item.kind}</Tag>
+            <Tag>{item.language}</Tag>
+          </div>
+          <a
+            class="small"
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read on WeChat →
+          </a>
+        </EntryItem>
+      ))}
+    </>
+  )}
   <p class="small muted">{MEDIA_CONTENT.editorialNote}</p>
 </BaseLayout>
 
@@ -45,5 +69,8 @@ import TodoNote from "@components/ui/TodoNote.astro";
     margin-top: 6px;
     font-family: var(--font-sans);
     font-size: 0.9rem;
+  }
+  .tags {
+    margin: 6px 0;
   }
 </style>
