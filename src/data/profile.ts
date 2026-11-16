@@ -4,6 +4,13 @@ export interface Link {
   todo?: boolean;
 }
 
+export interface FooterLink {
+  label: string;
+  href?: string;
+  qrSrc?: string;
+  qrAlt?: string;
+}
+
 export const PROFILE_LINKS: readonly Link[] = [
   { label: "Email", href: "mailto:owen261@icloud.com" },
   {
@@ -16,7 +23,7 @@ export const PROFILE_LINKS: readonly Link[] = [
 ];
 
 /** Footer "Social" column. Add or remove entries here and the footer updates itself. */
-export const SOCIAL_LINKS: readonly Link[] = [
+export const SOCIAL_LINKS: readonly FooterLink[] = [
   { label: "Instagram", href: "https://www.instagram.com/owenmurphy2022/" },
   { label: "TikTok", href: "https://www.tiktok.com/@owenmurphy2022" },
   { label: "YouTube", href: "https://www.youtube.com/@owenmurphy2022" },
@@ -28,6 +35,11 @@ export const SOCIAL_LINKS: readonly Link[] = [
   {
     label: "小红书 (Xiaohongshu)",
     href: "https://www.xiaohongshu.com/user/profile/6584485a000000001d003274",
+  },
+  {
+    label: "公众号",
+    qrSrc: "/qr/wechat-official-account.jpg",
+    qrAlt: "QR code for Owen Murphy's WeChat Official Account",
   },
   {
     label: "Podcast",

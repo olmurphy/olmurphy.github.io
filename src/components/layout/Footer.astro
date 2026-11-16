@@ -27,8 +27,39 @@ const columns = [
         >
           <h2 id={`footer-${col.title.toLowerCase()}`}>{col.title}</h2>
           <ul>
-            {col.links.map((link) => {
-              const isExternal = link.href.startsWith("http");
+            {col.links.map((link, idx) => {
+              if (link.qrSrc) {
+                const popupId = `qr-popup-${idx}`;
+                return (
+                  <li class="qr-item">
+                    <button
+                      type="button"
+                      class="qr-trigger"
+                      aria-expanded="false"
+                      aria-controls={popupId}
+                    >
+                      {link.label}
+                    </button>
+                    <div
+                      class="qr-popup"
+                      id={popupId}
+                      role="group"
+                      aria-label={link.label}
+                    >
+                      <img
+                        src={link.qrSrc}
+                        alt={link.qrAlt ?? link.label}
+                        width="140"
+                        height="140"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span>Scan with WeChat</span>
+                    </div>
+                  </li>
+                );
+              }
+              const isExternal = link.href?.startsWith("http");
               return (
                 <li>
                   <a
@@ -113,6 +144,83 @@ const columns = [
     color: var(--color-text);
     border-bottom-color: var(--color-text-muted);
   }
+  .qr-item {
+    position: relative;
+  }
+
+  .qr-trigger {
+    background: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0;
+    font: inherit;
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+  }
+
+  .qr-trigger:hover,
+  .qr-trigger:focus-visible {
+    color: var(--color-text);
+    border-bottom-color: var(--color-text-muted);
+  }
+
+  .qr-popup {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 10px);
+    z-index: 10;
+    width: 168px;
+    padding: 14px;
+    /* Always white so the code scans reliably in dark mode */
+    background: #ffffff;
+    color: #1f2328;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    font-size: var(--text-xs);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-fast),
+      visibility var(--transition-fast);
+  }
+
+  /* Invisible bridge so the popup doesn't close while the pointer crosses the gap */
+  .qr-popup::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 12px;
+  }
+
+  .qr-popup img {
+    display: block;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 8px;
+  }
+
+  .qr-item:hover .qr-popup,
+  .qr-item:focus-within .qr-popup,
+  .qr-item.open .qr-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qr-popup {
+      transition: none;
+      transform: none;
+    }
+  }
 
   .footer-bottom {
     margin-top: 40px;
@@ -134,3 +242,32 @@ const columns = [
     }
   }
 </style>
+
+<script>
+  const qrItems = Array.from(
+    document.querySelectorAll<HTMLElement>(".qr-item"),
+  );
+
+  function closeAll(): void {
+    qrItems.forEach((item) => {
+      item.classList.remove("open");
+      item.querySelector(".qr-trigger")?.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  qrItems.forEach((item) => {
+    const trigger = item.querySelector<HTMLButtonElement>(".qr-trigger");
+    trigger?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const willOpen = !item.classList.contains("open");
+      closeAll();
+      item.classList.toggle("open", willOpen);
+      trigger.setAttribute("aria-expanded", String(willOpen));
+    });
+  });
+
+  document.addEventListener("click", closeAll);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeAll();
+  });
+</script>
