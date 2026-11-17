@@ -144,7 +144,7 @@ const schemaPayload = JSON.stringify({
   }
 
   main {
-    padding-block: 56px 60px;
+    padding-block: 36px 60px;
     min-height: 60vh;
   }
 
@@ -170,6 +170,12 @@ const schemaPayload = JSON.stringify({
   @media (prefers-reduced-motion: reduce) {
     .page-enter {
       animation: none;
+    }
+  }
+
+  @media (min-width: 760px) {
+    main {
+      padding-block: 56px 60px;
     }
   }
 </style>

@@ -3,15 +3,36 @@ import { SITE } from "@config/site";
 import Nav from "./Nav.astro";
 ---
 
-<header>
+<header id="site-header">
   <div class="wrap">
-    <a class="site-name" href="/">
-      {SITE.name}
-    </a>
+    <div class="bar">
+      <a class="site-name" href="/">
+        {SITE.name}
+      </a>
+
+      <button
+        type="button"
+        class="menu-btn"
+        id="menu-btn"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open navigation menu"
+      >
+        <span class="burger" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <span id="menu-label">Menu</span>
+      </button>
+    </div>
+
     <div class="tagline">{SITE.tagline}</div>
     <Nav />
   </div>
 </header>
+
+<div class="scrim" id="nav-scrim"></div>
 
 <style>
   header {
@@ -20,11 +41,17 @@ import Nav from "./Nav.astro";
     z-index: 40;
     background: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
-    padding: 22px 0 0;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-height);
   }
 
   .site-name {
-    font-size: var(--text-2xl);
+    font-size: 1.2rem;
     font-weight: 700;
     letter-spacing: 0.2px;
     color: var(--color-text);
@@ -36,8 +63,191 @@ import Nav from "./Nav.astro";
   }
 
   .tagline {
+    display: none;
     color: var(--color-text-muted);
     font-size: var(--text-base);
     margin: 2px 0 14px;
   }
+
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 6px 14px 6px 12px;
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .menu-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+
+  .menu-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .menu-btn[aria-expanded="true"] {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: transparent;
+  }
+
+  .burger {
+    position: relative;
+    width: 16px;
+    height: 12px;
+  }
+
+  .burger span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 2px;
+    transition:
+      transform 0.2s ease,
+      opacity 0.15s ease,
+      top 0.2s ease;
+  }
+
+  .burger span:nth-child(1) {
+    top: 0;
+  }
+
+  .burger span:nth-child(2) {
+    top: 5px;
+  }
+
+  .burger span:nth-child(3) {
+    top: 10px;
+  }
+
+  .menu-btn[aria-expanded="true"] .burger span:nth-child(1) {
+    top: 5px;
+    transform: rotate(45deg);
+  }
+
+  .menu-btn[aria-expanded="true"] .burger span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-btn[aria-expanded="true"] .burger span:nth-child(3) {
+    top: 5px;
+    transform: rotate(-45deg);
+  }
+
+  .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgba(10, 12, 14, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.18s ease,
+      visibility 0.18s;
+  }
+
+  .scrim.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (min-width: 760px) {
+    header {
+      padding-top: 22px;
+    }
+
+    .bar {
+      height: auto;
+    }
+
+    .site-name {
+      font-size: var(--text-2xl);
+    }
+
+    .tagline {
+      display: block;
+    }
+
+    .menu-btn,
+    .scrim {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scrim,
+    .burger span {
+      transition: none;
+    }
+  }
 </style>
+
+<script>
+  const btn = document.getElementById("menu-btn");
+  const label = document.getElementById("menu-label");
+  const menu = document.getElementById("mobile-menu");
+  const scrim = document.getElementById("nav-scrim");
+  const desktopQuery = window.matchMedia("(min-width: 760px)");
+
+  function isOpen(): boolean {
+    return Boolean(menu?.classList.contains("open"));
+  }
+
+  function setOpen(open: boolean): void {
+    menu?.classList.toggle("open", open);
+    scrim?.classList.toggle("open", open);
+    document.body.classList.toggle("menu-open", open);
+    btn?.setAttribute("aria-expanded", String(open));
+    btn?.setAttribute(
+      "aria-label",
+      open ? "Close navigation menu" : "Open navigation menu",
+    );
+    if (label) {
+      label.textContent = open ? "Close" : "Menu";
+    }
+  }
+
+  btn?.addEventListener("click", () => {
+    setOpen(!isOpen());
+  });
+
+  scrim?.addEventListener("click", () => {
+    setOpen(false);
+    btn?.focus();
+  });
+
+  menu?.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest("a")) {
+      setOpen(false);
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen()) {
+      setOpen(false);
+      btn?.focus();
+    }
+  });
+
+  desktopQuery.addEventListener("change", (e) => {
+    if (e.matches && isOpen()) {
+      setOpen(false);
+    }
+  });
+</script>

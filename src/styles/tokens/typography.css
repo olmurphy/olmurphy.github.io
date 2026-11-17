@@ -20,6 +20,7 @@
   /* Layout & Spacing */
   --container-max: 760px;
   --container-pad: 20px;
+  --header-height: 56px;
 
   /* Radii */
   --radius-sm: 3px;
@@ -34,5 +35,11 @@
 @media (max-width: 600px) {
   :root {
     --container-pad: clamp(16px, 4.5vw, 20px);
+  }
+}
+
+@media (min-width: 760px) {
+  :root {
+    --header-height: auto;
   }
 }

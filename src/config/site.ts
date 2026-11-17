@@ -1,8 +1,11 @@
 import type { FeatureFlag } from "./features";
 
+export type NavGroup = "Overview" | "Work" | "Background";
+
 export interface NavItem {
   label: string;
   href: string;
+  group: NavGroup;
   featureFlag?: FeatureFlag;
 }
 
@@ -18,18 +21,34 @@ export const SITE = {
   defaultOgImageAlt: "Portrait of Owen Li Murphy",
 } as const;
 
+export const NAV_GROUPS: readonly NavGroup[] = [
+  "Overview",
+  "Work",
+  "Background",
+];
+
 export const NAV_ITEMS: readonly NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Timeline", href: "/timeline" },
-  { label: "Life", href: "/life" },
-  { label: "Research", href: "/research" },
-  { label: "Publications", href: "/publications" },
-  { label: "Projects", href: "/projects" },
-  { label: "Teaching", href: "/teaching", featureFlag: "showTeachingPage" },
-  { label: "Group", href: "/group", featureFlag: "showLabGroupPage" },
-  { label: "Education & Experience", href: "/education" },
-  { label: "Learning", href: "/learning" },
-  { label: "Media", href: "/media" },
-  { label: "Contact", href: "/contact" },
+  { label: "Home", href: "/", group: "Overview" },
+  { label: "About", href: "/about", group: "Overview" },
+  { label: "Timeline", href: "/timeline", group: "Overview" },
+  { label: "Life", href: "/life", group: "Overview" },
+  { label: "Research", href: "/research", group: "Work" },
+  { label: "Publications", href: "/publications", group: "Work" },
+  { label: "Projects", href: "/projects", group: "Work" },
+  {
+    label: "Teaching",
+    href: "/teaching",
+    group: "Work",
+    featureFlag: "showTeachingPage",
+  },
+  {
+    label: "Group",
+    href: "/group",
+    group: "Work",
+    featureFlag: "showLabGroupPage",
+  },
+  { label: "Education & Experience", href: "/education", group: "Background" },
+  { label: "Learning", href: "/learning", group: "Background" },
+  { label: "Media", href: "/media", group: "Background" },
+  { label: "Contact", href: "/contact", group: "Background" },
 ];

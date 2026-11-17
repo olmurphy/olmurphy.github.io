@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile navigation — Owen Li Murphy</title>
+<meta name="description" content="Design preview: compact sticky header with a drop-down menu for mobile.">
+<style>
+  /* ---------- Design tokens: same as the rest of the site ---------- */
+  :root {
+    --bg: #fcfcfa;
+    --text: #1f2328;
+    --muted: #5d6570;
+    --line: #e3e3de;
+    --accent: #1f4e79;
+    --accent-soft: #eaf1f8;
+    --max: 760px;
+    --header-h: 56px;   /* height of the compact mobile header */
+  }
+  :root[data-theme="dark"] {
+    --bg: #15181c; --text: #e6e8ea; --muted: #9aa3ad;
+    --line: #2a2f35; --accent: #7fb2e5; --accent-soft: #1c2530;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c; --text: #e6e8ea; --muted: #9aa3ad;
+      --line: #2a2f35; --accent: #7fb2e5; --accent-soft: #1c2530;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 16px); }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: Georgia, "Times New Roman", "Songti SC", serif;
+    line-height: 1.65; font-size: 17px;
+  }
+  body.menu-open { overflow: hidden; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+  .sans { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 40;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex; align-items: center; justify-content: space-between;
+    height: var(--header-h);
+  }
+  .site-name {
+    font-size: 1.2rem; font-weight: 700; letter-spacing: .2px;
+    color: var(--text); border: none;
+  }
+  .site-name:hover { border: none; }
+  .tagline { display: none; color: var(--muted); font-size: .95rem; margin: 2px 0 14px; }
+
+  /* Menu button: three lines that morph into an X */
+  .menu-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 6px 14px 6px 12px; cursor: pointer;
+    font: inherit; font-size: .85rem;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+  }
+  .menu-btn:hover { color: var(--text); border-color: var(--muted); }
+  .menu-btn:focus-visible, .menu a:focus-visible, .theme-toggle:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  .menu-btn[aria-expanded="true"] { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+  .burger { position: relative; width: 16px; height: 12px; }
+  .burger span {
+    position: absolute; left: 0; width: 100%; height: 1.5px; background: currentColor; border-radius: 2px;
+    transition: transform .2s ease, opacity .15s ease, top .2s ease;
+  }
+  .burger span:nth-child(1) { top: 0; }
+  .burger span:nth-child(2) { top: 5px; }
+  .burger span:nth-child(3) { top: 10px; }
+  .menu-btn[aria-expanded="true"] .burger span:nth-child(1) { top: 5px; transform: rotate(45deg); }
+  .menu-btn[aria-expanded="true"] .burger span:nth-child(2) { opacity: 0; }
+  .menu-btn[aria-expanded="true"] .burger span:nth-child(3) { top: 5px; transform: rotate(-45deg); }
+
+  /* ---------- Drop-down panel (mobile) ---------- */
+  .menu {
+    position: absolute; left: 0; right: 0; top: 100%;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+    max-height: calc(100vh - var(--header-h)); max-height: calc(100dvh - var(--header-h));
+    overflow-y: auto; overscroll-behavior: contain;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, .08);
+    visibility: hidden; opacity: 0; transform: translateY(-6px);
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  }
+  .menu.open { visibility: visible; opacity: 1; transform: none; }
+  .menu-inner { padding-top: 6px; padding-bottom: 18px; }
+
+  .group-label {
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
+    color: var(--muted); margin: 16px 0 4px;
+  }
+  .menu a {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 0; border: none; border-bottom: 1px solid var(--line);
+    color: var(--text); font-size: 1.02rem;
+  }
+  .menu a::after { content: "›"; color: var(--muted); font-size: 1.2rem; line-height: 1; }
+  .menu a:hover { color: var(--accent); }
+  .menu a.active { color: var(--accent); font-weight: 600; }
+  .menu a.active::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .menu .group a:last-child { border-bottom: none; }
+
+  .menu-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: .85rem; color: var(--muted);
+  }
+  .theme-toggle {
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--muted); }
+
+  /* Dim the page behind the open menu; tap it to close */
+  .scrim {
+    position: fixed; inset: 0; z-index: 30; background: rgba(10, 12, 14, .45);
+    opacity: 0; visibility: hidden; transition: opacity .18s ease, visibility .18s;
+  }
+  .scrim.open { opacity: 1; visibility: visible; }
+
+  /* ---------- Desktop: the original full tab row, no menu button ---------- */
+  .desktop-nav { display: none; }
+  @media (min-width: 760px) {
+    :root { --header-h: auto; }
+    header { padding-top: 22px; }
+    .bar { height: auto; }
+    .site-name { font-size: 1.35rem; }
+    .tagline { display: block; }
+    .menu-btn, .menu, .scrim { display: none; }
+    .desktop-nav {
+      display: flex; flex-wrap: wrap; gap: 4px 20px;
+      font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: .9rem;
+    }
+    .desktop-nav a { color: var(--muted); padding: 8px 0 10px; border-bottom: 2px solid transparent; }
+    .desktop-nav a:hover { color: var(--text); border-bottom-color: var(--line); }
+    .desktop-nav a.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    .desktop-nav .theme-toggle { margin-left: auto; align-self: center; }
+  }
+
+  /* ---------- Sample page content (so you can see the header over a real page) ---------- */
+  main { padding: 36px 0 60px; min-height: 120vh; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; line-height: 1.25; }
+  h2 {
+    font-size: 1.1rem; margin: 34px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600;
+  }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--muted); }
+  .hero { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+  .portrait {
+    width: 170px; height: 170px; border-radius: 50%; flex-shrink: 0;
+    background: var(--accent-soft); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: .8rem; text-align: center;
+  }
+  .hero-text { flex: 1; min-width: 260px; }
+  @media (max-width: 600px) {
+    .hero { flex-direction: column; align-items: center; }
+    .hero-text { width: 100%; min-width: 0; }
+    .hero-text h1, .hero-text .muted { text-align: center; }
+  }
+  .demo-note {
+    background: var(--accent-soft); border-radius: 8px; padding: 12px 16px; margin: 0 0 22px;
+    font-size: .88rem; color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu, .scrim, .burger span { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+<script>
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<header id="site-header">
+  <div class="wrap">
+    <div class="bar">
+      <a class="site-name" href="#home">Owen Li Murphy</a>
+
+      <!-- Mobile only: opens the drop-down -->
+      <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="menu" aria-label="Open navigation menu">
+        <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span id="menu-label">Menu</span>
+      </button>
+    </div>
+    <div class="tagline">Deep learning · Computational biology · Multi-agent systems</div>
+
+    <!-- Desktop only: the original tab row -->
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="#home" data-page="home">Home</a>
+      <a href="#about" data-page="about">About</a>
+      <a href="#timeline" data-page="timeline">Timeline</a>
+      <a href="#life" data-page="life">Life</a>
+      <a href="#research" data-page="research">Research</a>
+      <a href="#publications" data-page="publications">Publications</a>
+      <a href="#projects" data-page="projects">Projects</a>
+      <a href="#teaching" data-page="teaching">Teaching</a>
+      <a href="#education" data-page="education">Education &amp; Experience</a>
+      <a href="#learning" data-page="learning">Learning</a>
+      <a href="#media" data-page="media">Media</a>
+      <a href="#contact" data-page="contact">Contact</a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch between light and dark mode">Dark mode</button>
+    </nav>
+  </div>
+
+  <!-- Mobile drop-down. Links are grouped so 12 pages are easy to scan. -->
+  <nav class="menu" id="menu" aria-label="Primary navigation">
+    <div class="wrap menu-inner">
+      <div class="group">
+        <div class="group-label">Overview</div>
+        <a href="#home" data-page="home">Home</a>
+        <a href="#about" data-page="about">About</a>
+        <a href="#timeline" data-page="timeline">Timeline</a>
+        <a href="#life" data-page="life">Life</a>
+      </div>
+      <div class="group">
+        <div class="group-label">Work</div>
+        <a href="#research" data-page="research">Research</a>
+        <a href="#publications" data-page="publications">Publications</a>
+        <a href="#projects" data-page="projects">Projects</a>
+        <a href="#teaching" data-page="teaching">Teaching</a>
+      </div>
+      <div class="group">
+        <div class="group-label">Background</div>
+        <a href="#education" data-page="education">Education &amp; Experience</a>
+        <a href="#learning" data-page="learning">Learning</a>
+        <a href="#media" data-page="media">Media</a>
+        <a href="#contact" data-page="contact">Contact</a>
+      </div>
+      <div class="menu-foot">
+        <span>Appearance</span>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch between light and dark mode">Dark mode</button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="scrim" id="scrim"></div>
+
+<main class="wrap">
+  <p class="demo-note">
+    Design preview. Narrow this window below 760&nbsp;px (or open it on a phone) to see the menu button; wider shows the original tab row.
+    Tapping a link here only updates the highlighted page. In the Astro site, the real <code>href</code>s are used.
+  </p>
+
+  <section class="hero">
+    <div class="portrait">photo</div>
+    <div class="hero-text">
+      <h1>Owen Li Murphy</h1>
+      <p class="muted">M.S. Computer Science (Machine Learning), Georgia Tech &nbsp;·&nbsp; 李晓党</p>
+      <p>
+        I'm a software engineer and aspiring researcher working at the intersection of
+        <strong>deep learning</strong> and <strong>computational biology</strong>, with a background in
+        mathematics and distributed systems.
+      </p>
+    </div>
+  </section>
+
+  <h2>Research interests</h2>
+  <p>Scroll down: the header stays pinned, but now takes only 56px instead of most of the screen.</p>
+  <p class="muted">Computational biology · Reliable deep learning · Mathematical foundations</p>
+</main>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var body = document.body;
+    var btn = document.getElementById('menu-btn');
+    var label = document.getElementById('menu-label');
+    var menu = document.getElementById('menu');
+    var scrim = document.getElementById('scrim');
+    var links = Array.prototype.slice.call(document.querySelectorAll('[data-page]'));
+    var toggles = Array.prototype.slice.call(document.querySelectorAll('[data-theme-toggle]'));
+    var wide = window.matchMedia('(min-width: 760px)');
+
+    /* ----- open / close ----- */
+    function setOpen(open) {
+      menu.classList.toggle('open', open);
+      scrim.classList.toggle('open', open);
+      body.classList.toggle('menu-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      label.textContent = open ? 'Close' : 'Menu';
+    }
+    function isOpen() { return menu.classList.contains('open'); }
+
+    btn.addEventListener('click', function () { setOpen(!isOpen()); });
+    scrim.addEventListener('click', function () { setOpen(false); btn.focus(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen()) { setOpen(false); btn.focus(); }
+    });
+    // If the window is widened while open, tidy up
+    (wide.addEventListener ? wide.addEventListener('change', function (e) { if (e.matches) setOpen(false); }) : null);
+
+    /* ----- active page (demo only; the Astro Nav already sets this from the URL) ----- */
+    function markActive() {
+      var id = (location.hash || '#home').slice(1);
+      links.forEach(function (a) {
+        var on = a.getAttribute('data-page') === id;
+        a.classList.toggle('active', on);
+        if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      });
+    }
+    menu.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a')) setOpen(false);
+    });
+    window.addEventListener('hashchange', markActive);
+    markActive();
+
+    /* ----- light / dark toggle (both copies stay in sync) ----- */
+    function systemDark() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+    function current() { return root.getAttribute('data-theme') || (systemDark() ? 'dark' : 'light'); }
+    function syncLabels() { toggles.forEach(function (b) { b.textContent = current() === 'dark' ? 'Light mode' : 'Dark mode'; }); }
+    toggles.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var next = current() === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        syncLabels();
+      });
+    });
+    syncLabels();
+  })();
+</script>
+</body>
+</html>
