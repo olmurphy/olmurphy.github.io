@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desktop navigation options — Owen Li Murphy</title>
+<style>
+  /* ---------- Design tokens: same as the rest of the site ---------- */
+  :root {
+    --bg: #fcfcfa; --text: #1f2328; --muted: #5d6570; --line: #e3e3de;
+    --accent: #1f4e79; --accent-soft: #eaf1f8; --max: 760px;
+  }
+  :root[data-theme="dark"] {
+    --bg: #15181c; --text: #e6e8ea; --muted: #9aa3ad; --line: #2a2f35;
+    --accent: #7fb2e5; --accent-soft: #1c2530;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c; --text: #e6e8ea; --muted: #9aa3ad; --line: #2a2f35;
+      --accent: #7fb2e5; --accent-soft: #1c2530;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: Georgia, "Times New Roman", "Songti SC", serif; line-height: 1.65; font-size: 17px;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+  .sans { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+
+  /* ---------- Preview-only switcher (not part of the site) ---------- */
+  .switcher {
+    background: var(--accent-soft); border-bottom: 1px solid var(--line);
+    padding: 10px 0; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: .85rem;
+  }
+  .switcher .wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .switcher .lbl { color: var(--muted); margin-right: 4px; }
+  .seg {
+    background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px;
+    padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .seg:hover { color: var(--text); border-color: var(--muted); }
+  .seg.on { background: var(--bg); color: var(--accent); border-color: var(--accent); font-weight: 600; }
+
+  /* ---------- Header ---------- */
+  header { position: sticky; top: 0; z-index: 40; background: var(--bg); border-bottom: 1px solid var(--line); padding: 22px 0 0; }
+  .site-name { font-size: 1.35rem; font-weight: 700; letter-spacing: .2px; color: var(--text); border: none; }
+  .site-name:hover { border: none; }
+  .tagline { color: var(--muted); font-size: .95rem; margin: 2px 0 14px; }
+
+  nav {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: .9rem;
+  }
+  .nav-link, .dd-trigger {
+    color: var(--muted); padding: 8px 0 10px; border: none; border-bottom: 2px solid transparent;
+    background: none; font: inherit; cursor: pointer; line-height: 1.5;
+  }
+  .nav-link:hover, .dd-trigger:hover { color: var(--text); border-bottom-color: var(--line); }
+  .nav-link.active, .dd-trigger.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  .nav-link:focus-visible, .dd-trigger:focus-visible, .dd-panel a:focus-visible, .theme-toggle:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  .theme-toggle {
+    margin-left: auto; background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ---------- Dropdowns ---------- */
+  .dd { position: relative; }
+  .dd-trigger .caret { display: inline-block; margin-left: 5px; font-size: .65rem; transition: transform .15s ease; }
+  .dd.open .caret { transform: rotate(180deg); }
+  .dd-panel {
+    position: absolute; top: 100%; left: -12px; min-width: 230px; padding: 6px;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .10);
+    visibility: hidden; opacity: 0; transform: translateY(-4px);
+    transition: opacity .15s ease, transform .15s ease, visibility .15s;
+  }
+  .dd.open .dd-panel { visibility: visible; opacity: 1; transform: none; }
+  .dd-panel a {
+    display: block; padding: 8px 12px; border: none; border-radius: 6px;
+    color: var(--text); font-size: .9rem; white-space: nowrap;
+  }
+  .dd-panel a:hover { background: var(--accent-soft); color: var(--accent); }
+  .dd-panel a.active { color: var(--accent); font-weight: 600; background: var(--accent-soft); }
+
+  /* ---------- Sample page ---------- */
+  main { padding: 56px 0 60px; min-height: 100vh; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; line-height: 1.25; }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--muted); }
+  .note {
+    background: var(--accent-soft); border-radius: 8px; padding: 14px 18px; margin: 22px 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: .9rem; color: var(--muted);
+  }
+  .note strong { color: var(--text); }
+  @media (max-width: 759px) { .hide-narrow { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .dd-panel, .caret { transition: none; } }
+</style>
+<script>
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<div class="switcher">
+  <div class="wrap">
+    <span class="lbl">Preview option:</span>
+    <button type="button" class="seg" data-variant="A">A · Current (wraps)</button>
+    <button type="button" class="seg on" data-variant="B">B · Grouped dropdowns</button>
+    <button type="button" class="seg" data-variant="C">C · Key pages + “More”</button>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <a class="site-name" href="#home">Owen Li Murphy</a>
+    <div class="tagline">Deep learning · Computational biology · Multi-agent systems</div>
+    <nav id="nav" aria-label="Primary navigation"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1 id="page-title">About</h1>
+  <p class="muted">The person behind the CV.</p>
+  <p>Hover or click the dropdowns above, or use Tab and arrow keys. Selecting a page updates the highlight.</p>
+
+  <div class="note" id="explain"></div>
+  <p class="muted hide-narrow">On phones, the site keeps the “Menu” drawer from the previous design; these options only affect screens 760&nbsp;px and wider.</p>
+</main>
+
+<script>
+(function () {
+  var items = [
+    { id: 'home',         label: 'Home',                   group: 'Overview',   pin: true },
+    { id: 'about',        label: 'About',                  group: 'Overview' },
+    { id: 'timeline',     label: 'Timeline',               group: 'Overview' },
+    { id: 'life',         label: 'Life',                   group: 'Overview' },
+    { id: 'research',     label: 'Research',               group: 'Work' },
+    { id: 'publications', label: 'Publications',           group: 'Work' },
+    { id: 'projects',     label: 'Projects',               group: 'Work' },
+    { id: 'teaching',     label: 'Teaching',               group: 'Work' },
+    { id: 'education',    label: 'Education & Experience', group: 'Background' },
+    { id: 'learning',     label: 'Learning',               group: 'Background' },
+    { id: 'media',        label: 'Media',                  group: 'Background' },
+    { id: 'contact',      label: 'Contact',                group: 'Background', pin: true }
+  ];
+  var groups = ['Overview', 'Work', 'Background'];
+  // Option C: pages that stay visible; everything else goes under "More"
+  var keyPages = ['home', 'about', 'research', 'publications', 'projects', 'education', 'contact'];
+
+  var explain = {
+    A: '<strong>A · Current.</strong> Everything visible, but 12 links wrap onto a second row on typical laptop widths, and the theme toggle lands on that second row. It also gets longer every time you add a page.',
+    B: '<strong>B · Grouped dropdowns.</strong> One clean row. Uses the same Overview / Work / Background groups as the mobile menu, so desktop and phone stay consistent. Home and Contact stay pinned as direct links. Trade-off: most pages are one hover away.',
+    C: '<strong>C · Key pages + More.</strong> Research, Publications, Projects, and Education stay one click away for visiting advisors; secondary pages (Timeline, Life, Teaching, Learning, Media) sit under “More”. Trade-off: needs a manual “primary” list, separate from the mobile groups.'
+  };
+
+  var nav = document.getElementById('nav');
+  var variant = 'B';
+  var current = 'about';
+  var root = document.documentElement;
+
+  function esc(s) { return s.replace(/&/g, '&amp;'); }
+  function link(it, cls) {
+    return '<a href="#' + it.id + '" data-id="' + it.id + '" class="' + cls + (it.id === current ? ' active' : '') +
+           '"' + (it.id === current ? ' aria-current="page"' : '') + '>' + esc(it.label) + '</a>';
+  }
+  function dropdown(label, list, idx) {
+    var active = list.some(function (i) { return i.id === current; });
+    var pid = 'dd-panel-' + idx;
+    return '<div class="dd">' +
+      '<button type="button" class="dd-trigger' + (active ? ' active' : '') + '" aria-expanded="false" aria-haspopup="true" aria-controls="' + pid + '">' +
+      esc(label) + '<span class="caret" aria-hidden="true">▼</span></button>' +
+      '<div class="dd-panel" id="' + pid + '">' + list.map(function (i) { return link(i, ''); }).join('') + '</div></div>';
+  }
+  function toggle() {
+    return '<button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch between light and dark mode">Dark mode</button>';
+  }
+
+  function render() {
+    var html = '';
+    if (variant === 'A') {
+      html = items.map(function (i) { return link(i, 'nav-link'); }).join('');
+    } else if (variant === 'B') {
+      html += link(items[0], 'nav-link');
+      groups.forEach(function (g, n) {
+        var list = items.filter(function (i) { return i.group === g && !i.pin; });
+        html += dropdown(g, list, n);
+      });
+      html += link(items[items.length - 1], 'nav-link');
+    } else {
+      keyPages.forEach(function (id) {
+        html += link(items.filter(function (i) { return i.id === id; })[0], 'nav-link');
+      });
+      var more = items.filter(function (i) { return keyPages.indexOf(i.id) === -1; });
+      // place "More" before Contact so Contact stays last
+      var parts = keyPages.map(function (id) { return link(items.filter(function (i) { return i.id === id; })[0], 'nav-link'); });
+      parts.splice(parts.length - 1, 0, dropdown('More', more, 0));
+      html = parts.join('');
+    }
+    nav.innerHTML = html + toggle();
+    document.getElementById('explain').innerHTML = explain[variant];
+    document.getElementById('page-title').textContent = items.filter(function (i) { return i.id === current; })[0].label;
+    Array.prototype.forEach.call(document.querySelectorAll('.seg'), function (b) {
+      b.classList.toggle('on', b.getAttribute('data-variant') === variant);
+    });
+    syncLabels();
+  }
+
+  /* ----- dropdown behavior: hover (mouse), click/tap, Esc, click-away, focus-out ----- */
+  var hoverCapable = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+  var closeTimer;
+  function closeAll(except) {
+    Array.prototype.forEach.call(nav.querySelectorAll('.dd.open'), function (d) {
+      if (d === except) return;
+      d.classList.remove('open');
+      d.querySelector('.dd-trigger').setAttribute('aria-expanded', 'false');
+    });
+  }
+  function setOpen(dd, open) {
+    clearTimeout(closeTimer);
+    if (open) closeAll(dd);
+    dd.classList.toggle('open', open);
+    dd.querySelector('.dd-trigger').setAttribute('aria-expanded', String(open));
+  }
+
+  nav.addEventListener('click', function (e) {
+    var trig = e.target.closest('.dd-trigger');
+    if (trig) { var dd = trig.parentNode; setOpen(dd, !dd.classList.contains('open')); return; }
+    var a = e.target.closest('a[data-id]');
+    if (a) { e.preventDefault(); current = a.getAttribute('data-id'); closeAll(); render(); }
+  });
+  nav.addEventListener('mouseover', function (e) {
+    if (!hoverCapable) return;
+    var dd = e.target.closest('.dd'); if (dd) setOpen(dd, true);
+  });
+  nav.addEventListener('mouseout', function (e) {
+    if (!hoverCapable) return;
+    var dd = e.target.closest('.dd');
+    if (dd && !dd.contains(e.relatedTarget)) { closeTimer = setTimeout(function () { setOpen(dd, false); }, 140); }
+  });
+  nav.addEventListener('focusout', function (e) {
+    var dd = e.target.closest('.dd');
+    if (dd && !dd.contains(e.relatedTarget)) setOpen(dd, false);
+  });
+  nav.addEventListener('keydown', function (e) {
+    var dd = e.target.closest('.dd');
+    if (!dd) return;
+    var links = Array.prototype.slice.call(dd.querySelectorAll('.dd-panel a'));
+    var trig = dd.querySelector('.dd-trigger');
+    if (e.key === 'Escape') { setOpen(dd, false); trig.focus(); }
+    else if (e.key === 'ArrowDown') {
+      e.preventDefault(); setOpen(dd, true);
+      var i = links.indexOf(document.activeElement);
+      (links[i + 1] || links[0]).focus();
+    } else if (e.key === 'ArrowUp' && document.activeElement !== trig) {
+      e.preventDefault();
+      var j = links.indexOf(document.activeElement);
+      (j > 0 ? links[j - 1] : trig).focus();
+    }
+  });
+  document.addEventListener('click', function (e) { if (!nav.contains(e.target)) closeAll(); });
+
+  /* ----- variant switcher (preview only) ----- */
+  document.querySelector('.switcher').addEventListener('click', function (e) {
+    var b = e.target.closest('.seg'); if (!b) return;
+    variant = b.getAttribute('data-variant'); render();
+  });
+
+  /* ----- theme toggle ----- */
+  function systemDark() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+  function themeNow() { return root.getAttribute('data-theme') || (systemDark() ? 'dark' : 'light'); }
+  function syncLabels() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'), function (b) {
+      b.textContent = themeNow() === 'dark' ? 'Light mode' : 'Dark mode';
+    });
+  }
+  nav.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-theme-toggle]')) return;
+    var next = themeNow() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (err) {}
+    syncLabels();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

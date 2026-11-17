@@ -6,6 +6,7 @@ export interface NavItem {
   label: string;
   href: string;
   group: NavGroup;
+  desktopPin?: boolean;
   featureFlag?: FeatureFlag;
 }
 
@@ -28,7 +29,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
 ];
 
 export const NAV_ITEMS: readonly NavItem[] = [
-  { label: "Home", href: "/", group: "Overview" },
+  { label: "Home", href: "/", group: "Overview", desktopPin: true },
   { label: "About", href: "/about", group: "Overview" },
   { label: "Timeline", href: "/timeline", group: "Overview" },
   { label: "Life", href: "/life", group: "Overview" },
@@ -50,5 +51,5 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: "Education & Experience", href: "/education", group: "Background" },
   { label: "Learning", href: "/learning", group: "Background" },
   { label: "Media", href: "/media", group: "Background" },
-  { label: "Contact", href: "/contact", group: "Background" },
+  { label: "Contact", href: "/contact", group: "Background", desktopPin: true },
 ];
