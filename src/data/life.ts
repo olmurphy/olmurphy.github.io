@@ -39,6 +39,15 @@ export const LIFE_CONTENT = {
     "Outside of work and coursework, I spend most weekends running with Move Crew along the riverfront in Shanghai, riding my road bike, or tinkering with hardware and 3D-printed builds. These snapshots are a small record of the cities, training routines, and friends along the way.",
   photos: [
     {
+      src: mediaUrl("life/places/three-gorges-dam-october-2026.webp"),
+      alt: "View of the Three Gorges Dam spanning the Yangtze River in Hubei, China",
+      category: "places",
+      caption:
+        "Three Gorges Dam — the world's largest power station at 22,500 MW across 32 main turbines",
+      meta: "Yichang, Hubei · Oct 2026",
+      todo: false,
+    },
+    {
       src: mediaUrl("life/active/running-move-crew-june-2026.webp"),
       alt: "Group photo after a Sunday morning run with Move Crew run club in Shanghai",
       category: "active",
@@ -59,7 +68,15 @@ export const LIFE_CONTENT = {
         },
         { text: " and Iris" },
       ],
-      meta: "Shanghai · 2025",
+      meta: "Shanghai · March 2026",
+      todo: false,
+    },
+    {
+      src: mediaUrl("life/places/great-wall-of-china-aug-2025.webp"),
+      alt: "View along the Great Wall of China winding over green mountain ridges near Beijing",
+      category: "places",
+      caption: "Hiking the Great Wall during language immersion",
+      meta: "Beijing · Aug 2025",
       todo: false,
     },
     {
