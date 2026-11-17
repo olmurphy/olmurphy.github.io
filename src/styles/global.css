@@ -82,6 +82,13 @@ li {
   padding: 0 var(--container-pad);
 }
 
+@media (max-width: 600px) {
+  .wrap {
+    padding-inline: max(var(--container-pad), env(safe-area-inset-left))
+      max(var(--container-pad), env(safe-area-inset-right));
+  }
+}
+
 .muted {
   color: var(--color-text-muted);
 }

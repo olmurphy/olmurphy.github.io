@@ -30,3 +30,9 @@
   --transition-fast: 0.15s ease;
   --transition-page: 0.25s ease;
 }
+
+@media (max-width: 600px) {
+  :root {
+    --container-pad: clamp(16px, 4.5vw, 20px);
+  }
+}
