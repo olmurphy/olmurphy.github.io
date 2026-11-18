@@ -1,13 +1,22 @@
 ---
-import { SITE } from "@config/site";
+import { UI } from "@i18n/ui";
+import type { Locale } from "@i18n/config";
+import { localePath } from "@i18n/utils";
 import Nav from "./Nav.astro";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = "en" } = Astro.props;
+const ui = UI[lang];
 ---
 
 <header id="site-header">
   <div class="wrap">
     <div class="bar">
-      <a class="site-name" href="/">
-        {SITE.name}
+      <a class="site-name" href={localePath(lang, "/")}>
+        {ui.siteName}
       </a>
 
       <button
@@ -16,19 +25,23 @@ import Nav from "./Nav.astro";
         id="menu-btn"
         aria-expanded="false"
         aria-controls="mobile-menu"
-        aria-label="Open navigation menu"
+        aria-label={ui.openMenuLabel}
+        data-open-label={ui.openMenuLabel}
+        data-close-label={ui.closeMenuLabel}
+        data-open-text={ui.menuButton}
+        data-close-text={ui.closeButton}
       >
         <span class="burger" aria-hidden="true">
           <span></span>
           <span></span>
           <span></span>
         </span>
-        <span id="menu-label">Menu</span>
+        <span id="menu-label">{ui.menuButton}</span>
       </button>
     </div>
 
-    <div class="tagline">{SITE.tagline}</div>
-    <Nav />
+    <div class="tagline">{ui.tagline}</div>
+    <Nav lang={lang} />
   </div>
 </header>
 

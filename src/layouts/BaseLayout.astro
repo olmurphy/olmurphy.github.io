@@ -1,6 +1,7 @@
 ---
 import { SITE } from "@config/site";
 import { LOCALE_META, type Locale } from "@i18n/config";
+import { UI } from "@i18n/ui";
 import { switchLocalePath } from "@i18n/utils";
 import { buildGlobalGraph, type JsonLdObject } from "@data/schema";
 import Header from "@components/layout/Header.astro";
@@ -8,6 +9,7 @@ import Footer from "@components/layout/Footer.astro";
 import "@styles/global.css";
 
 interface Props {
+  lang?: Locale;
   title?: string;
   description?: string;
   canonical?: string;
@@ -19,6 +21,7 @@ interface Props {
 }
 
 const {
+  lang = "en",
   title = SITE.defaultTitle,
   description = SITE.defaultDescription,
   canonical,
@@ -29,28 +32,15 @@ const {
   jsonLd,
 } = Astro.props;
 
+const meta = LOCALE_META[lang];
+const ui = UI[lang];
+const alternateLang: Locale = lang === "en" ? "zh" : "en";
+
 const siteBase = Astro.site ?? new URL(SITE.url);
 const normalizedPath =
   Astro.url.pathname.length > 1 && Astro.url.pathname.endsWith("/")
     ? Astro.url.pathname.slice(0, -1)
     : Astro.url.pathname;
-
-const canonicalURL = canonical
-  ? new URL(canonical, siteBase).toString()
-  : new URL(normalizedPath, siteBase).toString();
-
-const resolvedOgImage = new URL(ogImage, siteBase).toString();
-
-const extraNodes = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
-
-const schemaPayload = JSON.stringify({
-  "@context": "https://schema.org",
-  "@graph": [...buildGlobalGraph(), ...extraNodes],
-}).replace(/</g, "\\u003c");
-
-const { lang = "en", title, description /* ... */ } = Astro.props;
-const meta = LOCALE_META[lang];
-const alternateLang: Locale = lang === "en" ? "zh" : "en";
 
 const enUrl = new URL(
   switchLocalePath(normalizedPath, "en"),
@@ -60,7 +50,19 @@ const zhUrl = new URL(
   switchLocalePath(normalizedPath, "zh"),
   siteBase,
 ).toString();
-const canonicalURL = lang === "en" ? enUrl : zhUrl;
+const canonicalURL = canonical
+  ? new URL(canonical, siteBase).toString()
+  : lang === "en"
+    ? enUrl
+    : zhUrl;
+
+const resolvedOgImage = new URL(ogImage, siteBase).toString();
+const extraNodes = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+
+const schemaPayload = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [...buildGlobalGraph(), ...extraNodes],
+}).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
@@ -70,20 +72,13 @@ const canonicalURL = lang === "en" ? enUrl : zhUrl;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
-    <link rel="canonical" href={canonicalURL} />
-    <link rel="alternate" hreflang="en" href={enUrl} />
-    <link rel="alternate" hreflang="zh-Hans" href={zhUrl} />
-    <link rel="alternate" hreflang="x-default" href={enUrl} />
-    <meta property="og:locale" content={meta.ogLocale} />
-    <meta
-      property="og:locale:alternate"
-      content={LOCALE_META[alternateLang].ogLocale}
-    />
-
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={`${SITE.name} (${SITE.chineseName})`} />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="zh-Hans" href={zhUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Favicons -->
@@ -92,7 +87,11 @@ const canonicalURL = lang === "en" ? enUrl : zhUrl;
 
     <!-- Open Graph -->
     <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={meta.ogLocale} />
+    <meta
+      property="og:locale:alternate"
+      content={LOCALE_META[alternateLang].ogLocale}
+    />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -109,7 +108,6 @@ const canonicalURL = lang === "en" ? enUrl : zhUrl;
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json" set:html={schemaPayload} />
-    <!-- Page-specific head injections (e.g., noindex, profile tags) -->
     <slot name="head" />
 
     <script is:inline>
@@ -123,13 +121,13 @@ const canonicalURL = lang === "en" ? enUrl : zhUrl;
   </head>
   <body>
     <a href="#main" class="skip-link">
-      Skip to content
+      {ui.skipToContent}
     </a>
-    <Header />
+    <Header lang={lang} />
     <main id="main" class="wrap page-enter" tabindex="-1">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
     {import.meta.env.PROD && (
       <script
         is:inline
@@ -140,6 +138,7 @@ const canonicalURL = lang === "en" ? enUrl : zhUrl;
     )}
   </body>
 </html>
+<!-- Keep existing <style> block unchanged -->
 <style>
   .skip-link {
     position: absolute;
