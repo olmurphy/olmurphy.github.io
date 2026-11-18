@@ -37,7 +37,7 @@ export const SOCIAL_LINKS: readonly FooterLink[] = [
     href: "https://www.xiaohongshu.com/user/profile/6584485a000000001d003274",
   },
   {
-    label: "公众号",
+    label: "公众号 (Gongzhonghao",
     qrSrc: "/qr/wechat-official-account.jpg",
     qrAlt: "QR code for Owen Murphy's WeChat Official Account",
   },

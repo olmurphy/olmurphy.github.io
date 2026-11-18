@@ -21,7 +21,7 @@ export const SOCIAL_LINKS: readonly FooterLink[] = [
     href: "https://www.facebook.com/profile.php?id=100077171944784",
   },
   {
-    label: "小红书 (Xiaohongshu)",
+    label: "小红书",
     href: "https://www.xiaohongshu.com/user/profile/6584485a000000001d003274",
   },
   {
