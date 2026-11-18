@@ -291,6 +291,7 @@ const { content } = Astro.props;
 
     const width = 800;
     const height = 440;
+    const padding = 24;
 
     const svg = d3.select<SVGSVGElement, unknown>("#visited-map-svg");
     const rootLayer = svg.append("g");
@@ -319,11 +320,10 @@ const { content } = Astro.props;
       countriesObj,
     ) as unknown as GeoJSON.FeatureCollection;
 
-    // Exclude Antarctica for a cleaner academic layout
-    worldGeo.features = worldGeo.features.filter((f) => String(f.id) !== "010");
-
-    const projection = d3.geoNaturalEarth1().fitSize([width, height], worldGeo);
-    const path = d3.geoPath().projection(projection);
+    const worldProjection = d3
+      .geoNaturalEarth1()
+      .fitSize([width, height], worldGeo);
+    const worldPath = d3.geoPath().projection(worldProjection);
 
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
@@ -389,10 +389,30 @@ const { content } = Astro.props;
       return null;
     }
 
+    function getFlatCountryProjection(
+      country: CountryVisit,
+      targetGeo: GeoJSON.Feature | GeoJSON.FeatureCollection,
+    ): d3.GeoProjection {
+      const bounds: [[number, number], [number, number]] = [
+        [padding, padding],
+        [width - padding, height - padding],
+      ];
+
+      // Flat, upright US projection with Alaska & Hawaii neatly inset
+      if (country.isoNumeric === "840") {
+        return d3.geoAlbersUsa().fitExtent(bounds, targetGeo as any);
+      }
+
+      // Flat north-up Mercator projection centered on the selected country
+      return d3.geoMercator().fitExtent(bounds, targetGeo as any);
+    }
+
     async function drillIntoCountry(
       feature: GeoJSON.Feature,
       country: CountryVisit,
     ) {
+      hideTooltip();
+
       // 1. Update breadcrumbs & detail panel
       crumbWorld.classList.remove("active");
       crumbSep.hidden = false;
@@ -400,47 +420,31 @@ const { content } = Astro.props;
       crumbCountry.textContent = country.name;
       renderPanel(country);
 
-      // 2. Dim other countries
-      countriesLayer
-        .selectAll<SVGPathElement, GeoJSON.Feature>("path")
-        .classed(
-          "dimmed",
-          (d) => String(d.id).padStart(3, "0") !== country.isoNumeric,
-        );
-
-      // 3. Zoom smoothly into country bounding box
-      const [[x0, y0], [x1, y1]] = path.bounds(feature);
-      const dx = x1 - x0;
-      const dy = y1 - y0;
-      const cx = (x0 + x1) / 2;
-      const cy = (y0 + y1) / 2;
-      const scale = Math.max(
-        1.5,
-        Math.min(10, 0.8 / Math.max(dx / width, dy / height)),
-      );
-      const tx = width / 2 - scale * cx;
-      const ty = height / 2 - scale * cy;
-
-      svg
-        .transition()
-        .duration(650)
-        .call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
-
-      // 4. Render state/province polygons
-      subdivisionsLayer.selectAll("*").remove();
+      // 2. Load subdivisions and build a flat local projection
       const subGeo = await loadSubdivisions(country);
-      if (!subGeo) return;
+      const fitTarget = subGeo ?? feature;
+      const flatProjection = getFlatCountryProjection(country, fitTarget);
+      const flatPath = d3.geoPath().projection(flatProjection);
+
+      // 3. Hide world layer and reset zoom so the flat country fills the viewport cleanly
+      countriesLayer.style("display", "none");
+      svg.call(zoom.transform, d3.zoomIdentity);
+      subdivisionsLayer.selectAll("*").remove();
 
       const visitedSubMap = new Map(
         country.subdivisions.map((s) => [s.name.toLowerCase(), s]),
       );
 
+      // Fallback to country outline if no subdivision GeoJSON is available
+      const featuresToDraw = subGeo ? subGeo.features : [feature];
+
       subdivisionsLayer
         .selectAll("path")
-        .data(subGeo.features)
+        .data(featuresToDraw)
         .join("path")
-        .attr("d", path as any)
+        .attr("d", flatPath as any)
         .attr("class", (d: any) => {
+          if (!subGeo) return "subdivision visited";
           const rawName = String(
             d.properties?.name ?? d.properties?.NAME ?? "",
           );
@@ -450,7 +454,7 @@ const { content } = Astro.props;
         })
         .on("mousemove", (event: MouseEvent, d: any) => {
           const rawName = String(
-            d.properties?.name ?? d.properties?.NAME ?? "",
+            d.properties?.name ?? d.properties?.NAME ?? country.name,
           );
           if (rawName) showTooltip(event, rawName);
         })
@@ -467,15 +471,16 @@ const { content } = Astro.props;
     }
 
     function resetToWorld() {
+      hideTooltip();
       subdivisionsLayer.selectAll("*").remove();
-      countriesLayer.selectAll("path").classed("dimmed", false);
+      countriesLayer.style("display", null);
 
       crumbWorld.classList.add("active");
       crumbSep.hidden = true;
       crumbCountry.hidden = true;
       panel.hidden = true;
 
-      svg.transition().duration(600).call(zoom.transform, d3.zoomIdentity);
+      svg.call(zoom.transform, d3.zoomIdentity);
     }
 
     // Draw world countries
@@ -483,7 +488,7 @@ const { content } = Astro.props;
       .selectAll("path")
       .data(worldGeo.features)
       .join("path")
-      .attr("d", path as any)
+      .attr("d", worldPath as any)
       .attr("class", (d) => {
         const id = String(d.id ?? "").padStart(3, "0");
         return visitedByIso.has(id) ? "country visited" : "country";
