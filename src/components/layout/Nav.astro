@@ -1,20 +1,37 @@
 ---
 import { NAV_GROUPS, NAV_ITEMS } from "@config/site";
 import { FEATURES } from "@config/features";
+import { UI } from "@i18n/ui";
+import type { Locale } from "@i18n/config";
+import { localePath, switchLocalePath } from "@i18n/utils";
 import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = "en" } = Astro.props;
+const ui = UI[lang];
+const alternateLang: Locale = lang === "en" ? "zh" : "en";
 
 const normalize = (path: string) =>
   path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
 
 const currentPath = normalize(Astro.url.pathname);
-const isCurrent = (href: string) => currentPath === normalize(href);
+const switchHref = switchLocalePath(currentPath, alternateLang);
 
 const visibleNavItems = NAV_ITEMS.filter(
   (item) => !item.featureFlag || FEATURES[item.featureFlag],
-);
+).map((item) => ({
+  ...item,
+  localizedLabel: ui.navLabels[item.href] ?? item.label,
+  localizedHref: localePath(lang, item.href),
+}));
+
+const isCurrent = (href: string) => currentPath === normalize(href);
 
 const mobileGroups = NAV_GROUPS.map((group) => ({
-  label: group,
+  label: ui.navGroups[group],
   items: visibleNavItems.filter((item) => item.group === group),
 })).filter((group) => group.items.length > 0);
 
@@ -30,24 +47,23 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
   );
   return {
     id: `dd-panel-${idx}`,
-    label: group,
+    label: ui.navGroups[group],
     items,
-    hasActive: items.some((item) => isCurrent(item.href)),
+    hasActive: items.some((item) => isCurrent(item.localizedHref)),
   };
 }).filter((group) => group.items.length > 0);
 ---
 
-<!-- Desktop only: Option B Grouped Dropdowns -->
-<nav class="desktop-nav" id="desktop-nav" aria-label="Primary navigation">
+<nav class="desktop-nav" id="desktop-nav" aria-label={ui.primaryNavAria}>
   {desktopStartPins.map((item) => {
-    const active = isCurrent(item.href);
+    const active = isCurrent(item.localizedHref);
     return (
       <a
-        href={item.href}
+        href={item.localizedHref}
         class:list={["nav-link", { active }]}
         aria-current={active ? "page" : undefined}
       >
-        {item.label}
+        {item.localizedLabel}
       </a>
     );
   })}
@@ -68,14 +84,14 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
       </button>
       <div class="dd-panel" id={group.id}>
         {group.items.map((item) => {
-          const active = isCurrent(item.href);
+          const active = isCurrent(item.localizedHref);
           return (
             <a
-              href={item.href}
+              href={item.localizedHref}
               class:list={[{ active }]}
               aria-current={active ? "page" : undefined}
             >
-              {item.label}
+              {item.localizedLabel}
             </a>
           );
         })}
@@ -84,38 +100,46 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
   ))}
 
   {desktopEndPins.map((item) => {
-    const active = isCurrent(item.href);
+    const active = isCurrent(item.localizedHref);
     return (
       <a
-        href={item.href}
+        href={item.localizedHref}
         class:list={["nav-link", { active }]}
         aria-current={active ? "page" : undefined}
       >
-        {item.label}
+        {item.localizedLabel}
       </a>
     );
   })}
 
-  <div class="desktop-toggle">
-    <ThemeToggle />
+  <div class="desktop-controls">
+    <a
+      href={switchHref}
+      hreflang={alternateLang === "zh" ? "zh-Hans" : "en"}
+      lang={alternateLang === "zh" ? "zh-Hans" : "en"}
+      class="lang-toggle"
+      aria-label={ui.languageSwitchAria}
+    >
+      {ui.languageSwitchLabel}
+    </a>
+    <ThemeToggle lang={lang} />
   </div>
 </nav>
 
-<!-- Mobile only: grouped drop-down drawer -->
-<nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+<nav class="mobile-menu" id="mobile-menu" aria-label={ui.mobileNavAria}>
   <div class="wrap menu-inner">
     {mobileGroups.map((group) => (
       <div class="group">
         <div class="group-label">{group.label}</div>
         {group.items.map((item) => {
-          const active = isCurrent(item.href);
+          const active = isCurrent(item.localizedHref);
           return (
             <a
-              href={item.href}
+              href={item.localizedHref}
               class:list={[{ active }]}
               aria-current={active ? "page" : undefined}
             >
-              {item.label}
+              {item.localizedLabel}
             </a>
           );
         })}
@@ -123,8 +147,19 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
     ))}
 
     <div class="menu-foot">
-      <span>Appearance</span>
-      <ThemeToggle />
+      <span>{ui.appearanceLabel}</span>
+      <div class="mobile-controls">
+        <a
+          href={switchHref}
+          hreflang={alternateLang === "zh" ? "zh-Hans" : "en"}
+          lang={alternateLang === "zh" ? "zh-Hans" : "en"}
+          class="lang-toggle"
+          aria-label={ui.languageSwitchAria}
+        >
+          {ui.languageSwitchLabel}
+        </a>
+        <ThemeToggle lang={lang} />
+      </div>
     </div>
   </div>
 </nav>
@@ -233,6 +268,12 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
     color: var(--color-text-muted);
   }
 
+  .mobile-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
   /* ---------- Desktop grouped dropdowns ---------- */
   @media (min-width: 760px) {
     .mobile-menu {
@@ -246,6 +287,14 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
       gap: 4px 20px;
       font-family: var(--font-sans);
       font-size: 0.9rem;
+    }
+
+    .desktop-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+      flex-shrink: 0;
     }
 
     .nav-link,
@@ -339,10 +388,6 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
       color: var(--color-accent);
       font-weight: 600;
       background: var(--color-accent-soft);
-    }
-
-    .desktop-toggle {
-      margin-left: auto;
     }
   }
 

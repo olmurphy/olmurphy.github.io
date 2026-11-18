@@ -1,13 +1,19 @@
 ---
-import { RESEARCH_CONTENT } from "@data/research";
+import { getContent } from "@data";
+import { getLocaleFromPath } from "@i18n/utils";
+import { UI } from "@i18n/ui";
 import EntryItem from "@components/ui/EntryItem.astro";
 import TodoNote from "@components/ui/TodoNote.astro";
+
+const lang = getLocaleFromPath(Astro.url.pathname);
+const content = getContent(lang).research;
+const labels = UI[lang].labels;
 ---
 
 <section aria-labelledby="grants-heading">
-  <h2 id="grants-heading">Grants &amp; Fellowships</h2>
-  {RESEARCH_CONTENT.grants.length > 0 ? (
-    RESEARCH_CONTENT.grants.map((grant) => (
+  <h2 id="grants-heading">{labels.grants}</h2>
+  {content.grants.length > 0 ? (
+    content.grants.map((grant) => (
       <EntryItem
         title={grant.title}
         meta={[grant.funder, grant.date, grant.amountOrRole]
@@ -19,7 +25,7 @@ import TodoNote from "@components/ui/TodoNote.astro";
     ))
   ) : (
     <p class="muted">
-      <TodoNote>{RESEARCH_CONTENT.grantsEmptyTodo}</TodoNote>
+      <TodoNote>{content.grantsEmptyTodo}</TodoNote>
     </p>
   )}
 </section>

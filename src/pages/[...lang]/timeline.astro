@@ -1,0 +1,120 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { FEATURES } from "@config/features";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import TimelineFilter from "@components/sections/timeline/TimelineFilter.astro";
+import TimelineItem from "@components/sections/timeline/TimelineItem.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).timeline;
+const visibleGroups = content.groups
+  .map((group) => ({
+    ...group,
+    events: group.events.filter(
+      (event) => !event.featureFlag || FEATURES[event.featureFlag],
+    ),
+  }))
+  .filter((group) => group.events.length > 0);
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "en" ? `Timeline — ${SITE.name}` : `时间线 — ${SITE.name}`}
+  description={
+    lang === "en"
+      ? "Academic, career, and personal milestones of Owen Li Murphy."
+      : "Owen Li Murphy 的学业、职业与个人经历。"
+  }
+>
+  <h1>{content.title}</h1>
+  <p class="muted">{content.subtitle}</p>
+
+  <TimelineFilter legendNote={content.legendNote} />
+
+  <div class="timeline" id="timeline-rail">
+    {visibleGroups.map((group) => (
+      <section class="t-group" aria-label={group.year}>
+        <div class="t-year">{group.year}</div>
+        {group.events.map((event) => (
+          <TimelineItem event={event} />
+        ))}
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  [hidden] {
+    display: none !important;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    margin-top: 8px;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-border);
+  }
+
+  .t-year {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin: 34px 0 14px;
+  }
+
+  .t-group:first-child .t-year {
+    margin-top: 18px;
+  }
+</style>
+
+<script>
+  const chips = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("#timeline-filters .chip"),
+  );
+  const items = Array.from(
+    document.querySelectorAll<HTMLElement>("#timeline-rail .t-item"),
+  );
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("#timeline-rail .t-group"),
+  );
+
+  function applyFilter(filter: string): void {
+    chips.forEach((chip) => {
+      const isSelected = chip.dataset.filter === filter;
+      chip.classList.toggle("on", isSelected);
+      chip.setAttribute("aria-pressed", String(isSelected));
+    });
+
+    items.forEach((item) => {
+      item.hidden = !(filter === "all" || item.dataset.cat === filter);
+    });
+
+    groups.forEach((group) => {
+      group.hidden = !group.querySelector(".t-item:not([hidden])");
+    });
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      applyFilter(chip.dataset.filter ?? "all");
+    });
+  });
+</script>

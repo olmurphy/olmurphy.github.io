@@ -1,5 +1,7 @@
 ---
-import type { ProjectEntry } from "@data/projects";
+import type { ProjectEntry } from "@data/en/projects";
+import { getLocaleFromPath } from "@i18n/utils";
+import { UI } from "@i18n/ui";
 import Card from "@components/ui/Card.astro";
 import Tag from "@components/ui/Tag.astro";
 import TodoNote from "@components/ui/TodoNote.astro";
@@ -9,6 +11,8 @@ interface Props {
 }
 
 const { project } = Astro.props;
+const lang = getLocaleFromPath(Astro.url.pathname);
+const labels = UI[lang].labels;
 ---
 
 <Card>
@@ -27,10 +31,10 @@ const { project } = Astro.props;
   <p class="small">{project.summary}</p>
   {project.team && project.team.length > 0 && (
     <p class="small team">
-      <span class="muted">Team:</span>{" "}
+      <span class="muted">{labels.team}</span>{" "}
       {project.team.map((member, idx) => (
         <>
-          {idx > 0 && ", "}
+          {idx > 0 && (lang === "en" ? ", " : "、")}
           {member.href ? (
             <a href={member.href} target="_blank" rel="noopener noreferrer">
               {member.name}

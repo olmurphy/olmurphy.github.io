@@ -1,0 +1,126 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import { UI } from "@i18n/ui";
+import EntryItem from "@components/ui/EntryItem.astro";
+import SkillRow from "@components/sections/education/SkillRow.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).education;
+const labels = UI[lang].labels;
+---
+
+<BaseLayout
+  lang={lang}
+  title={
+    lang === "en"
+      ? `Education & Experience — ${SITE.name}`
+      : `教育与工作经历 — ${SITE.name}`
+  }
+  description={
+    lang === "en"
+      ? "Academic degrees, software engineering experience, honors, and technical skills of Owen Li Murphy."
+      : "Owen Li Murphy 的学位、工作经历、荣誉与专业技能。"
+  }
+>
+  <h1>{content.title}</h1>
+
+  <h2>{labels.education}</h2>
+  {content.education.map((edu) => (
+    <EntryItem
+      title={edu.degree}
+      logoSrc={edu.logoSrc}
+      logoAlt={edu.institution}
+      logoHref={edu.institutionHref}
+    >
+      <Fragment slot="meta">
+        <a href={edu.institutionHref} target="_blank" rel="noopener noreferrer">
+          {edu.institution}
+        </a>
+        {edu.institutionSuffix} · {edu.period}
+      </Fragment>
+      {edu.details && <p class="small">{edu.details}</p>}
+    </EntryItem>
+  ))}
+
+  {content.visiting.length > 0 && (
+    <>
+      <h2>{labels.visitingAppointments}</h2>
+      {content.visiting.map((visit) => (
+        <EntryItem
+          title={visit.role}
+          logoSrc={visit.logoSrc}
+          logoAlt={visit.institution}
+          logoHref={visit.institutionHref}
+        >
+          <Fragment slot="meta">
+            <a
+              href={visit.institutionHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {visit.institution}
+            </a>
+            {visit.institutionNote}
+            {visit.hosts && visit.hosts.length > 0 && (
+              <>
+                {" "}
+                · {labels.collaborators}{" "}
+                {visit.hosts.map((host, idx) => (
+                  <>
+                    {idx > 0 && (lang === "en" ? " & " : "、")}
+                    {host.href ? (
+                      <a
+                        href={host.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {host.name}
+                      </a>
+                    ) : (
+                      host.name
+                    )}
+                  </>
+                ))}
+              </>
+            )}{" "}
+            ·{" "}
+            {visit.todo ? (
+              <span class="todo">{visit.period}</span>
+            ) : (
+              visit.period
+            )}
+          </Fragment>
+          {visit.summary && (
+            <p class:list={["small", { todo: visit.todo }]}>{visit.summary}</p>
+          )}
+        </EntryItem>
+      ))}
+    </>
+  )}
+
+  <h2>{labels.experience}</h2>
+  {content.experience.map((exp) => (
+    <EntryItem title={exp.role} meta={`${exp.company} · ${exp.dates}`}>
+      <p class="small">{exp.summary}</p>
+    </EntryItem>
+  ))}
+
+  <h2>{labels.awards}</h2>
+  {content.awards.map((award) => (
+    <EntryItem title={award.title} meta={`${award.issuer} · ${award.date}`}>
+      {award.description && <p class="small">{award.description}</p>}
+    </EntryItem>
+  ))}
+
+  <h2>{labels.skills}</h2>
+  {content.skills.map((skill) => (
+    <SkillRow skill={skill} />
+  ))}
+</BaseLayout>

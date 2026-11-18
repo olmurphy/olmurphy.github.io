@@ -1,0 +1,34 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { FEATURES } from "@config/features";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import ResearchDirections from "@components/sections/research/ResearchDirections.astro";
+import GrantsList from "@components/sections/research/GrantsList.astro";
+import FoundationsCallout from "@components/sections/research/FoundationsCallout.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).research;
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "en" ? `Research — ${SITE.name}` : "研究 — Owen Li Murphy"}
+  description={
+    lang === "en"
+      ? "Research statement, active directions, and mathematical foundations of Owen Li Murphy."
+      : "Owen Li Murphy 的研究陈述、当前研究方向与数学基础。"
+  }
+>
+  <h1>{content.title}</h1>
+  <p class="muted">{content.subtitle}</p>
+
+  <ResearchDirections />
+  {FEATURES.showGrantsSection && <GrantsList />}
+  <FoundationsCallout />
+</BaseLayout>

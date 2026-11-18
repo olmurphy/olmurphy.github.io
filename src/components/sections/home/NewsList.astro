@@ -1,15 +1,19 @@
 ---
-import type { NewsItem } from "@data/home";
+import type { NewsItem } from "@data/types";
+import { getContent } from "@data";
+import { getLocaleFromPath } from "@i18n/utils";
 
 interface Props {
   items: readonly NewsItem[];
 }
 
 const { items } = Astro.props;
+const lang = getLocaleFromPath(Astro.url.pathname);
+const heading = getContent(lang).home.newsHeading;
 ---
 
 <section aria-labelledby="news-heading">
-  <h2 id="news-heading">News</h2>
+  <h2 id="news-heading">{heading}</h2>
   <ul class="news">
     {items.map((item) => (
       <li>

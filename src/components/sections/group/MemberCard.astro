@@ -1,5 +1,6 @@
 ---
-import type { GroupMember } from "@data/group";
+import type { GroupMember } from "@data/en/group";
+import { getLocaleFromPath } from "@i18n/utils";
 import EntryItem from "@components/ui/EntryItem.astro";
 
 interface Props {
@@ -7,9 +8,12 @@ interface Props {
 }
 
 const { member } = Astro.props;
+const lang = getLocaleFromPath(Astro.url.pathname);
 const metaParts = [
   member.period,
-  member.coAdvisor ? `Co-advised with ${member.coAdvisor}` : undefined,
+  member.coAdvisor
+    ? `${lang === "en" ? "Co-advised with" : "共同指导教师"} ${member.coAdvisor}`
+    : undefined,
 ].filter(Boolean);
 ---
 
@@ -17,12 +21,18 @@ const metaParts = [
   <p class="small">
     {member.researchFocus}
     {member.nextPosition && (
-      <span class="muted"> · Next: {member.nextPosition}</span>
+      <span class="muted">
+        {" "}
+        · {lang === "en" ? "Next:" : "后续去向："} {member.nextPosition}
+      </span>
     )}
     {member.website && (
       <>
         {" "}
-        · <a href={member.website}>Website →</a>
+        ·{" "}
+        <a href={member.website}>
+          {lang === "en" ? "Website →" : "个人主页 →"}
+        </a>
       </>
     )}
   </p>

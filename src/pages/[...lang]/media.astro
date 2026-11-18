@@ -1,0 +1,91 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { getContent } from "@data";
+import { buildMediaJsonLd } from "@data/schema";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import { UI } from "@i18n/ui";
+import FeaturedTalkCard from "@components/sections/media/FeaturedTalkCard.astro";
+import Card from "@components/ui/Card.astro";
+import EntryItem from "@components/ui/EntryItem.astro";
+import Tag from "@components/ui/Tag.astro";
+import TodoNote from "@components/ui/TodoNote.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).media;
+const labels = UI[lang].labels;
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "en" ? `Media — ${SITE.name}` : `媒体与科普 — ${SITE.name}`}
+  description={
+    lang === "en"
+      ? "Educational videos, viral talks, and science communication by Owen Li Murphy."
+      : "Owen Li Murphy 的科普视频、技术演讲与科学传播内容。"
+  }
+  jsonLd={buildMediaJsonLd(lang)}
+>
+  <h1>{content.title}</h1>
+  <p class="muted">{content.subtitle}</p>
+
+  <h2>{labels.featuredTalks}</h2>
+  {content.featuredTalks.map((talk) => (
+    <FeaturedTalkCard talk={talk} />
+  ))}
+
+  <h2>{labels.series}</h2>
+  <Card>
+    <h3>{content.seriesTitle}</h3>
+    <p class="small">{content.seriesDescription}</p>
+    <div class="links">
+      {content.links.map((link) => (
+        <a href={link.href} target="_blank" rel="noopener noreferrer">
+          {link.todo ? <TodoNote>{link.label}</TodoNote> : link.label}
+        </a>
+      ))}
+    </div>
+  </Card>
+  {content.press.length > 0 && (
+    <>
+      <h2>{labels.press}</h2>
+      {content.press.map((item) => (
+        <EntryItem title={item.title} meta={`${item.outlet} · ${item.date}`}>
+          {item.titleEn && <p class="small muted">{item.titleEn}</p>}
+          <p class="small">{item.summary}</p>
+          <div class="tags">
+            <Tag variant="status">{item.kind}</Tag>
+            <Tag>{item.language}</Tag>
+          </div>
+          <a
+            class="small"
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {labels.readWechat}
+          </a>
+        </EntryItem>
+      ))}
+    </>
+  )}
+  <p class="small muted">{content.editorialNote}</p>
+</BaseLayout>
+
+<style>
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 6px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+  .tags {
+    margin: 6px 0;
+  }
+</style>

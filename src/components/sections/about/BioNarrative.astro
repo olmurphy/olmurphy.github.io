@@ -1,15 +1,21 @@
 ---
-import { ABOUT_CONTENT } from "@data/about";
+import { getContent } from "@data";
+import { getLocaleFromPath } from "@i18n/utils";
+import { UI } from "@i18n/ui";
+
+const lang = getLocaleFromPath(Astro.url.pathname);
+const content = getContent(lang).about;
+const labels = UI[lang].labels;
 ---
 
-<section aria-label="Biography">
-  {ABOUT_CONTENT.bioParagraphs.map((paragraph) => (
+<section aria-label={labels.biography}>
+  {content.bioParagraphs.map((paragraph) => (
     <p>{paragraph}</p>
   ))}
 
-  <h2>Why this field</h2>
-  <p>{ABOUT_CONTENT.whyThisField}</p>
+  <h2>{content.whyThisFieldHeading}</h2>
+  <p>{content.whyThisField}</p>
 
-  <h2>Background &amp; story</h2>
-  <p>{ABOUT_CONTENT.background}</p>
+  <h2>{content.backgroundHeading}</h2>
+  <p>{content.background}</p>
 </section>

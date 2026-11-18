@@ -46,3 +46,70 @@ gcloud storage cp friends.png gs://owenmurphy2022-portfolio-media/life/everyday/
 --cache-control="public, max-age=31536000, immutable"
 
 gcloud storage cp temple-of-heaven.png gs://owenmurphy2022-portfolio-media/life/places/temple-of-heaven-2025.png --cache-control="public, max-age=31536000, immutable"
+
+src/
+├── config/
+│ ├── features.ts # Unchanged
+│ ├── site.ts # Shared constants (URLs, handles) + locale metadata
+│ └── storage.ts # Unchanged (R2 media URLs shared across locales)
+├── i18n/
+│ ├── config.ts # LOCALES = ['en', 'zh'], DEFAULT_LOCALE = 'en', hreflang map
+│ ├── ui.ts # Chrome strings (nav groups, buttons, ARIA labels, 404, BibTeX)
+│ └── utils.ts # getLocaleFromUrl(), localePath(lang, path), switchLocalePath()
+├── data/
+│ ├── types.ts # Shared TypeScript interfaces extracted from current data files
+│ ├── index.ts # Typed registry: getSiteData(lang) -> { home, about, research, ... }
+│ ├── en/ # Existing English data files moved here[cite: 1, 2]
+│ │ ├── about.ts
+│ │ ├── contact.ts
+│ │ ├── education.ts
+│ │ ├── group.ts
+│ │ ├── home.ts
+│ │ ├── learning.ts
+│ │ ├── life.ts
+│ │ ├── media.ts
+│ │ ├── profile.ts
+│ │ ├── projects.ts
+│ │ ├── publications.ts
+│ │ ├── research.ts
+│ │ ├── teaching.ts
+│ │ └── timeline.ts
+│ └── zh/ # 1:1 typed Chinese mirrors enforcing compile-time parity
+│ ├── about.ts
+│ ├── contact.ts
+│ ├── education.ts
+│ ├── group.ts
+│ ├── home.ts
+│ ├── learning.ts
+│ ├── life.ts
+│ ├── media.ts
+│ ├── profile.ts
+│ ├── projects.ts
+│ ├── publications.ts
+│ ├── research.ts
+│ ├── teaching.ts
+│ └── timeline.ts
+├── layouts/
+│ └── BaseLayout.astro # Accepts `lang`, injects html[lang], canonical, hreflang, og:locale
+├── components/ # Existing components updated to accept `lang` / localized props[cite: 1, 2]
+└── pages/
+├── 404.astro # Root 404 (can offer bilingual quick links)
+├── references.bib.ts # Language-agnostic BibTeX export
+└── [...lang]/ # Single route set generating both `/` and `/zh/`
+├── index.astro
+├── about.astro
+├── contact.astro
+├── education.astro
+├── group.astro
+├── learning.astro
+├── life.astro
+├── media.astro
+├── projects.astro
+├── publications.astro
+├── research.astro
+├── teaching.astro
+├── timeline.astro
+├── llms.txt.ts # Generates /llms.txt and /zh/llms.txt
+└── llms-full.txt.ts # Generates /llms-full.txt and /zh/llms-full.txt
+
+https://gemini.google.com/app/3e92848d14d3f6e1

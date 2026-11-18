@@ -1,13 +1,24 @@
 ---
+import { UI } from "@i18n/ui";
+import type { Locale } from "@i18n/config";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = "en" } = Astro.props;
+const ui = UI[lang];
 ---
 
 <button
   type="button"
   class="theme-toggle"
   data-theme-toggle
-  aria-label="Switch between light and dark mode"
+  data-dark-label={ui.darkMode}
+  data-light-label={ui.lightMode}
+  aria-label={ui.themeToggleAria}
 >
-  Dark mode
+  {ui.darkMode}
 </button>
 
 <style>
@@ -56,9 +67,11 @@
   }
 
   function syncLabels(): void {
-    const text = getCurrentTheme() === "dark" ? "Light mode" : "Dark mode";
+    const isDark = getCurrentTheme() === "dark";
     toggles.forEach((btn) => {
-      btn.textContent = text;
+      btn.textContent = isDark
+        ? (btn.dataset.lightLabel ?? "Light mode")
+        : (btn.dataset.darkLabel ?? "Dark mode");
     });
   }
 
@@ -68,9 +81,7 @@
       root.setAttribute("data-theme", next);
       try {
         localStorage.setItem("theme", next);
-      } catch {
-        // Ignore storage errors in restricted contexts
-      }
+      } catch {}
       syncLabels();
     });
   });

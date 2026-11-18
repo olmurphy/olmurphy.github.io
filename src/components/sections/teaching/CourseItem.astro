@@ -1,5 +1,6 @@
 ---
-import type { CourseEntry } from "@data/teaching";
+import type { CourseEntry } from "@data/en/teaching";
+import { getLocaleFromPath } from "@i18n/utils";
 import EntryItem from "@components/ui/EntryItem.astro";
 import Tag from "@components/ui/Tag.astro";
 import TodoNote from "@components/ui/TodoNote.astro";
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const { course } = Astro.props;
+const lang = getLocaleFromPath(Astro.url.pathname);
 ---
 
 <EntryItem title={course.title}>
@@ -17,7 +19,7 @@ const { course } = Astro.props;
     {course.instructorName && (
       <>
         {" "}
-        · Instructor:{" "}
+        · {lang === "en" ? "Instructor:" : "授课教师："}{" "}
         {course.instructorHref ? (
           <a
             href={course.instructorHref}
@@ -38,7 +40,13 @@ const { course } = Astro.props;
   </p>
 
   <div class="tags">
-    <Tag variant="status">{course.status}</Tag>
+    <Tag variant="status">
+      {lang === "en"
+        ? course.status
+        : course.status === "Current"
+          ? "当前"
+          : "已完成"}
+    </Tag>
     {course.tags.map((tag) => (
       <Tag>{tag}</Tag>
     ))}

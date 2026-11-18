@@ -22,7 +22,7 @@
     "lint-staged": "^17.6.0",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^1.1.2",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.3"
   },
   "lint-staged": {
     "*.{astro,ts,tsx,js,jsx,json,css,md}": [

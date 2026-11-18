@@ -1,0 +1,36 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import { UI } from "@i18n/ui";
+import CurriculumSection from "@components/sections/learning/CurriculumSection.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).learning;
+const labels = UI[lang].labels;
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "en" ? `Learning — ${SITE.name}` : `自主研习 — ${SITE.name}`}
+  description={
+    lang === "en"
+      ? "Independent self-study across mathematics, computer science, and natural sciences."
+      : "数学、计算机科学与自然科学领域的自主学习与研习记录。"
+  }
+>
+  <h1>{content.title}</h1>
+  <p class="muted">{content.subtitle}</p>
+
+  <h2>{labels.whatTaken}</h2>
+  <p>{content.reflection}</p>
+
+  {content.categories.map((category) => (
+    <CurriculumSection category={category} />
+  ))}
+</BaseLayout>
