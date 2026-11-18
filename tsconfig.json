@@ -4,6 +4,7 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "paths": {
+      "@data": ["./src/data/index.ts"],
       "@config/*": ["./src/config/*"],
       "@data/*": ["./src/data/*"],
       "@styles/*": ["./src/styles/*"],

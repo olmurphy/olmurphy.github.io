@@ -1,0 +1,73 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { FEATURES } from "@config/features";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import { UI } from "@i18n/ui";
+import { localePath } from "@i18n/utils";
+import Callout from "@components/ui/Callout.astro";
+import MemberCard from "@components/sections/group/MemberCard.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).group;
+const labels = UI[lang].labels;
+const phdStudents = content.members.filter((m) => m.role === "phd");
+const msAndUndergrads = content.members.filter(
+  (m) => m.role === "masters" || m.role === "undergrad",
+);
+const alumni = content.members.filter((m) => m.role === "alumni");
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "en" ? `Group — ${SITE.name}` : `研究团队 — ${SITE.name}`}
+  description={
+    lang === "en"
+      ? "Students and researchers advised by Owen Li Murphy."
+      : "由 Owen Li Murphy 指导的学生与研究人员。"
+  }
+>
+  {!FEATURES.showLabGroupPage && (
+    <meta slot="head" name="robots" content="noindex" />
+  )}
+
+  <h1>{content.title}</h1>
+  <p class="muted">{content.subtitle}</p>
+
+  <Callout>
+    {content.prospectiveNote}{" "}
+    <a href={localePath(lang, "/contact")}>{labels.getInTouch}</a>
+  </Callout>
+
+  {phdStudents.length > 0 && (
+    <>
+      <h2>{labels.phdStudents}</h2>
+      {phdStudents.map((member) => (
+        <MemberCard member={member} />
+      ))}
+    </>
+  )}
+
+  {msAndUndergrads.length > 0 && (
+    <>
+      <h2>{labels.mastersAndUndergraduates}</h2>
+      {msAndUndergrads.map((member) => (
+        <MemberCard member={member} />
+      ))}
+    </>
+  )}
+
+  {alumni.length > 0 && (
+    <>
+      <h2>{labels.alumni}</h2>
+      {alumni.map((member) => (
+        <MemberCard member={member} />
+      ))}
+    </>
+  )}
+</BaseLayout>

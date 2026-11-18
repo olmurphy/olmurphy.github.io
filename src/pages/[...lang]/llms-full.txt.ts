@@ -1,110 +1,109 @@
 import type { APIRoute } from "astro";
 import { SITE } from "@config/site";
 import { FEATURES } from "@config/features";
-import { HOME_HERO, RESEARCH_OVERVIEW, NEWS_ITEMS } from "@data/home";
-import { ABOUT_CONTENT } from "@data/about";
-import { RESEARCH_CONTENT } from "@data/research";
-import { PUBLICATIONS_CONTENT } from "@data/publications";
-import { PROJECTS_CONTENT } from "@data/projects";
-import { EDUCATION_CONTENT } from "@data/education";
-import { TEACHING_CONTENT } from "@data/teaching";
-import { LEARNING_CONTENT } from "@data/learning";
-import { MEDIA_CONTENT } from "@data/media";
-import { CONTACT_CONTENT } from "@data/contact";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
 
 export const prerender = true;
 
-export const GET: APIRoute = () => {
-  const visibleProjects = PROJECTS_CONTENT.projects.filter(
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+export const GET: APIRoute = ({ params }) => {
+  const lang: Locale = params.lang === "zh" ? "zh" : "en";
+  const content = getContent(lang);
+  const zh = lang === "zh";
+  const visibleProjects = content.projects.projects.filter(
     (p) => !p.featureFlag || FEATURES[p.featureFlag],
   );
-  const visibleHackathons = PROJECTS_CONTENT.hackathons.filter(
+  const visibleHackathons = content.projects.hackathons.filter(
     (h) => !h.featureFlag || FEATURES[h.featureFlag],
   );
 
   const sections: string[] = [
     `# ${SITE.name} (${SITE.chineseName})`,
-    `${HOME_HERO.affiliation}`,
-    `Website: ${SITE.url}`,
+    `${content.home.hero.affiliation}`,
+    `${zh ? "网站" : "Website"}: ${SITE.url}`,
     "",
-    "## About",
-    ...ABOUT_CONTENT.bioParagraphs,
+    zh ? "## 关于我" : "## About",
+    ...content.about.bioParagraphs,
     "",
-    ...ABOUT_CONTENT.quickFacts.map((f) => `- **${f.label}**: ${f.value}`),
+    ...content.about.quickFacts.map((f) => `- **${f.label}**: ${f.value}`),
     "",
-    "## Research Statement & Directions",
-    RESEARCH_CONTENT.statement,
+    zh ? "## 研究陈述与方向" : "## Research Statement & Directions",
+    content.research.statement,
     "",
-    ...RESEARCH_CONTENT.directions.map(
+    ...content.research.directions.map(
       (d) => `- **${d.title}**: ${d.description}`,
     ),
     "",
-    `**Exploring Areas**: ${RESEARCH_CONTENT.exploringAreas.join(", ")}`,
+    `**${zh ? "正在探索的领域" : "Exploring Areas"}**: ${content.research.exploringAreas.join(", ")}`,
     "",
-    `**Mathematical Foundations**: ${RESEARCH_CONTENT.foundations}`,
+    `**${zh ? "数学基础" : "Mathematical Foundations"}**: ${content.research.foundations}`,
     "",
-    "## Publications & Works in Progress",
-    "### Under Review",
-    ...PUBLICATIONS_CONTENT.underReview.map(
+    zh ? "## 论文与进行中的研究" : "## Publications & Works in Progress",
+    zh ? "### 审稿中" : "### Under Review",
+    ...content.publications.underReview.map(
       (p) =>
         `- **${p.title}** (${p.venue}) — ${p.summary} [${p.tags.join(", ")}]`,
     ),
     "",
-    "### In Progress",
-    ...PUBLICATIONS_CONTENT.inProgress.map(
+    zh ? "### 进行中" : "### In Progress",
+    ...content.publications.inProgress.map(
       (p) =>
         `- **${p.title}** (${p.venue}) — ${p.summary} [${p.tags.join(", ")}]`,
     ),
     "",
-    "## Projects",
+    zh ? "## 项目" : "## Projects",
     ...visibleProjects.map((p) => {
       const link = p.linkHref && !p.linkTodo ? ` (${p.linkHref})` : "";
       return `- **${p.title}** [${p.tags.join(", ")}]: ${p.summary}${link}`;
     }),
     "",
-    "## Hackathons",
+    zh ? "## 黑客松" : "## Hackathons",
     ...visibleHackathons.map((h) => {
       const link = h.linkHref && !h.linkTodo ? ` (${h.linkHref})` : "";
       return `- **${h.title}** (${h.statusTag ?? ""}): ${h.summary}${link}`;
     }),
     "",
-    "## Education",
-    ...EDUCATION_CONTENT.education.map(
+    zh ? "## 教育经历" : "## Education",
+    ...content.education.education.map(
       (e) =>
         `- **${e.degree}**, ${e.institution}${e.institutionSuffix ?? ""} (${e.period})${e.details ? ` — ${e.details}` : ""}`,
     ),
     "",
-    "## Visiting Appointments",
-    ...EDUCATION_CONTENT.visiting.map((v) => {
+    zh ? "## 访问经历" : "## Visiting Appointments",
+    ...content.education.visiting.map((v) => {
       const hosts = v.hosts?.map((h) => h.name).join(" & ");
       return `- **${v.role}**, ${v.institution} (${v.period})${hosts ? ` · Collaborators: ${hosts}` : ""}${v.summary ? ` — ${v.summary}` : ""}`;
     }),
     "",
-    "## Experience",
-    ...EDUCATION_CONTENT.experience.map(
+    zh ? "## 工作经历" : "## Experience",
+    ...content.education.experience.map(
       (exp) =>
         `- **${exp.role}**, ${exp.company} (${exp.dates}) — ${exp.summary}`,
     ),
     "",
-    "## Teaching",
-    ...TEACHING_CONTENT.courses.map(
+    zh ? "## 教学经历" : "## Teaching",
+    ...content.teaching.courses.map(
       (c) =>
         `- **${c.title}**, ${c.institution} — ${c.role} (${c.term}${c.instructorName ? `, Instructor: ${c.instructorName}` : ""}): ${c.summary}`,
     ),
     "",
-    "## Awards & Honors",
-    ...EDUCATION_CONTENT.awards.map(
+    zh ? "## 奖项与荣誉" : "## Awards & Honors",
+    ...content.education.awards.map(
       (a) =>
         `- **${a.title}**, ${a.issuer} (${a.date})${a.description ? ` — ${a.description}` : ""}`,
     ),
     "",
-    "## Technical Skills",
-    ...EDUCATION_CONTENT.skills.map(
+    zh ? "## 专业技能" : "## Technical Skills",
+    ...content.education.skills.map(
       (s) => `- **${s.category}**: ${s.items ?? ""}`,
     ),
     "",
-    "## Independent Self-Study",
-    ...LEARNING_CONTENT.categories.flatMap((cat) => [
+    zh ? "## 自主研习" : "## Independent Self-Study",
+    ...content.learning.categories.flatMap((cat) => [
       `### ${cat.heading}`,
       ...cat.items.map(
         (item) =>
@@ -112,18 +111,18 @@ export const GET: APIRoute = () => {
       ),
     ]),
     "",
-    "## Media & Talks",
-    ...MEDIA_CONTENT.featuredTalks.map(
+    zh ? "## 媒体与演讲" : "## Media & Talks",
+    ...content.media.featuredTalks.map(
       (t) =>
         `- **${t.title}** (${t.platform}, ${t.stats}): ${t.description} (${t.links.map((l) => l.href).join(" | ")})`,
     ),
-    `- **${MEDIA_CONTENT.seriesTitle}**: ${MEDIA_CONTENT.seriesDescription}`,
+    `- **${content.media.seriesTitle}**: ${content.media.seriesDescription}`,
     "",
-    "## Recent News",
-    ...NEWS_ITEMS.map((n) => `- **${n.date}**: ${n.text}`),
+    zh ? "## 近期动态" : "## Recent News",
+    ...content.home.newsItems.map((n) => `- **${n.date}**: ${n.text}`),
     "",
-    "## Contact",
-    ...CONTACT_CONTENT.channels
+    zh ? "## 联系方式" : "## Contact",
+    ...content.contact.channels
       .filter((c) => !c.todo)
       .map((c) => `- **${c.label}**: ${c.href ?? c.value}`),
     "",

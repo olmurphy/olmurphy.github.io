@@ -1,28 +1,33 @@
 import { SITE } from "@config/site";
 import { FEATURES } from "@config/features";
-import { HOME_HERO } from "@data/home";
-import { RESEARCH_CONTENT } from "@data/research";
-import { PUBLICATIONS_CONTENT } from "@data/publications";
-import { PROJECTS_CONTENT } from "@data/projects";
-import { MEDIA_CONTENT } from "@data/media";
+import { getContent } from "@data";
+import { localePath } from "@i18n/utils";
+import type { Locale } from "@i18n/config";
 
 export type JsonLdObject = Record<string, unknown>;
 
 export const PERSON_ID = `${SITE.url}/#person`;
 export const WEBSITE_ID = `${SITE.url}/#website`;
 
-export function buildGlobalGraph(): readonly JsonLdObject[] {
-  const portraitUrl = new URL(HOME_HERO.portraitSrc, SITE.url).toString();
+export function buildGlobalGraph(lang: Locale = "en"): readonly JsonLdObject[] {
+  const content = getContent(lang);
+  const portraitUrl = new URL(
+    content.home.hero.portraitSrc,
+    SITE.url,
+  ).toString();
 
   return [
     {
       "@type": "WebSite",
       "@id": WEBSITE_ID,
-      url: SITE.url,
+      url:
+        lang === "en"
+          ? SITE.url
+          : new URL(localePath(lang, "/"), SITE.url).toString(),
       name: SITE.name,
       alternateName: SITE.chineseName,
-      description: SITE.defaultDescription,
-      inLanguage: "en",
+      description: content.home.meta.description,
+      inLanguage: lang === "en" ? "en" : "zh-Hans",
       author: { "@id": PERSON_ID },
     },
     {
@@ -34,8 +39,11 @@ export function buildGlobalGraph(): readonly JsonLdObject[] {
       familyName: "Murphy",
       url: SITE.url,
       image: portraitUrl,
-      description: SITE.defaultDescription,
-      jobTitle: "AI & Software Engineer; M.S. Computer Science Student",
+      description: content.home.meta.description,
+      jobTitle:
+        lang === "en"
+          ? "AI & Software Engineer; M.S. Computer Science Student"
+          : "AI 与软件工程师；计算机科学硕士生",
       sameAs: [
         "https://github.com/olmurphy",
         "https://scholar.google.com/citations?user=A667B6MAAAAJ&hl=zh-CN",
@@ -87,7 +95,7 @@ export function buildGlobalGraph(): readonly JsonLdObject[] {
         "Selective Prediction",
         "Distribution Shift",
         "Spectral Graph Theory",
-        ...RESEARCH_CONTENT.exploringAreas,
+        ...content.research.exploringAreas,
       ],
       knowsLanguage: [
         { "@type": "Language", name: "English" },
@@ -95,32 +103,33 @@ export function buildGlobalGraph(): readonly JsonLdObject[] {
       ],
       homeLocation: {
         "@type": "Place",
-        name: "Shanghai, China",
+        name: lang === "en" ? "Shanghai, China" : "中国上海",
       },
     },
   ];
 }
 
-export function buildAboutJsonLd(): JsonLdObject {
+export function buildAboutJsonLd(lang: Locale = "en"): JsonLdObject {
+  const content = getContent(lang).about;
   return {
     "@type": "ProfilePage",
-    url: `${SITE.url}/about`,
-    name: `About — ${SITE.name}`,
+    url: new URL(localePath(lang, "/about"), SITE.url).toString(),
+    name: content.meta.title,
     mainEntity: { "@id": PERSON_ID },
   };
 }
 
-export function buildPublicationsJsonLd(): readonly JsonLdObject[] {
-  const allPapers = [
-    ...PUBLICATIONS_CONTENT.underReview,
-    ...PUBLICATIONS_CONTENT.inProgress,
-  ];
+export function buildPublicationsJsonLd(
+  lang: Locale = "en",
+): readonly JsonLdObject[] {
+  const content = getContent(lang).publications;
+  const allPapers = [...content.underReview, ...content.inProgress];
 
   return [
     {
       "@type": "CollectionPage",
-      url: `${SITE.url}/publications`,
-      name: `Publications — ${SITE.name}`,
+      url: new URL(localePath(lang, "/publications"), SITE.url).toString(),
+      name: `${content.title} — ${SITE.name}`,
       about: { "@id": PERSON_ID },
     },
     ...allPapers.map((paper) => ({
@@ -138,19 +147,22 @@ export function buildPublicationsJsonLd(): readonly JsonLdObject[] {
   ];
 }
 
-export function buildProjectsJsonLd(): readonly JsonLdObject[] {
-  const visibleProjects = PROJECTS_CONTENT.projects.filter(
+export function buildProjectsJsonLd(
+  lang: Locale = "en",
+): readonly JsonLdObject[] {
+  const content = getContent(lang).projects;
+  const visibleProjects = content.projects.filter(
     (p) => !p.featureFlag || FEATURES[p.featureFlag],
   );
-  const visibleHackathons = PROJECTS_CONTENT.hackathons.filter(
+  const visibleHackathons = content.hackathons.filter(
     (h) => !h.featureFlag || FEATURES[h.featureFlag],
   );
 
   return [
     {
       "@type": "CollectionPage",
-      url: `${SITE.url}/projects`,
-      name: `Projects — ${SITE.name}`,
+      url: new URL(localePath(lang, "/projects"), SITE.url).toString(),
+      name: `${content.title} — ${SITE.name}`,
       about: { "@id": PERSON_ID },
     },
     ...[...visibleProjects, ...visibleHackathons].map((project) => {
@@ -171,21 +183,22 @@ export function buildProjectsJsonLd(): readonly JsonLdObject[] {
   ];
 }
 
-export function buildMediaJsonLd(): readonly JsonLdObject[] {
+export function buildMediaJsonLd(lang: Locale = "en"): readonly JsonLdObject[] {
+  const content = getContent(lang);
   return [
     {
       "@type": "CollectionPage",
-      url: `${SITE.url}/media`,
-      name: `Media — ${SITE.name}`,
+      url: new URL(localePath(lang, "/media"), SITE.url).toString(),
+      name: `${content.media.title} — ${SITE.name}`,
       about: { "@id": PERSON_ID },
     },
-    ...MEDIA_CONTENT.featuredTalks.map((talk) => ({
+    ...content.media.featuredTalks.map((talk) => ({
       "@type": "VideoObject",
       name: talk.title,
       description: talk.description,
       creator: { "@id": PERSON_ID },
       publisher: { "@id": PERSON_ID },
-      thumbnailUrl: new URL(HOME_HERO.portraitSrc, SITE.url).toString(),
+      thumbnailUrl: new URL(content.home.hero.portraitSrc, SITE.url).toString(),
       ...(talk.douyinVideoId
         ? {
             embedUrl: `https://open.douyin.com/player/video?vid=${talk.douyinVideoId}&autoplay=0`,
@@ -195,8 +208,8 @@ export function buildMediaJsonLd(): readonly JsonLdObject[] {
     })),
     {
       "@type": "CreativeWorkSeries",
-      name: MEDIA_CONTENT.seriesTitle,
-      description: MEDIA_CONTENT.seriesDescription,
+      name: content.media.seriesTitle,
+      description: content.media.seriesDescription,
       creator: { "@id": PERSON_ID },
       url: "https://www.youtube.com/@owenmurphy2022/featured",
     },

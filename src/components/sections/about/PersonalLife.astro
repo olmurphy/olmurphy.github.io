@@ -1,19 +1,28 @@
 ---
-import { ABOUT_CONTENT } from "@data/about";
+import { getContent } from "@data";
+import { getLocaleFromPath, localePath } from "@i18n/utils";
+import { UI } from "@i18n/ui";
 import KeyValueTable from "@components/ui/KeyValueTable.astro";
+
+const lang = getLocaleFromPath(Astro.url.pathname);
+const content = getContent(lang).about;
+const labels = UI[lang].labels;
 ---
 
-<section aria-label="Personal interests and quick facts">
-  <h2>Outside the lab</h2>
+<section aria-label={labels.personalInterests}>
+  <h2>{content.outsideLabHeading}</h2>
   <ul>
-    <li>Calisthenics, flexibility training, and running.</li>
-    <li>
-      Making educational videos — see <a href="/media">Media</a>.
-    </li>
-    <li>Tinkering with hardware: Raspberry Pi, Arduino, and a home lab.</li>
-    <li>Competitive programming (Python and C++).</li>
+    {content.outsideLabItems.map((item) => (
+      <li>
+        {item.text}
+        {item.linkHref && item.linkLabel && (
+          <a href={localePath(lang, item.linkHref)}>{item.linkLabel}</a>
+        )}
+        {item.suffix}
+      </li>
+    ))}
   </ul>
 
-  <h2>Quick facts</h2>
-  <KeyValueTable rows={ABOUT_CONTENT.quickFacts} />
+  <h2>{content.quickFactsHeading}</h2>
+  <KeyValueTable rows={content.quickFacts} />
 </section>

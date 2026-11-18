@@ -1,19 +1,24 @@
 ---
+import { getLocaleFromPath } from "@i18n/utils";
+
 interface Props {
   legendNote: string;
 }
 
 const { legendNote } = Astro.props;
+const lang = getLocaleFromPath(Astro.url.pathname);
 ---
 
 <div
   class="filters"
   id="timeline-filters"
   role="group"
-  aria-label="Filter timeline by category"
+  aria-label={
+    lang === "en" ? "Filter timeline by category" : "按类别筛选时间线"
+  }
 >
   <button type="button" class="chip on" data-filter="all" aria-pressed="true">
-    All
+    {lang === "en" ? "All" : "全部"}
   </button>
   <button
     type="button"
@@ -21,10 +26,12 @@ const { legendNote } = Astro.props;
     data-filter="academic"
     aria-pressed="false"
   >
-    <span class="dot" aria-hidden="true"></span>Academic
+    <span class="dot" aria-hidden="true"></span>
+    {lang === "en" ? "Academic" : "学业"}
   </button>
   <button type="button" class="chip" data-filter="career" aria-pressed="false">
-    <span class="dot" aria-hidden="true"></span>Career
+    <span class="dot" aria-hidden="true"></span>
+    {lang === "en" ? "Career" : "职业"}
   </button>
   <button
     type="button"
@@ -32,7 +39,8 @@ const { legendNote } = Astro.props;
     data-filter="personal"
     aria-pressed="false"
   >
-    <span class="dot" aria-hidden="true"></span>Personal
+    <span class="dot" aria-hidden="true"></span>
+    {lang === "en" ? "Personal" : "个人"}
   </button>
 </div>
 <p class="legend-note">{legendNote}</p>

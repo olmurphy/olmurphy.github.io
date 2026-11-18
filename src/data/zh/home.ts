@@ -10,7 +10,7 @@ export const HOME_CONTENT: HomeContent = {
   hero: {
     portraitSrc: "/photo.jpg",
     portraitAlt: "李晓党 (Owen Li Murphy) 个人肖像",
-    portraitPlaceholder: "add photo.jpg",
+    portraitPlaceholder: "请添加 photo.jpg",
     affiliation: "佐治亚理工学院 (Georgia Tech) 计算机科学硕士（机器学习方向）",
     bioHtml:
       "我是一名软件工程师与科研探索者，拥有数学与分布式系统背景，目前致力于<strong>深度学习</strong>与<strong>计算生物学</strong>的交叉研究，正在准备计算机科学或计算生物学方向的研究型硕士申请。",

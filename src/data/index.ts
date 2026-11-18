@@ -1,19 +1,8 @@
 import type { Locale } from "@i18n/config";
-import { HOME_CONTENT as enHome } from "./en/home";
-import { HOME_CONTENT as zhHome } from "./zh/home";
-import { ABOUT_CONTENT as enAbout } from "./en/about";
-import { ABOUT_CONTENT as zhAbout } from "./zh/about";
+import { CONTENT as en } from "./en";
+import { CONTENT as zh } from "./zh";
 
-const CONTENT = {
-  en: {
-    home: enHome,
-    about: enAbout,
-  },
-  zh: {
-    home: zhHome,
-    about: zhAbout,
-  },
-} as const;
+const CONTENT = { en, zh };
 
 export function getContent(lang: Locale) {
   return CONTENT[lang];

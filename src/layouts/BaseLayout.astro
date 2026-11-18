@@ -26,7 +26,9 @@ const {
   description = SITE.defaultDescription,
   canonical,
   ogImage = SITE.defaultOgImage,
-  ogImageAlt = SITE.defaultOgImageAlt,
+  ogImageAlt = lang === "en"
+    ? SITE.defaultOgImageAlt
+    : "李晓党 (Owen Li Murphy) 个人肖像",
   ogType = "website",
   twitterCard = "summary",
   jsonLd,
@@ -61,7 +63,7 @@ const extraNodes = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
 const schemaPayload = JSON.stringify({
   "@context": "https://schema.org",
-  "@graph": [...buildGlobalGraph(), ...extraNodes],
+  "@graph": [...buildGlobalGraph(lang), ...extraNodes],
 }).replace(/</g, "\\u003c");
 ---
 

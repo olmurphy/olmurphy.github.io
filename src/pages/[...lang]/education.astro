@@ -1,19 +1,38 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
-import { EDUCATION_CONTENT } from "@data/education";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import { UI } from "@i18n/ui";
 import EntryItem from "@components/ui/EntryItem.astro";
 import SkillRow from "@components/sections/education/SkillRow.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).education;
+const labels = UI[lang].labels;
 ---
 
 <BaseLayout
-  title={`Education & Experience — ${SITE.name}`}
-  description="Academic degrees, software engineering experience, honors, and technical skills of Owen Li Murphy."
+  lang={lang}
+  title={
+    lang === "en"
+      ? `Education & Experience — ${SITE.name}`
+      : `教育与工作经历 — ${SITE.name}`
+  }
+  description={
+    lang === "en"
+      ? "Academic degrees, software engineering experience, honors, and technical skills of Owen Li Murphy."
+      : "Owen Li Murphy 的学位、工作经历、荣誉与专业技能。"
+  }
 >
-  <h1>{EDUCATION_CONTENT.title}</h1>
+  <h1>{content.title}</h1>
 
-  <h2>Education</h2>
-  {EDUCATION_CONTENT.education.map((edu) => (
+  <h2>{labels.education}</h2>
+  {content.education.map((edu) => (
     <EntryItem
       title={edu.degree}
       logoSrc={edu.logoSrc}
@@ -30,10 +49,10 @@ import SkillRow from "@components/sections/education/SkillRow.astro";
     </EntryItem>
   ))}
 
-  {EDUCATION_CONTENT.visiting.length > 0 && (
+  {content.visiting.length > 0 && (
     <>
-      <h2>Visiting Appointments</h2>
-      {EDUCATION_CONTENT.visiting.map((visit) => (
+      <h2>{labels.visitingAppointments}</h2>
+      {content.visiting.map((visit) => (
         <EntryItem
           title={visit.role}
           logoSrc={visit.logoSrc}
@@ -52,7 +71,7 @@ import SkillRow from "@components/sections/education/SkillRow.astro";
             {visit.hosts && visit.hosts.length > 0 && (
               <>
                 {" "}
-                · Collaborators:{" "}
+                · {labels.collaborators}{" "}
                 {visit.hosts.map((host, idx) => (
                   <>
                     {idx > 0 && " & "}
@@ -86,22 +105,22 @@ import SkillRow from "@components/sections/education/SkillRow.astro";
     </>
   )}
 
-  <h2>Experience</h2>
-  {EDUCATION_CONTENT.experience.map((exp) => (
+  <h2>{labels.experience}</h2>
+  {content.experience.map((exp) => (
     <EntryItem title={exp.role} meta={`${exp.company} · ${exp.dates}`}>
       <p class="small">{exp.summary}</p>
     </EntryItem>
   ))}
 
-  <h2>Awards &amp; Honors</h2>
-  {EDUCATION_CONTENT.awards.map((award) => (
+  <h2>{labels.awards}</h2>
+  {content.awards.map((award) => (
     <EntryItem title={award.title} meta={`${award.issuer} · ${award.date}`}>
       {award.description && <p class="small">{award.description}</p>}
     </EntryItem>
   ))}
 
-  <h2>Skills</h2>
-  {EDUCATION_CONTENT.skills.map((skill) => (
+  <h2>{labels.skills}</h2>
+  {content.skills.map((skill) => (
     <SkillRow skill={skill} />
   ))}
 </BaseLayout>

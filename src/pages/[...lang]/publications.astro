@@ -1,65 +1,83 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
-import { PUBLICATIONS_CONTENT } from "@data/publications";
+import { getContent } from "@data";
 import { buildPublicationsJsonLd } from "@data/schema";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import { UI } from "@i18n/ui";
+import { localePath } from "@i18n/utils";
 import PublicationItem from "@components/sections/publications/PublicationItem.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).publications;
+const labels = UI[lang].labels;
 ---
 
 <BaseLayout
-  title={`Publications — ${SITE.name}`}
-  description="Papers, preprints, and works in progress by Owen Li Murphy."
-  jsonLd={buildPublicationsJsonLd()}
+  lang={lang}
+  title={
+    lang === "en" ? `Publications — ${SITE.name}` : `论文发表 — ${SITE.name}`
+  }
+  description={
+    lang === "en"
+      ? "Papers, preprints, and works in progress by Owen Li Murphy."
+      : "Owen Li Murphy 已发表论文、预印本与进行中的研究成果。"
+  }
+  jsonLd={buildPublicationsJsonLd(lang)}
 >
-  {PUBLICATIONS_CONTENT.published.length > 0 && (
+  {content.published.length > 0 && (
     <>
       <div class="pub-header">
         <div>
-          <h1>{PUBLICATIONS_CONTENT.title}</h1>
-          <p class="muted">{PUBLICATIONS_CONTENT.subtitle}</p>
+          <h1>{content.title}</h1>
+          <p class="muted">{content.subtitle}</p>
         </div>
         <a
-          href="/references.bib"
+          href={localePath(lang, "/references.bib")}
           download="references.bib"
           class="bibtex-master-btn small"
         >
-          Download references.bib ↓
+          {labels.publicationsBibtex}
         </a>
       </div>
     </>
   )}
 
-  {PUBLICATIONS_CONTENT.published.length > 0 && (
+  {content.published.length > 0 && (
     <>
-      <h2>Published &amp; accepted</h2>
-      {PUBLICATIONS_CONTENT.published.map((paper) => (
+      <h2>{labels.publicationsPublished}</h2>
+      {content.published.map((paper) => (
         <PublicationItem entry={paper} />
       ))}
     </>
   )}
 
-  {PUBLICATIONS_CONTENT.underReview.length > 0 && (
+  {content.underReview.length > 0 && (
     <>
-      <h2>Under review</h2>
-      {PUBLICATIONS_CONTENT.underReview.map((paper) => (
+      <h2>{labels.publicationsReview}</h2>
+      {content.underReview.map((paper) => (
         <PublicationItem entry={paper} />
       ))}
     </>
   )}
 
-  {PUBLICATIONS_CONTENT.inProgress.length > 0 && (
+  {content.inProgress.length > 0 && (
     <>
-      <h2>In progress</h2>
-      {PUBLICATIONS_CONTENT.inProgress.map((paper) => (
+      <h2>{labels.publicationsProgress}</h2>
+      {content.inProgress.map((paper) => (
         <PublicationItem entry={paper} />
       ))}
     </>
   )}
 
-  {PUBLICATIONS_CONTENT.talks.length > 0 && (
+  {content.talks.length > 0 && (
     <>
-      <h2>Talks &amp; posters</h2>
-      {PUBLICATIONS_CONTENT.talks.map((talk) => (
+      <h2>{labels.publicationsTalks}</h2>
+      {content.talks.map((talk) => (
         <PublicationItem entry={talk} />
       ))}
     </>

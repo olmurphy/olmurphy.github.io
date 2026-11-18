@@ -1,24 +1,30 @@
 ---
-import { RESEARCH_CONTENT } from "@data/research";
+import { getContent } from "@data";
+import { getLocaleFromPath } from "@i18n/utils";
+import { UI } from "@i18n/ui";
 import Tag from "@components/ui/Tag.astro";
+
+const lang = getLocaleFromPath(Astro.url.pathname);
+const content = getContent(lang).research;
+const labels = UI[lang].labels;
 ---
 
-<section aria-label="Research directions">
-  <h2>Statement</h2>
-  <p>{RESEARCH_CONTENT.statement}</p>
+<section aria-label={labels.researchDirections}>
+  <h2>{labels.statement}</h2>
+  <p>{content.statement}</p>
 
-  <h2>Current directions</h2>
+  <h2>{labels.currentDirections}</h2>
   <ul>
-    {RESEARCH_CONTENT.directions.map((item) => (
+    {content.directions.map((item) => (
       <li>
         <strong>{item.title}</strong> — {item.description}
       </li>
     ))}
   </ul>
 
-  <h2>Areas I'm exploring</h2>
+  <h2>{labels.exploringAreas}</h2>
   <p class="tag-list">
-    {RESEARCH_CONTENT.exploringAreas.map((area) => (
+    {content.exploringAreas.map((area) => (
       <Tag>{area}</Tag>
     ))}
   </p>

@@ -228,10 +228,14 @@ const ui = UI[lang];
     btn?.setAttribute("aria-expanded", String(open));
     btn?.setAttribute(
       "aria-label",
-      open ? "Close navigation menu" : "Open navigation menu",
+      open
+        ? (btn.dataset.closeLabel ?? "Close navigation menu")
+        : (btn.dataset.openLabel ?? "Open navigation menu"),
     );
     if (label) {
-      label.textContent = open ? "Close" : "Menu";
+      label.textContent = open
+        ? (btn?.dataset.closeText ?? "Close")
+        : (btn?.dataset.openText ?? "Menu");
     }
   }
 

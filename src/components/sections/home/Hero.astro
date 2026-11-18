@@ -1,36 +1,34 @@
 ---
-import { SITE } from "@config/site";
-import { HOME_HERO } from "@data/home";
-import { PROFILE_LINKS } from "@data/profile";
+import { getContent } from "@data";
+import { getLocaleFromPath } from "@i18n/utils";
+
+const lang = getLocaleFromPath(Astro.url.pathname);
+const content = getContent(lang);
 ---
 
-<section class="hero" aria-label="Introduction">
+<section class="hero" aria-label={lang === "en" ? "Introduction" : "个人简介"}>
   <div class="portrait">
     <img
-      src={HOME_HERO.portraitSrc}
-      alt={HOME_HERO.portraitAlt}
+      src={content.home.hero.portraitSrc}
+      alt={content.home.hero.portraitAlt}
       onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"
     />
     <span class="todo" style="display: none;">
-      {HOME_HERO.portraitPlaceholder}
+      {lang === "en"
+        ? content.home.hero.portraitPlaceholder
+        : "请添加 photo.jpg"}
     </span>
   </div>
 
   <div class="hero-text">
-    <h1>{SITE.name}</h1>
+    <h1>Owen Li Murphy</h1>
     <p class="muted subtitle">
-      {HOME_HERO.affiliation} &nbsp;·&nbsp; {SITE.chineseName}
+      {content.home.hero.affiliation} &nbsp;·&nbsp; 李晓党
     </p>
-    <p>
-      I'm a software engineer and aspiring researcher working at the
-      intersection of <strong>deep learning</strong> and{" "}
-      <strong>computational biology</strong>, with a background in mathematics
-      and distributed systems. I'm preparing for a Masters in computer science
-      or computational biology.
-    </p>
+    <p set:html={content.home.hero.bioHtml} />
 
     <div class="links">
-      {PROFILE_LINKS.map((link) => (
+      {content.profileLinks.map((link) => (
         <a href={link.href} class:list={[{ todo: link.todo }]}>
           {link.label}
         </a>

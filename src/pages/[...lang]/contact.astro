@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import KeyValueTable from "@components/ui/KeyValueTable.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).contact;
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "en" ? `Contact — ${SITE.name}` : `联系方式 — ${SITE.name}`}
+  description={
+    lang === "en"
+      ? "Contact details and academic profiles for Owen Li Murphy."
+      : "Owen Li Murphy 的联系方式与学术主页。"
+  }
+>
+  <h1>{content.title}</h1>
+  <p>{content.intro}</p>
+
+  <KeyValueTable rows={content.channels} />
+</BaseLayout>

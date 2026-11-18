@@ -1,5 +1,7 @@
 ---
 import type { TimelineEvent } from "@data/timeline";
+import { getLocaleFromPath } from "@i18n/utils";
+import { UI } from "@i18n/ui";
 import Tag from "@components/ui/Tag.astro";
 
 interface Props {
@@ -7,6 +9,7 @@ interface Props {
 }
 
 const { event } = Astro.props;
+const labels = UI[getLocaleFromPath(Astro.url.pathname)].labels;
 ---
 
 <article
@@ -18,7 +21,7 @@ const { event } = Astro.props;
     {event.planned && (
       <>
         {" "}
-        <Tag variant="status">Planned</Tag>
+        <Tag variant="status">{labels.timelinePlanned}</Tag>
       </>
     )}
   </div>

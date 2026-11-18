@@ -1,5 +1,6 @@
 ---
 import type { FeaturedTalk } from "@data/media";
+import { getLocaleFromPath } from "@i18n/utils";
 import Card from "@components/ui/Card.astro";
 import Tag from "@components/ui/Tag.astro";
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const { talk } = Astro.props;
+const lang = getLocaleFromPath(Astro.url.pathname);
 const embedSrc = talk.douyinVideoId
   ? `https://open.douyin.com/player/video?vid=${talk.douyinVideoId}&autoplay=0`
   : undefined;
@@ -40,8 +42,7 @@ const embedSrc = talk.douyinVideoId
       <div class="talk-embed">
         <iframe
           src={embedSrc}
-          title={`${talk.title} — Douyin video`}
-          scrolling="no"
+          title={`${talk.title} — ${lang === "en" ? "Douyin video" : "抖音视频"}`}
           loading="lazy"
           referrerpolicy="no-referrer"
           allowfullscreen

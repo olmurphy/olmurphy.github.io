@@ -1,30 +1,42 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
-import { LIFE_CATEGORIES, LIFE_CONTENT } from "@data/life";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
 import LifeFilter from "@components/sections/life/LifeFilter.astro";
 import PhotoTile from "@components/sections/life/PhotoTile.astro";
 import Lightbox from "@components/sections/life/Lightbox.astro";
 
-const activeCategoryIds = new Set(LIFE_CONTENT.photos.map((p) => p.category));
-const visibleCategories = LIFE_CATEGORIES.filter((cat) =>
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang);
+const activeCategoryIds = new Set(content.life.photos.map((p) => p.category));
+const visibleCategories = content.lifeCategories.filter((cat) =>
   activeCategoryIds.has(cat.id),
 );
 ---
 
 <BaseLayout
-  title={`Life — ${SITE.name}`}
-  description="Photos from outside the lab: places, athletics, projects, and everyday life."
+  lang={lang}
+  title={lang === "en" ? `Life — ${SITE.name}` : `生活随记 — ${SITE.name}`}
+  description={
+    lang === "en"
+      ? "Photos from outside the lab: places, athletics, projects, and everyday life."
+      : "记录实验室之外的旅行、运动、创作与日常生活。"
+  }
 >
-  <h1>{LIFE_CONTENT.title}</h1>
-  <p class="muted">{LIFE_CONTENT.subtitle}</p>
+  <h1>{content.life.title}</h1>
+  <p class="muted">{content.life.subtitle}</p>
 
-  <p>{LIFE_CONTENT.intro}</p>
+  <p>{content.life.intro}</p>
 
   <LifeFilter categories={visibleCategories} />
 
   <div class="gallery" id="gallery-grid">
-    {LIFE_CONTENT.photos.map((photo) => (
+    {content.life.photos.map((photo) => (
       <PhotoTile photo={photo} />
     ))}
   </div>
@@ -89,7 +101,7 @@ const visibleCategories = LIFE_CATEGORIES.filter((cat) =>
       .map((photo) => photo.querySelector<HTMLElement>(".thumb"))
       .filter(
         (thumb): thumb is HTMLElement =>
-          Boolean(thumb) && !thumb.classList.contains("empty"),
+          thumb !== null && !thumb.classList.contains("empty"),
       );
   }
 

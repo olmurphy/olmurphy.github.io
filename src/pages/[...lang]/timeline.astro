@@ -2,11 +2,18 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { SITE } from "@config/site";
 import { FEATURES } from "@config/features";
-import { TIMELINE_CONTENT } from "@data/timeline";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
 import TimelineFilter from "@components/sections/timeline/TimelineFilter.astro";
 import TimelineItem from "@components/sections/timeline/TimelineItem.astro";
 
-const visibleGroups = TIMELINE_CONTENT.groups
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).timeline;
+const visibleGroups = content.groups
   .map((group) => ({
     ...group,
     events: group.events.filter(
@@ -17,13 +24,18 @@ const visibleGroups = TIMELINE_CONTENT.groups
 ---
 
 <BaseLayout
-  title={`Timeline — ${SITE.name}`}
-  description="Academic, career, and personal milestones of Owen Li Murphy."
+  lang={lang}
+  title={lang === "en" ? `Timeline — ${SITE.name}` : `时间线 — ${SITE.name}`}
+  description={
+    lang === "en"
+      ? "Academic, career, and personal milestones of Owen Li Murphy."
+      : "Owen Li Murphy 的学业、职业与个人经历。"
+  }
 >
-  <h1>{TIMELINE_CONTENT.title}</h1>
-  <p class="muted">{TIMELINE_CONTENT.subtitle}</p>
+  <h1>{content.title}</h1>
+  <p class="muted">{content.subtitle}</p>
 
-  <TimelineFilter legendNote={TIMELINE_CONTENT.legendNote} />
+  <TimelineFilter legendNote={content.legendNote} />
 
   <div class="timeline" id="timeline-rail">
     {visibleGroups.map((group) => (

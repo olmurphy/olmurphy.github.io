@@ -3,10 +3,23 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/sections/home/Hero.astro";
 import ResearchInterests from "@components/sections/home/ResearchInterests.astro";
 import NewsList from "@components/sections/home/NewsList.astro";
-import { NEWS_ITEMS } from "@data/home";
+import { getContent } from "@data";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang);
 ---
 
-<BaseLayout ogType="profile">
+<BaseLayout
+  lang={lang}
+  title={content.home.meta.title}
+  description={content.home.meta.description}
+  ogType="profile"
+>
   <Fragment slot="head">
     <meta property="profile:first_name" content="Owen" />
     <meta property="profile:last_name" content="Murphy" />
@@ -14,5 +27,5 @@ import { NEWS_ITEMS } from "@data/home";
   </Fragment>
   <Hero />
   <ResearchInterests />
-  <NewsList items={NEWS_ITEMS} />
+  <NewsList items={content.home.newsItems} />
 </BaseLayout>

@@ -1,21 +1,23 @@
 ---
 import type { LifeCategoryMeta } from "@data/life";
+import { getLocaleFromPath } from "@i18n/utils";
 
 interface Props {
   categories: readonly LifeCategoryMeta[];
 }
 
 const { categories } = Astro.props;
+const lang = getLocaleFromPath(Astro.url.pathname);
 ---
 
 <div
   class="filters"
   id="life-filters"
   role="group"
-  aria-label="Filter photos by category"
+  aria-label={lang === "en" ? "Filter photos by category" : "按类别筛选照片"}
 >
   <button type="button" class="chip on" data-filter="all" aria-pressed="true">
-    All
+    {lang === "en" ? "All" : "全部"}
   </button>
   {categories.map((cat) => (
     <button

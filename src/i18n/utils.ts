@@ -1,6 +1,10 @@
 // src/i18n/utils.ts
 import { DEFAULT_LOCALE, type Locale } from "./config";
 
+export function getLocaleFromPath(pathname: string): Locale {
+  return /^\/zh(?:\/|$)/.test(pathname) ? "zh" : DEFAULT_LOCALE;
+}
+
 /** Prefix non-default locale paths cleanly: localePath('zh', '/research') -> '/zh/research' */
 export function localePath(lang: Locale, path: string): string {
   const clean = path.startsWith("/") ? path : `/${path}`;

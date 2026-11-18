@@ -1,12 +1,21 @@
 ---
 import { SITE } from "@config/site";
-import { SOCIAL_LINKS, PROFESSIONAL_LINKS } from "@data/profile";
+import { getContent } from "@data";
+import { UI } from "@i18n/ui";
+import type { Locale } from "@i18n/config";
+import { localePath } from "@i18n/utils";
 
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = "en" } = Astro.props;
 const year = new Date().getFullYear();
-
+const ui = UI[lang];
+const content = getContent(lang);
 const columns = [
-  { title: "Social", links: SOCIAL_LINKS },
-  { title: "Professional", links: PROFESSIONAL_LINKS },
+  { title: ui.footerSocialHeading, links: content.socialLinks },
+  { title: ui.footerProfessionalHeading, links: content.professionalLinks },
 ];
 ---
 
@@ -14,10 +23,10 @@ const columns = [
   <div class="wrap">
     <div class="footer-top">
       <div class="brand">
-        <a class="brand-name" href="/">
-          {SITE.name}
+        <a class="brand-name" href={localePath(lang, "/")}>
+          {ui.siteName}
         </a>
-        <p class="brand-tagline">{SITE.tagline}</p>
+        <p class="brand-tagline">{ui.tagline}</p>
       </div>
 
       {columns.map((col) => (
@@ -28,7 +37,7 @@ const columns = [
           <h2 id={`footer-${col.title.toLowerCase()}`}>{col.title}</h2>
           <ul>
             {col.links.map((link, idx) => {
-              if (link.qrSrc) {
+              if ("qrSrc" in link && link.qrSrc) {
                 const popupId = `qr-popup-${idx}`;
                 return (
                   <li class="qr-item">
@@ -48,13 +57,16 @@ const columns = [
                     >
                       <img
                         src={link.qrSrc}
-                        alt={link.qrAlt ?? link.label}
+                        alt={
+                          ("qrAlt" in link ? link.qrAlt : undefined) ??
+                          link.label
+                        }
                         width="140"
                         height="140"
                         loading="lazy"
                         decoding="async"
                       />
-                      <span>Scan with WeChat</span>
+                      <span>{ui.scanWithWechat}</span>
                     </div>
                   </li>
                 );

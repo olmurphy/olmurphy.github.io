@@ -1,4 +1,7 @@
 ---
+import { getLocaleFromPath } from "@i18n/utils";
+
+const lang = getLocaleFromPath(Astro.url.pathname);
 ---
 
 <div
@@ -6,10 +9,15 @@
   id="lightbox"
   role="dialog"
   aria-modal="true"
-  aria-label="Photo viewer"
+  aria-label={lang === "en" ? "Photo viewer" : "照片浏览器"}
   hidden
 >
-  <button type="button" class="lb-close" id="lb-close" aria-label="Close photo">
+  <button
+    type="button"
+    class="lb-close"
+    id="lb-close"
+    aria-label={lang === "en" ? "Close photo" : "关闭照片"}
+  >
     ×
   </button>
 
@@ -17,7 +25,7 @@
     type="button"
     class="lb-nav lb-prev"
     id="lb-prev"
-    aria-label="Previous photo"
+    aria-label={lang === "en" ? "Previous photo" : "上一张照片"}
   >
     ‹
   </button>
@@ -29,7 +37,7 @@
     type="button"
     class="lb-nav lb-next"
     id="lb-next"
-    aria-label="Next photo"
+    aria-label={lang === "en" ? "Next photo" : "下一张照片"}
   >
     ›
   </button>

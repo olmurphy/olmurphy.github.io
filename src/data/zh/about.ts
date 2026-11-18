@@ -10,7 +10,7 @@ export const ABOUT_CONTENT: AboutContent = {
   subtitle: "简历之外的个人故事。",
   bioParagraphs: [
     "我本科就读于贝勒大学（Baylor University），获数学与计算机科学双专业理学学士学位。毕业后先后在 IBM Consulting 担任软件工程师、在 Global Business AI 担任 AI 与软件工程师，专注于高吞吐分布式系统与机器学习基础设施建设。在工程实践中，我逐渐发现自己对“模型为何如此运作”的兴趣远胜于单纯的系统部署，这也促使我坚定地走向学术研究道路。",
-    "我目前定居上海，并曾在上海交通大学进修汉语。我具备流利的中文工作能力，期待在中英文学术与工程社区之间搭建交流与合作的桥梁。",
+    "我目前定居上海，并曾在上海交通大学进修汉语，具备工作交流水平的普通话能力，也期待与中英文研究社群开展合作。",
   ],
   whyThisFieldHeading: "为何选择这一领域",
   whyThisField:
