@@ -35,6 +35,12 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: "Life", href: "/life", group: "Overview" },
   { label: "Research", href: "/research", group: "Work" },
   { label: "Publications", href: "/publications", group: "Work" },
+  {
+    label: "Writing",
+    href: "/writing",
+    group: "Work",
+    featureFlag: "showWritingPage",
+  },
   { label: "Projects", href: "/projects", group: "Work" },
   {
     label: "Teaching",

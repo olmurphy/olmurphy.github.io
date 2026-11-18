@@ -7,6 +7,8 @@ export const FEATURES = {
   showLabGroupPage: false,
   /** Toggle visibility of the Teaching page in primary navigation */
   showTeachingPage: true,
+  /** Toggle visibility of the Writing page in primary navigation */
+  showWritingPage: true,
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURES;

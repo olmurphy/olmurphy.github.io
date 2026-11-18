@@ -5,6 +5,8 @@ import { PUBLICATIONS_CONTENT as publications } from "./publications";
 import { PROJECTS_CONTENT as projects } from "./projects";
 import { EDUCATION_CONTENT as education } from "./education";
 import { TIMELINE_CONTENT as timeline } from "./timeline";
+import { WRITING_CONTENT as writing } from "./writing";
+import type { WritingTopic } from "@lib/medium";
 import {
   LIFE_CONTENT as life,
   LIFE_CATEGORIES as lifeCategories,
@@ -26,7 +28,12 @@ import type { MemberRole } from "./group";
 import type { TimelineCategory } from "./timeline";
 
 type PreservedStrings =
-  FeatureFlag | CourseStatus | LifeCategory | MemberRole | TimelineCategory;
+  | FeatureFlag
+  | CourseStatus
+  | LifeCategory
+  | MemberRole
+  | TimelineCategory
+  | WritingTopic;
 
 export const CONTENT = {
   home,
@@ -46,6 +53,7 @@ export const CONTENT = {
   profileLinks,
   socialLinks,
   professionalLinks,
+  writing,
 };
 
 type Widen<T> = T extends PreservedStrings

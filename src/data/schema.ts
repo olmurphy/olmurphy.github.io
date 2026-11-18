@@ -2,6 +2,7 @@ import { SITE } from "@config/site";
 import { FEATURES } from "@config/features";
 import { getContent } from "@data";
 import { localePath } from "@i18n/utils";
+import type { MediumPost } from "@lib/medium";
 import type { Locale } from "@i18n/config";
 
 export type JsonLdObject = Record<string, unknown>;
@@ -212,6 +213,31 @@ export function buildMediaJsonLd(lang: Locale = "en"): readonly JsonLdObject[] {
       description: content.media.seriesDescription,
       creator: { "@id": PERSON_ID },
       url: "https://www.youtube.com/@owenmurphy2022/featured",
+    },
+  ];
+}
+
+export function buildWritingJsonLd(
+  lang: Locale = "en",
+  posts: readonly MediumPost[] = [],
+): readonly JsonLdObject[] {
+  const content = getContent(lang).writing;
+  return [
+    {
+      "@type": "Blog",
+      url: new URL(localePath(lang, "/writing"), SITE.url).toString(),
+      name: `${content.title} — ${SITE.name}`,
+      description: content.meta.description,
+      author: { "@id": PERSON_ID },
+      blogPost: posts.map((post) => ({
+        "@type": "BlogPosting",
+        headline: post.title,
+        url: post.url,
+        ...(post.publishedAt ? { datePublished: post.publishedAt } : {}),
+        ...(post.excerpt ? { description: post.excerpt } : {}),
+        ...(post.coverSrc ? { image: post.coverSrc } : {}),
+        author: { "@id": PERSON_ID },
+      })),
     },
   ];
 }

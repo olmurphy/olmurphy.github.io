@@ -26,6 +26,7 @@ export default defineConfig({
         if (pathname === '/404' || pathname === '/zh/404') return false;
         if (!FEATURES.showLabGroupPage && (pathname === '/group' || pathname === '/zh/group')) return false;
         if (!FEATURES.showTeachingPage && (pathname === '/teaching' || pathname === '/zh/teaching')) return false;
+        if (!FEATURES.showWritingPage && (pathname === '/writing' || pathname === '/zh/writing')) return false;
         return true;
       },
     }),

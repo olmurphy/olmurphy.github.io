@@ -20,6 +20,15 @@ const quickLinks = [
     href: "/publications",
     description: "Papers under review and works in progress.",
   },
+  ...(FEATURES.showWritingPage
+    ? [
+        {
+          label: "Writing",
+          href: "/writing",
+          description: "Essays and technical write-ups on Medium.",
+        },
+      ]
+    : []),
   {
     label: "Projects",
     href: "/projects",

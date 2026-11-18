@@ -1,0 +1,66 @@
+---
+import type { WritingFilterOption } from "@data/en/writing";
+import { getLocaleFromPath } from "@i18n/utils";
+
+interface Props {
+  filters: readonly WritingFilterOption[];
+}
+
+const { filters } = Astro.props;
+const lang = getLocaleFromPath(Astro.url.pathname);
+---
+
+<div
+  class="filters"
+  id="writing-filters"
+  role="group"
+  aria-label={lang === "en" ? "Filter posts by topic" : "按主题筛选文章"}
+>
+  {filters.map((filter, idx) => (
+    <button
+      type="button"
+      class:list={["chip", { on: idx === 0 }]}
+      data-filter={filter.id}
+      aria-pressed={idx === 0 ? "true" : "false"}
+    >
+      {filter.label}
+    </button>
+  ))}
+</div>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0 0;
+    font-family: var(--font-sans);
+  }
+
+  .chip {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .chip:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+
+  .chip.on {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: transparent;
+    font-weight: 600;
+  }
+</style>

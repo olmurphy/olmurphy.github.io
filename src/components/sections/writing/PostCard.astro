@@ -1,0 +1,223 @@
+---
+import type { MediumPost } from "@lib/medium";
+import type { Locale } from "@i18n/config";
+import Tag from "@components/ui/Tag.astro";
+
+interface Props {
+  post: MediumPost;
+  featured?: boolean;
+  lang: Locale;
+  latestBadge: string;
+  minReadSuffix: string;
+  readOnMediumLabel: string;
+}
+
+const {
+  post,
+  featured = false,
+  lang,
+  latestBadge,
+  minReadSuffix,
+  readOnMediumLabel,
+} = Astro.props;
+
+const dateText = post.dateLabel[lang];
+---
+
+<a
+  class:list={["post", { featured }]}
+  data-topic={post.topic}
+  href={post.url}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <div class:list={["cover", { empty: !post.coverSrc }]}>
+    {post.coverSrc && (
+      <img
+        src={post.coverSrc}
+        alt=""
+        loading={featured ? "eager" : "lazy"}
+        decoding="async"
+        referrerpolicy="no-referrer"
+        onerror="this.style.display='none'; this.parentElement?.classList.add('empty');"
+      />
+    )}
+    <span class="ph" aria-hidden="true">
+      Medium
+    </span>
+  </div>
+
+  <div class="post-body">
+    <div class="post-meta">
+      {featured && (
+        <span class="badge">
+          <Tag variant="status">{latestBadge}</Tag>
+        </span>
+      )}
+      {dateText && <span>{dateText} · </span>}
+      <span>
+        {post.readTimeMinutes} {minReadSuffix}
+      </span>
+    </div>
+
+    <h3>{post.title}</h3>
+    {post.excerpt && <p class="excerpt">{post.excerpt}</p>}
+
+    <div class="post-foot">
+      {post.tags.map((tag) => (
+        <Tag>{tag}</Tag>
+      ))}
+      <span class="read">{readOnMediumLabel}</span>
+    </div>
+  </div>
+</a>
+
+<style>
+  .post {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 18px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 14px;
+    color: inherit;
+    transition: border-color var(--transition-fast);
+  }
+
+  .post:hover {
+    border-color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .post:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .cover {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-border);
+  }
+
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+
+  .post:hover .cover img {
+    transform: scale(1.03);
+  }
+
+  .cover .ph {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+  }
+
+  .cover.empty .ph {
+    display: flex;
+  }
+
+  .post-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .post-meta {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    font-family: var(--font-sans);
+  }
+
+  .badge {
+    margin-right: 2px;
+  }
+
+  .post h3 {
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    color: var(--color-text);
+  }
+
+  .excerpt {
+    font-size: 0.92rem;
+    color: var(--color-text-muted);
+    margin: 0 0 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-foot {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 0;
+  }
+
+  .read {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: var(--color-accent);
+    font-family: var(--font-sans);
+  }
+
+  .post.featured {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .post.featured .cover {
+    aspect-ratio: 2 / 1;
+  }
+
+  .post.featured h3 {
+    font-size: 1.3rem;
+  }
+
+  .post.featured .excerpt {
+    font-size: 1rem;
+    -webkit-line-clamp: 4;
+  }
+
+  @media (max-width: 600px) {
+    .post {
+      grid-template-columns: 1fr;
+    }
+
+    .cover {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cover img {
+      transition: none;
+    }
+
+    .post:hover .cover img {
+      transform: none;
+    }
+  }
+</style>

@@ -27,6 +27,8 @@ export const GET: APIRoute = ({ params }) => {
     "/research":
       "Research statement, current directions, and mathematical foundations.",
     "/publications": "Papers under review, works in progress, and preprints.",
+    "/writing":
+      "Essays and technical writing on deep learning, biology, and engineering.",
     "/projects":
       "Machine learning, systems engineering, and hackathon projects.",
     "/teaching": "Teaching assistantships and academic instruction.",
@@ -46,6 +48,7 @@ export const GET: APIRoute = ({ params }) => {
     "/life": "摄影记录与科研之外的生活。",
     "/research": "研究陈述、当前方向与数学基础。",
     "/publications": "审稿中论文、研究成果与预印本。",
+    "/writing": "发布于 Medium 的深度学习、计算生物学与系统工程随笔。",
     "/projects": "机器学习、系统工程与黑客松项目。",
     "/teaching": "助教经历与教学工作。",
     "/group": "指导学生与研究合作者。",

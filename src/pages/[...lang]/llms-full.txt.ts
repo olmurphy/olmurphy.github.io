@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { SITE } from "@config/site";
 import { FEATURES } from "@config/features";
 import { getContent } from "@data";
+import { getMediumPosts } from "@lib/medium";
 import { getLocaleStaticPaths, type Locale } from "@i18n/config";
 
 export const prerender = true;
@@ -10,7 +11,7 @@ export function getStaticPaths() {
   return getLocaleStaticPaths();
 }
 
-export const GET: APIRoute = ({ params }) => {
+export const GET: APIRoute = async ({ params }) => {
   const lang: Locale = params.lang === "zh" ? "zh" : "en";
   const content = getContent(lang);
   const zh = lang === "zh";
@@ -20,6 +21,7 @@ export const GET: APIRoute = ({ params }) => {
   const visibleHackathons = content.projects.hackathons.filter(
     (h) => !h.featureFlag || FEATURES[h.featureFlag],
   );
+  const mediumPosts = FEATURES.showWritingPage ? await getMediumPosts() : [];
 
   const sections: string[] = [
     `# ${SITE.name} (${SITE.chineseName})`,
@@ -55,6 +57,16 @@ export const GET: APIRoute = ({ params }) => {
         `- **${p.title}** (${p.venue}) — ${p.summary} [${p.tags.join(", ")}]`,
     ),
     "",
+    ...(mediumPosts.length > 0
+      ? [
+          zh ? "## 随笔与文章 (Medium)" : "## Writing (Medium)",
+          ...mediumPosts.map(
+            (post) =>
+              `- **${post.title}** (${post.dateLabel[lang]}, ${post.readTimeMinutes} ${zh ? "分钟阅读" : "min read"}) — ${post.excerpt} (${post.url})`,
+          ),
+          "",
+        ]
+      : []),
     zh ? "## 项目" : "## Projects",
     ...visibleProjects.map((p) => {
       const link = p.linkHref && !p.linkTodo ? ` (${p.linkHref})` : "";

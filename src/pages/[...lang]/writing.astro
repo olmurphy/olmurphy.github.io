@@ -1,0 +1,173 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { FEATURES } from "@config/features";
+import { getContent } from "@data";
+import { buildWritingJsonLd } from "@data/schema";
+import { getLocaleStaticPaths, type Locale } from "@i18n/config";
+import { getMediumPosts } from "@lib/medium";
+import WritingFilter from "@components/sections/writing/WritingFilter.astro";
+import PostCard from "@components/sections/writing/PostCard.astro";
+
+export function getStaticPaths() {
+  return getLocaleStaticPaths();
+}
+
+const { lang } = Astro.props as { lang: Locale };
+const content = getContent(lang).writing;
+const posts = await getMediumPosts();
+---
+
+<BaseLayout
+  lang={lang}
+  title={content.meta.title}
+  description={content.meta.description}
+  jsonLd={buildWritingJsonLd(lang, posts)}
+>
+  {!FEATURES.showWritingPage && (
+    <meta slot="head" name="robots" content="noindex" />
+  )}
+
+  <div class="page-head">
+    <div>
+      <h1>{content.title}</h1>
+      <p class="muted">{content.subtitle}</p>
+    </div>
+    <a
+      class="follow-btn"
+      href={content.mediumProfileUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {content.followButtonLabel}
+    </a>
+  </div>
+
+  {posts.length > 0 ? (
+    <>
+      <WritingFilter filters={content.filters} />
+
+      <div class="posts" id="writing-posts">
+        {posts.map((post, idx) => (
+          <PostCard
+            post={post}
+            featured={idx === 0}
+            lang={lang}
+            latestBadge={content.latestBadge}
+            minReadSuffix={content.minReadSuffix}
+            readOnMediumLabel={content.readOnMediumLabel}
+          />
+        ))}
+      </div>
+
+      <p class="small muted empty-note" id="writing-empty-note" hidden>
+        {content.emptyFilterNote}
+      </p>
+    </>
+  ) : (
+    <p class="muted empty-feed">{content.emptyFeedNote}</p>
+  )}
+
+  <p class="small muted rss-note">
+    {content.rssFooterPrefix}
+    <a
+      href={content.mediumProfileUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {content.rssFooterFollowLabel}
+    </a>
+    {content.rssFooterMiddle}
+    <a href={content.mediumFeedUrl} target="_blank" rel="noopener noreferrer">
+      {content.rssFooterFeedLabel}
+    </a>
+    {content.rssFooterSuffix}
+  </p>
+</BaseLayout>
+
+<style>
+  [hidden] {
+    display: none !important;
+  }
+
+  .page-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .follow-btn {
+    display: inline-block;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 4px 14px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .follow-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+    background: var(--color-accent-soft);
+    border-bottom-color: var(--color-text-muted);
+  }
+
+  .posts {
+    margin-top: 20px;
+    display: grid;
+    gap: 14px;
+  }
+
+  .empty-note {
+    margin-top: 24px;
+  }
+
+  .empty-feed {
+    margin-top: 24px;
+  }
+
+  .rss-note {
+    margin-top: 28px;
+  }
+</style>
+
+<script>
+  const chips = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("#writing-filters .chip"),
+  );
+  const posts = Array.from(
+    document.querySelectorAll<HTMLElement>("#writing-posts .post"),
+  );
+  const emptyNote = document.getElementById("writing-empty-note");
+
+  function applyFilter(filter: string): void {
+    chips.forEach((chip) => {
+      const selected = chip.dataset.filter === filter;
+      chip.classList.toggle("on", selected);
+      chip.setAttribute("aria-pressed", String(selected));
+    });
+
+    let shown = 0;
+    posts.forEach((post) => {
+      const show = filter === "all" || post.dataset.topic === filter;
+      post.hidden = !show;
+      if (show) shown++;
+    });
+
+    if (emptyNote) {
+      emptyNote.hidden = shown > 0;
+    }
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      applyFilter(chip.dataset.filter ?? "all");
+    });
+  });
+</script>
