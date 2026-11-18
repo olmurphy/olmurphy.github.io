@@ -1,7 +1,11 @@
 :root {
   /* Font Families */
-  --font-serif: Georgia, "Times New Roman", "Songti SC", serif;
-  --font-sans: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif:
+    Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "SimSun",
+    serif;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Segoe UI", Helvetica, Arial, sans-serif;
 
   /* Type Scale */
   --text-xs: 0.72rem;

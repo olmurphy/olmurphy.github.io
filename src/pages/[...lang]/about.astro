@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { SITE } from "@config/site";
+import { ABOUT_CONTENT } from "@data/about";
+import { buildAboutJsonLd } from "@data/schema";
+import BioNarrative from "@components/sections/about/BioNarrative.astro";
+import PersonalLife from "@components/sections/about/PersonalLife.astro";
+---
+
+<BaseLayout
+  title={`About — ${SITE.name}`}
+  description="Background, interests, and academic path of Owen Li Murphy."
+  jsonLd={buildAboutJsonLd()}
+>
+  <h1>{ABOUT_CONTENT.title}</h1>
+  <p class="muted">{ABOUT_CONTENT.subtitle}</p>
+
+  <BioNarrative />
+  <PersonalLife />
+</BaseLayout>

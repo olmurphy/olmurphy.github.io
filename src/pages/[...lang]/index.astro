@@ -1,0 +1,18 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Hero from "@components/sections/home/Hero.astro";
+import ResearchInterests from "@components/sections/home/ResearchInterests.astro";
+import NewsList from "@components/sections/home/NewsList.astro";
+import { NEWS_ITEMS } from "@data/home";
+---
+
+<BaseLayout ogType="profile">
+  <Fragment slot="head">
+    <meta property="profile:first_name" content="Owen" />
+    <meta property="profile:last_name" content="Murphy" />
+    <meta property="profile:username" content="olmurphy" />
+  </Fragment>
+  <Hero />
+  <ResearchInterests />
+  <NewsList items={NEWS_ITEMS} />
+</BaseLayout>
