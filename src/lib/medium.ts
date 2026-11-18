@@ -160,10 +160,12 @@ export async function getMediumPosts(): Promise<MediumPost[]> {
       try {
         const res = await fetch(MEDIUM_FEED_URL, {
           headers: {
-            Accept: "application/rss+xml, application/xml, text/xml",
-            "User-Agent": "olmurphy.github.io-static-builder/1.0",
+            Accept:
+              "application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8",
+            "User-Agent":
+              "Mozilla/5.0 (compatible; FeedFetcher/1.0; +https://olmurphy.github.io)",
           },
-          signal: AbortSignal.timeout(5000),
+          signal: AbortSignal.timeout(10000),
         });
 
         if (!res.ok) {

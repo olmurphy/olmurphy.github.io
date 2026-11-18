@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prepare": "husky"
+    "prepare": "husky",
+    "sync:medium": "node scripts/sync-medium.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.5",
