@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "title": "How I Self Learned Frontend Development in Javascript, HTML, and CSS",
+    "url": "https://owenmurphy2022.medium.com/how-i-self-learned-frontend-development-in-javascript-html-and-css-dc0e63bfe3ff",
+    "publishedAt": "2024-11-29T23:48:08.000Z",
+    "dateLabel": {
+      "en": "Nov 2024",
+      "zh": "2024年11月"
+    },
+    "readTimeMinutes": 3,
+    "excerpt": "“Learning to code is useful no matter what your career ambitions are.” — Arianna Huffington I am going to give a quick rundown of how I learned to frontend development. Introduction Let me share my journey into frontend…",
+    "coverSrc": "https://cdn-images-1.medium.com/max/1024/0*oaV3ru2sKwm20OVI",
+    "topic": "learning",
+    "tags": ["web-development", "learning-to-code", "frontend"]
+  },
+  {
+    "title": "Getting Started with Node.js, GraphQL, and TypeScript",
+    "url": "https://blog.stackademic.com/getting-started-with-node-js-graphql-and-typescript-c6a2eda7cf09",
+    "publishedAt": "2024-02-13T19:57:10.000Z",
+    "dateLabel": {
+      "en": "Feb 2024",
+      "zh": "2024年2月"
+    },
+    "readTimeMinutes": 6,
+    "excerpt": "First, what is GraphQL? To quote what most people know and would think when they hear the word is a query language and runtime for APIs developed by Facebook. The major benefits are API management and reduced…",
+    "coverSrc": "https://cdn-images-1.medium.com/max/1024/0*7BHXKbJRTNqHptfZ",
+    "topic": "engineering",
+    "tags": ["nodejs", "api", "web-development"]
+  },
+  {
+    "title": "Creating a Folder Tree View Component with React and TypeScript",
+    "url": "https://blog.stackademic.com/creating-a-folder-tree-view-component-with-react-and-typescript-d3df2086878e",
+    "publishedAt": "2023-09-17T01:55:35.000Z",
+    "dateLabel": {
+      "en": "Sep 2023",
+      "zh": "2023年9月"
+    },
+    "readTimeMinutes": 4,
+    "excerpt": "Learn how to create a folder tree structure. If you have ever used Visual Studio Code or some other text editor you have come across this type of folder structure where each folder has an expandable button where upon…",
+    "coverSrc": "https://cdn-images-1.medium.com/max/1024/0*f6jPy5lgs4A6fMSt",
+    "topic": "learning",
+    "tags": ["typescript", "trees", "react"]
+  },
+  {
+    "title": "How To Implement a Reusable Modal Component in React and TypeScript",
+    "url": "https://blog.stackademic.com/how-to-implement-a-reusable-modal-component-in-react-and-typescript-f2010609da98",
+    "publishedAt": "2023-08-24T02:06:39.000Z",
+    "dateLabel": {
+      "en": "Aug 2023",
+      "zh": "2023年8月"
+    },
+    "readTimeMinutes": 4,
+    "excerpt": "I love modals because they save a lot of time required to load a new tab. In this post, we’re going to learn how to create an awesome reusable modal with React from scratch. Introduction Modals are separate windows…",
+    "coverSrc": "https://cdn-images-1.medium.com/max/1024/0*zX2xfuRQ7yTgO08x",
+    "topic": "learning",
+    "tags": ["react", "frontend", "web-development"]
+  },
+  {
+    "title": "Go Green Today: 4 Quick and Simple Tips for an Eco-Friendly Lifestyle to Save the Planet",
+    "url": "https://owenmurphy2022.medium.com/go-green-today-4-quick-and-simple-tips-for-an-eco-friendly-lifestyle-to-save-the-planet-324e3cc151af",
+    "publishedAt": "2023-08-22T01:58:38.000Z",
+    "dateLabel": {
+      "en": "Aug 2023",
+      "zh": "2023年8月"
+    },
+    "readTimeMinutes": 5,
+    "excerpt": "“Environment is no one’s property to destroy; it’s everyone’s responsibility to protect.” — Mohith Agadi In the scorching summer of 2023, where temperatures soared to unprecedented highs, reaching a blistering 115…",
+    "coverSrc": "https://cdn-images-1.medium.com/max/1024/0*U7h0_SLCsuTG1Mb4",
+    "topic": "engineering",
+    "tags": ["sustainability", "plastic-pollution", "environment"]
+  },
+  {
+    "title": "Generating Breadcrumbs with React Router (Updated with TypeScript)",
+    "url": "https://blog.stackademic.com/generating-breadcrumbs-with-react-router-updated-with-typescript-c4ec47492d31",
+    "publishedAt": "2023-08-18T19:17:31.000Z",
+    "dateLabel": {
+      "en": "Aug 2023",
+      "zh": "2023年8月"
+    },
+    "readTimeMinutes": 5,
+    "excerpt": "Generating Breadcrumbs with React Router (and TypeScript) Everyone needs a little breadcrumbs in their life because even the digital journey could use a trail of ‘I can always go back to where I started from.’…",
+    "coverSrc": "https://cdn-images-1.medium.com/max/1024/0*Z4j5Rq7KnWDEMwT3",
+    "topic": "engineering",
+    "tags": ["react", "javascript", "breadcrumbs"]
+  }
+]

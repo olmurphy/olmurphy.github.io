@@ -4,10 +4,36 @@ import { writeFileSync } from "node:fs";
 const FEED_URL = "https://owenmurphy2022.medium.com/feed";
 const OUT_FILE = new URL("../src/data/medium-fallback.json", import.meta.url);
 
-// curl automatically uses macOS System Proxy / HTTP_PROXY / HTTPS_PROXY
-const xml = execFileSync("curl", ["-fsSL", "--max-time", "15", FEED_URL], {
-  encoding: "utf8",
-});
+function getProxyArgs() {
+  // 1. Respect explicit environment variables first (e.g., if proxy_on is active)
+  if (process.env.HTTPS_PROXY || process.env.https_proxy) {
+    return [];
+  }
+
+  // 2. Auto-detect macOS System Proxy (e.g., Veee+ on 127.0.0.1:15236)
+  if (process.platform === "darwin") {
+    try {
+      const scutil = execFileSync("scutil", ["--proxy"], { encoding: "utf8" });
+      const enabled = /HTTPSEnable\s*:\s*1/.test(scutil);
+      const host = scutil.match(/HTTPSProxy\s*:\s*(\S+)/)?.[1];
+      const port = scutil.match(/HTTPSPort\s*:\s*(\d+)/)?.[1];
+
+      if (enabled && host && port) {
+        return ["-x", `http://${host}:${port}`];
+      }
+    } catch {
+      // Ignore and fall back to direct connection
+    }
+  }
+
+  return [];
+}
+
+const xml = execFileSync(
+  "curl",
+  ["-fsSL", "--max-time", "15", ...getProxyArgs(), FEED_URL],
+  { encoding: "utf8" }
+);
 
 function decode(s) {
   return s
