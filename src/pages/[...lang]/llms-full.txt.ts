@@ -76,7 +76,8 @@ export const GET: APIRoute = ({ params }) => {
     zh ? "## 访问经历" : "## Visiting Appointments",
     ...content.education.visiting.map((v) => {
       const hosts = v.hosts?.map((h) => h.name).join(" & ");
-      return `- **${v.role}**, ${v.institution} (${v.period})${hosts ? ` · Collaborators: ${hosts}` : ""}${v.summary ? ` — ${v.summary}` : ""}`;
+      const collaboratorsLabel = zh ? "合作者：" : "Collaborators:";
+      return `- **${v.role}**, ${v.institution} (${v.period})${hosts ? ` · ${collaboratorsLabel} ${hosts}` : ""}${v.summary ? ` — ${v.summary}` : ""}`;
     }),
     "",
     zh ? "## 工作经历" : "## Experience",
@@ -88,7 +89,7 @@ export const GET: APIRoute = ({ params }) => {
     zh ? "## 教学经历" : "## Teaching",
     ...content.teaching.courses.map(
       (c) =>
-        `- **${c.title}**, ${c.institution} — ${c.role} (${c.term}${c.instructorName ? `, Instructor: ${c.instructorName}` : ""}): ${c.summary}`,
+        `- **${c.title}**, ${c.institution} — ${c.role} (${c.term}${c.instructorName ? `, ${zh ? "授课教师" : "Instructor"}: ${c.instructorName}` : ""}): ${c.summary}`,
     ),
     "",
     zh ? "## 奖项与荣誉" : "## Awards & Honors",

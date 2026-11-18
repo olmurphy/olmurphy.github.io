@@ -74,7 +74,7 @@ const labels = UI[lang].labels;
                 · {labels.collaborators}{" "}
                 {visit.hosts.map((host, idx) => (
                   <>
-                    {idx > 0 && " & "}
+                    {idx > 0 && (lang === "en" ? " & " : "、")}
                     {host.href ? (
                       <a
                         href={host.href}

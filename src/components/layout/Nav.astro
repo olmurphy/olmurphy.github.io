@@ -268,6 +268,12 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
     color: var(--color-text-muted);
   }
 
+  .mobile-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
   /* ---------- Desktop grouped dropdowns ---------- */
   @media (min-width: 760px) {
     .mobile-menu {
@@ -281,6 +287,14 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
       gap: 4px 20px;
       font-family: var(--font-sans);
       font-size: 0.9rem;
+    }
+
+    .desktop-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+      flex-shrink: 0;
     }
 
     .nav-link,
@@ -374,10 +388,6 @@ const desktopDropdowns = NAV_GROUPS.map((group, idx) => {
       color: var(--color-accent);
       font-weight: 600;
       background: var(--color-accent-soft);
-    }
-
-    .desktop-toggle {
-      margin-left: auto;
     }
   }
 
