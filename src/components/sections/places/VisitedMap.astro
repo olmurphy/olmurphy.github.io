@@ -1,0 +1,524 @@
+---
+import type { PlacesContent } from "@data/en/places";
+
+interface Props {
+  content: PlacesContent;
+}
+
+const { content } = Astro.props;
+---
+
+<div class="map-shell" id="visited-map-shell">
+  <div class="map-toolbar">
+    <nav class="breadcrumb" aria-label="Map zoom level">
+      <button type="button" class="crumb active" id="crumb-world">
+        {content.worldLabel}
+      </button>
+      <span class="crumb-sep" id="crumb-sep" hidden>
+        /
+      </span>
+      <span class="crumb-current" id="crumb-country" hidden></span>
+    </nav>
+
+    <div class="zoom-controls">
+      <button type="button" class="ctrl-btn" id="zoom-in" aria-label="Zoom in">
+        +
+      </button>
+      <button
+        type="button"
+        class="ctrl-btn"
+        id="zoom-out"
+        aria-label="Zoom out"
+      >
+        −
+      </button>
+      <button type="button" class="ctrl-btn reset" id="zoom-reset">
+        {content.resetLabel}
+      </button>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <svg
+      id="visited-map-svg"
+      viewBox="0 0 800 440"
+      role="img"
+      aria-label={content.title}
+    ></svg>
+    <div class="map-tooltip" id="map-tooltip" hidden></div>
+  </div>
+
+  <p class="small muted map-hint">{content.instructions}</p>
+
+  <aside class="selection-panel" id="selection-panel" hidden>
+    <div class="panel-head">
+      <h2 id="panel-title"></h2>
+      <span class="badge">{content.visitedBadge}</span>
+    </div>
+    <p class="small" id="panel-summary"></p>
+    <h3 class="sub-heading" id="panel-sub-heading">
+      {content.subdivisionsHeading}
+    </h3>
+    <ul class="sub-list" id="panel-sub-list"></ul>
+  </aside>
+</div>
+
+<script
+  type="application/json"
+  id="places-map-data"
+  set:html={JSON.stringify(content)}
+/>
+<style>
+  .map-shell {
+    margin-top: 20px;
+  }
+
+  .map-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .crumb {
+    background: none;
+    border: none;
+    padding: 2px 6px;
+    font: inherit;
+    color: var(--color-accent);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+  }
+
+  .crumb:hover {
+    background: var(--color-accent-soft);
+  }
+
+  .crumb.active {
+    color: var(--color-text);
+    font-weight: 600;
+    cursor: default;
+  }
+
+  .crumb.active:hover {
+    background: none;
+  }
+
+  .crumb-sep,
+  .crumb-current {
+    color: var(--color-text-muted);
+  }
+
+  .zoom-controls {
+    display: flex;
+    gap: 6px;
+  }
+
+  .ctrl-btn {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 2px 10px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .ctrl-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+
+  .canvas-wrap {
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-bg);
+    overflow: hidden;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  svg:active {
+    cursor: grabbing;
+  }
+
+  :global(.country) {
+    fill: var(--color-surface-subtle);
+    stroke: var(--color-border);
+    stroke-width: 0.6px;
+    transition: fill var(--transition-fast);
+  }
+
+  :global(.country.visited) {
+    fill: var(--color-accent);
+    fill-opacity: 0.72;
+    cursor: pointer;
+  }
+
+  :global(.country.visited:hover) {
+    fill-opacity: 0.95;
+  }
+
+  :global(.country.dimmed) {
+    fill-opacity: 0.25;
+  }
+
+  :global(.subdivision) {
+    fill: var(--color-bg);
+    stroke: var(--color-border);
+    stroke-width: 0.5px;
+    vector-effect: non-scaling-stroke;
+    transition: fill var(--transition-fast);
+  }
+
+  :global(.subdivision.visited) {
+    fill: var(--color-accent);
+    fill-opacity: 0.82;
+    cursor: pointer;
+  }
+
+  :global(.subdivision.visited:hover) {
+    fill-opacity: 1;
+  }
+
+  .map-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .map-hint {
+    margin-top: 8px;
+  }
+
+  .selection-panel {
+    margin-top: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    background: var(--color-bg);
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .panel-head h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-transform: none;
+    letter-spacing: normal;
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    color: var(--color-text);
+  }
+
+  .badge {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    padding: 1px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  .sub-heading {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: 14px 0 8px;
+  }
+
+  .sub-list {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .sub-list li {
+    margin-bottom: 6px;
+    font-size: 0.92rem;
+  }
+</style>
+
+<script>
+  import * as d3 from "d3";
+  import * as topojson from "topojson-client";
+  import worldAtlas from "world-atlas/countries-110m.json";
+  import usAtlas from "us-atlas/states-10m.json";
+  import type { PlacesContent, CountryVisit } from "@data/en/places";
+
+  const dataEl = document.getElementById("places-map-data");
+  if (dataEl?.textContent) {
+    const content: PlacesContent = JSON.parse(dataEl.textContent);
+    const visitedByIso = new Map<string, CountryVisit>(
+      content.countries.map((c) => [c.isoNumeric.padStart(3, "0"), c]),
+    );
+
+    const width = 800;
+    const height = 440;
+
+    const svg = d3.select<SVGSVGElement, unknown>("#visited-map-svg");
+    const rootLayer = svg.append("g");
+    const countriesLayer = rootLayer.append("g");
+    const subdivisionsLayer = rootLayer.append("g");
+
+    const tooltip = document.getElementById("map-tooltip")!;
+    const canvasWrap = svg.node()!.parentElement!;
+
+    const crumbWorld = document.getElementById("crumb-world")!;
+    const crumbSep = document.getElementById("crumb-sep")!;
+    const crumbCountry = document.getElementById("crumb-country")!;
+
+    const panel = document.getElementById("selection-panel")!;
+    const panelTitle = document.getElementById("panel-title")!;
+    const panelSummary = document.getElementById("panel-summary")!;
+    const panelSubList = document.getElementById("panel-sub-list")!;
+
+    // Convert TopoJSON -> GeoJSON
+    const worldTopology = worldAtlas as unknown as Parameters<
+      typeof topojson.feature
+    >[0];
+    const countriesObj = (worldAtlas as any).objects.countries;
+    const worldGeo = topojson.feature(
+      worldTopology,
+      countriesObj,
+    ) as unknown as GeoJSON.FeatureCollection;
+
+    // Exclude Antarctica for a cleaner academic layout
+    worldGeo.features = worldGeo.features.filter((f) => String(f.id) !== "010");
+
+    const projection = d3.geoNaturalEarth1().fitSize([width, height], worldGeo);
+    const path = d3.geoPath().projection(projection);
+
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
+      .scaleExtent([1, 14])
+      .on("zoom", (event) => {
+        rootLayer.attr("transform", event.transform.toString());
+      });
+
+    svg.call(zoom);
+
+    function showTooltip(event: MouseEvent, text: string) {
+      const rect = canvasWrap.getBoundingClientRect();
+      tooltip.textContent = text;
+      tooltip.hidden = false;
+      tooltip.style.left = `${event.clientX - rect.left + 12}px`;
+      tooltip.style.top = `${event.clientY - rect.top - 28}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.hidden = true;
+    }
+
+    function renderPanel(country: CountryVisit, highlightSub?: string) {
+      panel.hidden = false;
+      panelTitle.textContent = country.name;
+      panelSummary.textContent = country.summary;
+      panelSubList.innerHTML = "";
+
+      country.subdivisions.forEach((sub) => {
+        const li = document.createElement("li");
+        const isHighlighted =
+          highlightSub && sub.name.toLowerCase() === highlightSub.toLowerCase();
+
+        const titleHtml = `<strong>${sub.name}</strong>${
+          sub.cities?.length ? ` (${sub.cities.join(", ")})` : ""
+        }`;
+        li.innerHTML = `${titleHtml}${sub.note ? ` — ${sub.note}` : ""}`;
+        if (isHighlighted) {
+          li.style.color = "var(--color-accent)";
+        }
+        panelSubList.appendChild(li);
+      });
+    }
+
+    async function loadSubdivisions(
+      country: CountryVisit,
+    ): Promise<GeoJSON.FeatureCollection | null> {
+      if (country.isoNumeric === "840") {
+        const usTopo = usAtlas as unknown as Parameters<
+          typeof topojson.feature
+        >[0];
+        const statesObj = (usAtlas as any).objects.states;
+        return topojson.feature(
+          usTopo,
+          statesObj,
+        ) as unknown as GeoJSON.FeatureCollection;
+      }
+      if (country.subdivisionsUrl) {
+        const res = await fetch(country.subdivisionsUrl);
+        if (!res.ok) return null;
+        return (await res.json()) as GeoJSON.FeatureCollection;
+      }
+      return null;
+    }
+
+    async function drillIntoCountry(
+      feature: GeoJSON.Feature,
+      country: CountryVisit,
+    ) {
+      // 1. Update breadcrumbs & detail panel
+      crumbWorld.classList.remove("active");
+      crumbSep.hidden = false;
+      crumbCountry.hidden = false;
+      crumbCountry.textContent = country.name;
+      renderPanel(country);
+
+      // 2. Dim other countries
+      countriesLayer
+        .selectAll<SVGPathElement, GeoJSON.Feature>("path")
+        .classed(
+          "dimmed",
+          (d) => String(d.id).padStart(3, "0") !== country.isoNumeric,
+        );
+
+      // 3. Zoom smoothly into country bounding box
+      const [[x0, y0], [x1, y1]] = path.bounds(feature);
+      const dx = x1 - x0;
+      const dy = y1 - y0;
+      const cx = (x0 + x1) / 2;
+      const cy = (y0 + y1) / 2;
+      const scale = Math.max(
+        1.5,
+        Math.min(10, 0.8 / Math.max(dx / width, dy / height)),
+      );
+      const tx = width / 2 - scale * cx;
+      const ty = height / 2 - scale * cy;
+
+      svg
+        .transition()
+        .duration(650)
+        .call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+
+      // 4. Render state/province polygons
+      subdivisionsLayer.selectAll("*").remove();
+      const subGeo = await loadSubdivisions(country);
+      if (!subGeo) return;
+
+      const visitedSubMap = new Map(
+        country.subdivisions.map((s) => [s.name.toLowerCase(), s]),
+      );
+
+      subdivisionsLayer
+        .selectAll("path")
+        .data(subGeo.features)
+        .join("path")
+        .attr("d", path as any)
+        .attr("class", (d: any) => {
+          const rawName = String(
+            d.properties?.name ?? d.properties?.NAME ?? "",
+          );
+          return visitedSubMap.has(rawName.toLowerCase())
+            ? "subdivision visited"
+            : "subdivision";
+        })
+        .on("mousemove", (event: MouseEvent, d: any) => {
+          const rawName = String(
+            d.properties?.name ?? d.properties?.NAME ?? "",
+          );
+          if (rawName) showTooltip(event, rawName);
+        })
+        .on("mouseleave", hideTooltip)
+        .on("click", (event: MouseEvent, d: any) => {
+          event.stopPropagation();
+          const rawName = String(
+            d.properties?.name ?? d.properties?.NAME ?? "",
+          );
+          if (visitedSubMap.has(rawName.toLowerCase())) {
+            renderPanel(country, rawName);
+          }
+        });
+    }
+
+    function resetToWorld() {
+      subdivisionsLayer.selectAll("*").remove();
+      countriesLayer.selectAll("path").classed("dimmed", false);
+
+      crumbWorld.classList.add("active");
+      crumbSep.hidden = true;
+      crumbCountry.hidden = true;
+      panel.hidden = true;
+
+      svg.transition().duration(600).call(zoom.transform, d3.zoomIdentity);
+    }
+
+    // Draw world countries
+    countriesLayer
+      .selectAll("path")
+      .data(worldGeo.features)
+      .join("path")
+      .attr("d", path as any)
+      .attr("class", (d) => {
+        const id = String(d.id ?? "").padStart(3, "0");
+        return visitedByIso.has(id) ? "country visited" : "country";
+      })
+      .on("mousemove", (event: MouseEvent, d) => {
+        const id = String(d.id ?? "").padStart(3, "0");
+        const visited = visitedByIso.get(id);
+        const name = visited?.name ?? (d.properties as any)?.name ?? "";
+        if (name) {
+          showTooltip(
+            event,
+            visited ? `${name} · ${content.visitedBadge}` : name,
+          );
+        }
+      })
+      .on("mouseleave", hideTooltip)
+      .on("click", (event: MouseEvent, d) => {
+        event.stopPropagation();
+        const id = String(d.id ?? "").padStart(3, "0");
+        const visited = visitedByIso.get(id);
+        if (visited) {
+          drillIntoCountry(d, visited);
+        }
+      });
+
+    // Toolbar controls
+    crumbWorld.addEventListener("click", resetToWorld);
+    document
+      .getElementById("zoom-reset")
+      ?.addEventListener("click", resetToWorld);
+    document.getElementById("zoom-in")?.addEventListener("click", () => {
+      svg.transition().duration(250).call(zoom.scaleBy, 1.5);
+    });
+    document.getElementById("zoom-out")?.addEventListener("click", () => {
+      svg.transition().duration(250).call(zoom.scaleBy, 0.67);
+    });
+  }
+</script>

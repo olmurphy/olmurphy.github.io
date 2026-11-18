@@ -9,6 +9,7 @@ import {
   LIFE_CONTENT as life,
   LIFE_CATEGORIES as lifeCategories,
 } from "./life";
+import { PLACES_CONTENT as places } from "./places";
 import { LEARNING_CONTENT as learning } from "./learning";
 import { MEDIA_CONTENT as media } from "./media";
 import { TEACHING_CONTENT as teaching } from "./teaching";
@@ -24,6 +25,7 @@ import type { LocaleContent } from "../en";
 export const CONTENT: LocaleContent = {
   home,
   about,
+  places,
   research,
   publications,
   projects,

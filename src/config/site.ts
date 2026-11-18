@@ -33,6 +33,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { label: "About", href: "/about", group: "Overview" },
   { label: "Timeline", href: "/timeline", group: "Overview" },
   { label: "Life", href: "/life", group: "Overview" },
+  { label: "Places", href: "/places", group: "Overview" },
   { label: "Research", href: "/research", group: "Work" },
   { label: "Publications", href: "/publications", group: "Work" },
   { label: "Projects", href: "/projects", group: "Work" },
