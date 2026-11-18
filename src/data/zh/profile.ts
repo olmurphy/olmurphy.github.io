@@ -3,7 +3,7 @@ import type { FooterLink, Link } from "../en/profile";
 export const PROFILE_LINKS: readonly Link[] = [
   { label: "电子邮箱", href: "mailto:owen261@icloud.com" },
   {
-    label: "Google Scholar",
+    label: "Google 学术搜索",
     href: "https://scholar.google.com/citations?user=A667B6MAAAAJ&hl=zh-CN",
   },
   { label: "GitHub", href: "https://github.com/olmurphy" },
@@ -21,7 +21,7 @@ export const SOCIAL_LINKS: readonly FooterLink[] = [
     href: "https://www.facebook.com/profile.php?id=100077171944784",
   },
   {
-    label: "小红书 (Xiaohongshu)",
+    label: "小红书",
     href: "https://www.xiaohongshu.com/user/profile/6584485a000000001d003274",
   },
   {
@@ -30,7 +30,7 @@ export const SOCIAL_LINKS: readonly FooterLink[] = [
     qrAlt: "Owen Murphy 微信公众号二维码",
   },
   {
-    label: "Podcast",
+    label: "播客",
     href: "https://podcasts.apple.com/us/podcast/owen-murphy/id1812550142",
   },
   {
@@ -40,10 +40,10 @@ export const SOCIAL_LINKS: readonly FooterLink[] = [
 ];
 
 export const PROFESSIONAL_LINKS: readonly Link[] = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/owenmurphy2022/" },
+  { label: "领英", href: "https://www.linkedin.com/in/owenmurphy2022/" },
   { label: "GitHub", href: "https://github.com/olmurphy" },
   {
-    label: "Google Scholar",
+    label: "Google 学术搜索",
     href: "https://scholar.google.com/citations?user=A667B6MAAAAJ&hl=zh-CN",
   },
   {

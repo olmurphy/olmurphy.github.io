@@ -55,7 +55,7 @@ export const HOME_CONTENT: HomeContent = {
     },
     {
       date: "Aug 2026",
-      text: "Joined Global Business AI (GBizAI) in Shanghai as an AI & Software Engineer.",
+      text: "Joined Global Business AI in Shanghai as an AI & Software Engineer.",
     },
     {
       date: "2026",
