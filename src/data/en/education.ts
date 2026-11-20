@@ -94,7 +94,8 @@ export const EDUCATION_CONTENT: EducationContent = {
       institution: "Baylor University",
       institutionHref: "https://www.baylor.edu/",
       logoSrc: "/logos/baylor.webp",
-      period: "Aug 2018 – May 2022 · GPA 3.9",
+      period: "Aug 2018 – May 2022",
+      details: "GPA 3.9",
     },
   ] satisfies readonly EducationEntry[],
   experience: [
