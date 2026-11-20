@@ -80,14 +80,14 @@ export const EDUCATION_CONTENT: EducationContent = {
       institution: "Shanghai Jiao Tong University",
       institutionHref: "https://en.sjtu.edu.cn/",
       logoSrc: "/logos/sjtu.webp",
-      period: "Two semesters (高三 equivalent)",
+      period: "Septemeber 2025 - June 2026Two semesters (高三 equivalent)",
     },
     {
       degree: "Intensive Chinese Language Program",
       institution: "Beijing Language and Culture University",
       institutionHref: "https://www.blcu.edu.cn/",
       logoSrc: "/logos/blcu.webp",
-      period: "August 2025",
+      period: "August 2024",
     },
     {
       degree: "B.S. in Mathematics and Computer Science",
