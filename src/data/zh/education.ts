@@ -32,7 +32,8 @@ export const EDUCATION_CONTENT: EducationContent = {
       institution: "贝勒大学",
       institutionHref: "https://www.baylor.edu/",
       logoSrc: "/logos/baylor.webp",
-      period: "2018年8月 – 2022年5月 · GPA 3.9",
+      period: "2018年8月 – 2022年5月",
+      details: "GPA 3.9",
     },
   ],
   experience: [

@@ -2,15 +2,30 @@
 interface Props {
   title: string;
   meta?: string;
+  date?: string;
+  dateTodo?: boolean;
   logoSrc?: string;
   logoAlt?: string;
   logoHref?: string;
 }
 
-const { title, meta, logoSrc, logoAlt = "", logoHref } = Astro.props;
+const {
+  title,
+  meta,
+  date,
+  dateTodo,
+  logoSrc,
+  logoAlt = "",
+  logoHref,
+} = Astro.props;
 ---
 
-<article class:list={["entry", { "has-logo": Boolean(logoSrc) }]}>
+<article
+  class:list={[
+    "entry",
+    { "has-logo": Boolean(logoSrc), "has-date": Boolean(date) },
+  ]}
+>
   {logoSrc && (
     <div class="logo-wrap">
       {logoHref ? (
@@ -31,14 +46,21 @@ const { title, meta, logoSrc, logoAlt = "", logoHref } = Astro.props;
 
   <div class="entry-body">
     <h3>{title}</h3>
-    {(meta || Astro.slots.has("meta")) && (
+    {(meta || date || Astro.slots.has("meta")) && (
       <div class="meta">
         {meta}
         <slot name="meta" />
+        {date && (
+          <span class:list={["date-inline", { todo: dateTodo }]}>
+            {" "}
+            · {date}
+          </span>
+        )}
       </div>
     )}
     <slot />
   </div>
+  {date && <div class:list={["date", { todo: dateTodo }]}>{date}</div>}
 </article>
 
 <style>
@@ -50,6 +72,18 @@ const { title, meta, logoSrc, logoAlt = "", logoHref } = Astro.props;
     display: flex;
     align-items: flex-start;
     gap: 14px;
+  }
+
+  .entry.has-date {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "body date";
+    column-gap: 16px;
+  }
+
+  .entry.has-date.has-logo {
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    grid-template-areas: "logo body date";
   }
 
   .logo-wrap {
@@ -103,9 +137,51 @@ const { title, meta, logoSrc, logoAlt = "", logoHref } = Astro.props;
     min-width: 0;
   }
 
+  .entry.has-date .entry-body {
+    grid-area: body;
+  }
+
+  .entry.has-date .logo-wrap {
+    grid-area: logo;
+  }
+
   .meta {
     color: var(--color-text-muted);
     font-size: 0.9rem;
     margin-bottom: 4px;
+  }
+
+  .date {
+    grid-area: date;
+    padding-top: 4px;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .date-inline {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .entry.has-date {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "body";
+    }
+
+    .entry.has-date.has-logo {
+      grid-template-columns: 42px minmax(0, 1fr);
+      grid-template-areas: "logo body";
+    }
+
+    .date {
+      display: none;
+    }
+
+    .date-inline {
+      display: inline;
+    }
   }
 </style>

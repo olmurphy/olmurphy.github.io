@@ -35,6 +35,7 @@ const labels = UI[lang].labels;
   {content.education.map((edu) => (
     <EntryItem
       title={edu.degree}
+      date={edu.period}
       logoSrc={edu.logoSrc}
       logoAlt={edu.institution}
       logoHref={edu.institutionHref}
@@ -43,7 +44,7 @@ const labels = UI[lang].labels;
         <a href={edu.institutionHref} target="_blank" rel="noopener noreferrer">
           {edu.institution}
         </a>
-        {edu.institutionSuffix} · {edu.period}
+        {edu.institutionSuffix}
       </Fragment>
       {edu.details && <p class="small">{edu.details}</p>}
     </EntryItem>
@@ -55,6 +56,8 @@ const labels = UI[lang].labels;
       {content.visiting.map((visit) => (
         <EntryItem
           title={visit.role}
+          date={visit.period}
+          dateTodo={visit.todo}
           logoSrc={visit.logoSrc}
           logoAlt={visit.institution}
           logoHref={visit.institutionHref}
@@ -89,12 +92,6 @@ const labels = UI[lang].labels;
                   </>
                 ))}
               </>
-            )}{" "}
-            ·{" "}
-            {visit.todo ? (
-              <span class="todo">{visit.period}</span>
-            ) : (
-              visit.period
             )}
           </Fragment>
           {visit.summary && (
@@ -107,14 +104,14 @@ const labels = UI[lang].labels;
 
   <h2>{labels.experience}</h2>
   {content.experience.map((exp) => (
-    <EntryItem title={exp.role} meta={`${exp.company} · ${exp.dates}`}>
+    <EntryItem title={exp.role} meta={exp.company} date={exp.dates}>
       <p class="small">{exp.summary}</p>
     </EntryItem>
   ))}
 
   <h2>{labels.awards}</h2>
   {content.awards.map((award) => (
-    <EntryItem title={award.title} meta={`${award.issuer} · ${award.date}`}>
+    <EntryItem title={award.title} meta={award.issuer} date={award.date}>
       {award.description && <p class="small">{award.description}</p>}
     </EntryItem>
   ))}
