@@ -19,6 +19,7 @@ export const EDUCATION_CONTENT: EducationContent = {
       institutionHref: "https://en.sjtu.edu.cn/",
       logoSrc: "/logos/sjtu.webp",
       period: "2025年9月 – 2026年6月",
+      details: "两个学期（高三班）",
     },
     {
       degree: "汉语强化课程",

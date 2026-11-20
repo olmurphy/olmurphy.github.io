@@ -80,7 +80,8 @@ export const EDUCATION_CONTENT: EducationContent = {
       institution: "Shanghai Jiao Tong University",
       institutionHref: "https://en.sjtu.edu.cn/",
       logoSrc: "/logos/sjtu.webp",
-      period: "Septemeber 2025 - June 2026Two semesters (高三 equivalent)",
+      period: "Septemeber 2025 - June 2026",
+      details: "Two semesters (高三 equivalent)",
     },
     {
       degree: "Intensive Chinese Language Program",
