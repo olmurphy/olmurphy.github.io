@@ -11,12 +11,14 @@ EXCLUDED_DIRS = {
     "dist",
     "build",
     ".husky",
+    ".astro",
 }
 
 EXCLUDED_FILES = {
     ".DS_Store",
     "gathered_contents.txt",
     "directory_files.txt",
+    "list_files.py"
 }
 
 
