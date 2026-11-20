@@ -18,14 +18,14 @@ export const EDUCATION_CONTENT: EducationContent = {
       institution: "上海交通大学",
       institutionHref: "https://en.sjtu.edu.cn/",
       logoSrc: "/logos/sjtu.webp",
-      period: "两个学期（相当于高中三年级水平）",
+      period: "2025年9月 – 2026年6月",
     },
     {
       degree: "汉语强化课程",
       institution: "北京语言大学",
       institutionHref: "https://www.blcu.edu.cn/",
       logoSrc: "/logos/blcu.webp",
-      period: "2025年8月",
+      period: "2024年8月",
     },
     {
       degree: "数学与计算机科学理学学士",
