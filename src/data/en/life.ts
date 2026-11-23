@@ -47,16 +47,16 @@ export const LIFE_CONTENT: LifeContent = {
   photos: [
     {
       src: mediaUrl("life/everyday/li_kun_family_guangzhou_2026.webp"),
-      alt: "Spending time with Li Kun and family in Guangzhou",
+      alt: "Spending time with Li Kun and his family in Guangzhou",
       category: "everyday",
-      caption: "Visiting Li Kun and family in Guangzhou",
+      caption: "Visiting Li Kun and his family in Guangzhou",
       captionParts: [
         { text: "Visiting " },
         {
           text: "Li Kun",
           href: "https://www.linkedin.com/in/mac-li-16789b175/",
         },
-        { text: " and family in Guangzhou" },
+        { text: " and his family in Guangzhou" },
       ],
       meta: "Guangzhou · 2026",
       todo: false,
