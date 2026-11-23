@@ -83,7 +83,7 @@ export const LIFE_CONTENT: LifeContent = {
       alt: "View along the Great Wall of China winding over green mountain ridges near Beijing",
       category: "places",
       caption: "Hiking the Great Wall during language immersion",
-      meta: "Beijing · Aug 2025",
+      meta: "Beijing · Aug 2024",
       todo: false,
     },
     {
@@ -91,7 +91,7 @@ export const LIFE_CONTENT: LifeContent = {
       alt: "Hall of Prayer for Good Harvests at the Temple of Heaven in Beijing",
       category: "places",
       caption: "Visiting the Temple of Heaven during language immersion",
-      meta: "Beijing · Aug 2025",
+      meta: "Beijing · Aug 2024",
       todo: false,
     },
     {

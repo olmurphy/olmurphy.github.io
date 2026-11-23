@@ -47,12 +47,12 @@ const photoTranslations: Record<
     {
       alt: "北京附近蜿蜒于青山之上的长城景色",
       caption: "语言沉浸学习期间徒步长城",
-      meta: "北京 · 2025年8月",
+      meta: "北京 · 2024年8月",
     },
   "Hall of Prayer for Good Harvests at the Temple of Heaven in Beijing": {
     alt: "北京天坛祈年殿",
     caption: "语言沉浸学习期间参观天坛",
-    meta: "北京 · 2025年8月",
+    meta: "北京 · 2024年8月",
   },
   "Celebrating Hendry's birthday in New York City": {
     alt: "在纽约市为 Hendry 庆祝生日",
