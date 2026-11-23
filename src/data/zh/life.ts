@@ -17,6 +17,19 @@ const photoTranslations: Record<
     captionParts?: LifeContent["photos"][number]["captionParts"];
   }
 > = {
+  "Spending time with Li Kun and family in Guangzhou": {
+    alt: "在广州与李堃及家人相聚",
+    caption: "在广州拜访李堃与家人",
+    meta: "广州 · 2026年",
+    captionParts: [
+      { text: "在广州拜访" },
+      {
+        text: "李堃",
+        href: "https://www.linkedin.com/in/mac-li-16789b175/",
+      },
+      { text: "与家人" },
+    ],
+  },
   "View of the Three Gorges Dam spanning the Yangtze River in Hubei, China": {
     alt: "中国湖北横跨长江的三峡大坝",
     caption:

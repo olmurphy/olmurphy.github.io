@@ -46,6 +46,22 @@ export const LIFE_CONTENT: LifeContent = {
     "Outside of work and coursework, I spend most weekends running with Move Crew along the riverfront in Shanghai, riding my road bike, or tinkering with hardware and 3D-printed builds. These snapshots are a small record of the cities, training routines, and friends along the way.",
   photos: [
     {
+      src: mediaUrl("life/everyday/li_kun_family_guangzhou_2026.webp"),
+      alt: "Spending time with Li Kun and family in Guangzhou",
+      category: "everyday",
+      caption: "Visiting Li Kun and family in Guangzhou",
+      captionParts: [
+        { text: "Visiting " },
+        {
+          text: "Li Kun",
+          href: "https://www.linkedin.com/in/mac-li-16789b175/",
+        },
+        { text: " and family in Guangzhou" },
+      ],
+      meta: "Guangzhou · 2026",
+      todo: false,
+    },
+    {
       src: mediaUrl("life/places/three-gorges-dam-october-2026.webp"),
       alt: "View of the Three Gorges Dam spanning the Yangtze River in Hubei, China",
       category: "places",
