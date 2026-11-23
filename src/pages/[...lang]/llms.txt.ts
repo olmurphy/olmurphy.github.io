@@ -52,7 +52,7 @@ export const GET: APIRoute = ({ params }) => {
     "/education": "学位、访问经历、工作经验、荣誉与技能。",
     "/learning": "数学、计算机科学与自然科学领域的自主学习。",
     "/media": "技术演讲、科普视频系列与科学传播。",
-    "/contact": "电子邮箱、GitHub、Google Scholar、LinkedIn 与简历。",
+    "/contact": "电子邮箱、GitHub、Google 学术搜索、LinkedIn 与简历。",
   };
 
   const lines: string[] = [

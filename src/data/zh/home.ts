@@ -11,7 +11,7 @@ export const HOME_CONTENT: HomeContent = {
     portraitSrc: "/photo.jpg",
     portraitAlt: "李晓党 (Owen Li Murphy) 个人肖像",
     portraitPlaceholder: "请添加 photo.jpg",
-    affiliation: "佐治亚理工学院 (Georgia Tech) 计算机科学硕士（机器学习方向）",
+    affiliation: "佐治亚理工学院计算机科学硕士（机器学习方向）",
     bioHtml:
       "我是一名软件工程师与科研探索者，拥有数学与分布式系统背景，目前致力于<strong>深度学习</strong>与<strong>计算生物学</strong>的交叉研究，正在准备计算机科学或计算生物学方向的研究型硕士申请。",
   },
@@ -27,8 +27,7 @@ export const HOME_CONTENT: HomeContent = {
       },
       {
         title: "可靠深度学习",
-        description:
-          "分布偏移（Distribution Shift）下的模型置信度校准、选择性弃权（Abstention）与鲁棒性。",
+        description: "分布偏移下的模型置信度校准、选择性弃权与鲁棒性。",
       },
       {
         title: "数学基础",
@@ -55,7 +54,7 @@ export const HOME_CONTENT: HomeContent = {
     },
     {
       date: "2026年8月",
-      text: "加入位于上海的 Global Business AI (GBizAI)，担任 AI 与软件工程师。",
+      text: "加入位于上海的 Global Business AI，担任 AI 与软件工程师。",
     },
     {
       date: "2026年",
@@ -63,7 +62,7 @@ export const HOME_CONTENT: HomeContent = {
     },
     {
       date: "2025年秋",
-      text: "开始攻读佐治亚理工学院（Georgia Tech OMSCS）计算机科学硕士（机器学习方向）。",
+      text: "开始攻读佐治亚理工学院（OMSCS）计算机科学硕士（机器学习方向）。",
     },
   ],
 };

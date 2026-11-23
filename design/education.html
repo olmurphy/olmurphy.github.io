@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Education & Experience layout options — Owen Li Murphy</title>
+<style>
+  /* ---------- Design tokens: same as the rest of the site ---------- */
+  :root {
+    --bg: #fcfcfa; --text: #1f2328; --muted: #5d6570; --line: #e3e3de;
+    --accent: #1f4e79; --accent-soft: #eaf1f8; --max: 760px;
+  }
+  :root[data-theme="dark"] {
+    --bg: #15181c; --text: #e6e8ea; --muted: #9aa3ad; --line: #2a2f35;
+    --accent: #7fb2e5; --accent-soft: #1c2530;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c; --text: #e6e8ea; --muted: #9aa3ad; --line: #2a2f35;
+      --accent: #7fb2e5; --accent-soft: #1c2530;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", serif;
+    line-height: 1.65; font-size: 17px;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+  .sans { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", Helvetica, Arial, sans-serif; }
+
+  /* ---------- Preview-only switcher (not part of the site) ---------- */
+  .switcher {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--accent-soft); border-bottom: 1px solid var(--line);
+    padding: 10px 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif; font-size: .85rem;
+  }
+  .switcher .wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .switcher .lbl { color: var(--muted); margin-right: 4px; }
+  .seg {
+    background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px;
+    padding: 3px 12px; font: inherit; font-size: .8rem; cursor: pointer;
+  }
+  .seg:hover { color: var(--text); border-color: var(--muted); }
+  .seg.on { background: var(--bg); color: var(--accent); border-color: var(--accent); font-weight: 600; }
+  .switcher .spacer { margin-left: auto; display: flex; gap: 8px; }
+
+  main { padding: 36px 0 60px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; line-height: 1.25; }
+  h2 {
+    font-size: 1.1rem; margin: 34px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", Helvetica, Arial, sans-serif;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600;
+  }
+  h3 { font-size: 1.05rem; margin: 0 0 2px; line-height: 1.35; }
+  p { margin: 0 0 14px; }
+  .small { font-size: .9rem; }
+  .note {
+    background: var(--accent-soft); border-radius: 8px; padding: 14px 18px; margin: 18px 0 8px;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif; font-size: .88rem; color: var(--muted);
+  }
+  .note strong { color: var(--text); }
+
+  /* ---------- Shared row markup ---------- */
+  .row {
+    display: grid; column-gap: 14px; margin-bottom: 22px;
+    grid-template-columns: 42px minmax(0, 1fr);
+    grid-template-areas: "logo main";
+  }
+  .row.no-logo { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main"; }
+  .logo {
+    grid-area: logo; width: 42px; height: 42px; margin-top: 2px; border-radius: 50%;
+    border: 1px solid var(--line); background: #fff; color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font: 700 .68rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: .02em;
+  }
+  .logo.mono { background: var(--accent-soft); }
+  .main { grid-area: main; min-width: 0; }
+  .org { color: var(--muted); font-size: .9rem; margin-bottom: 4px; }
+  .org-date { display: inline; }
+  .date { grid-area: date; display: none; }
+  .detail { font-size: .9rem; margin: 0; }
+
+  /* Skills */
+  .skill { margin-bottom: 14px; }
+  .skill .label {
+    display: block; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
+  }
+
+  /* ---------- Option B: dates on the right ---------- */
+  .v-b .row { grid-template-columns: 42px minmax(0, 1fr) auto; grid-template-areas: "logo main date"; column-gap: 16px; }
+  .v-b .row.no-logo { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "main date"; }
+  .v-b .org-date { display: none; }
+  .v-b .date {
+    display: block; text-align: right; white-space: nowrap; padding-top: 4px;
+    color: var(--muted); font-size: .82rem;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
+  }
+  .v-b .skill, .v-c .skill {
+    display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 16px;
+    padding: 8px 0; border-bottom: 1px solid var(--line); margin: 0; font-size: .93rem;
+  }
+  .v-b .skill .label, .v-c .skill .label { padding-top: 2px; }
+
+  /* ---------- Option C: date column on the left (CV style) ---------- */
+  .v-c .row { grid-template-columns: 128px 42px minmax(0, 1fr); grid-template-areas: "date logo main"; column-gap: 14px; }
+  .v-c .row.no-logo { grid-template-columns: 128px minmax(0, 1fr); grid-template-areas: "date main"; }
+  .v-c .org-date { display: none; }
+  .v-c .date {
+    display: block; padding-top: 4px; color: var(--muted); font-size: .82rem; line-height: 1.45;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
+  }
+
+  /* On phones, B and C fall back to the date inside the meta line */
+  @media (max-width: 640px) {
+    .v-b .row, .v-c .row { grid-template-columns: 42px minmax(0, 1fr); grid-template-areas: "logo main"; }
+    .v-b .row.no-logo, .v-c .row.no-logo { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main"; }
+    .v-b .date, .v-c .date { display: none; }
+    .v-b .org-date, .v-c .org-date { display: inline; }
+    .v-b .skill, .v-c .skill { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>
+<script>
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<div class="switcher">
+  <div class="wrap">
+    <span class="lbl">Preview option:</span>
+    <button type="button" class="seg" data-variant="a">A · Current</button>
+    <button type="button" class="seg on" data-variant="b">B · Dates on right</button>
+    <button type="button" class="seg" data-variant="c">C · Date column on left</button>
+    <span class="spacer">
+      <button type="button" class="seg" id="lang">中文</button>
+      <button type="button" class="seg" id="theme">Dark mode</button>
+    </span>
+  </div>
+</div>
+
+<main class="wrap">
+  <h1 id="title"></h1>
+  <div class="note" id="explain"></div>
+  <div id="content"></div>
+</main>
+
+<script>
+(function () {
+  var variant = 'b', lang = 'en';
+
+  /* Replace the monograms with your real logos from /logos/*.webp in the Astro version. */
+  var DATA = {
+    en: {
+      title: 'Education & Experience',
+      h: { edu: 'Education', visit: 'Visiting Appointments', exp: 'Experience', awards: 'Awards & Honors', skills: 'Skills' },
+      edu: [
+        { t: 'M.S. in Computer Science, Machine Learning specialization', o: 'Georgia Institute of Technology (OMSCS)', d: 'Fall 2025 – present', x: 'Completed: Operating Systems, Machine Learning for Trading, Machine Learning. In progress: Deep Learning (CS 7643).', m: 'GT' },
+        { t: 'Chinese Language Studies', o: 'Shanghai Jiao Tong University', d: 'Two semesters', x: '', m: 'SJTU' },
+        { t: 'Intensive Chinese Language Program', o: 'Beijing Language and Culture University', d: 'Aug 2025', x: '', m: 'BLCU' },
+        { t: 'B.S. in Mathematics and Computer Science', o: 'Baylor University', d: 'Aug 2018 – May 2022', x: 'GPA 3.9', m: 'BU' }
+      ],
+      visit: [
+        { t: 'Visiting Researcher', o: 'Shanghai Institute for Mathematics and Interdisciplinary Sciences (SIMIS) · Affiliated with Fudan University', d: 'May 2026', x: 'Collaborators: Dr. Leon Witt & Dr. Lucy Klinger. Game-theoretic multi-agent alignment, peer prediction mechanisms, and Knowledge-Free Correlated Agreement.', m: 'FD' }
+      ],
+      exp: [
+        { t: 'AI / Software Engineer', o: 'Global Business AI (GBizAI)', d: 'Aug 2026 – present', x: 'Architecting enterprise multi-tenant chatbot management platforms and LLM streaming data planes.', m: 'GB' },
+        { t: 'Software Engineer', o: 'IBM Consulting', d: 'Jun 2022 – Sep 2025', x: 'Developed high-throughput enterprise backend systems, distributed services, and machine-learning algorithm integrations over three years.', m: 'IBM' }
+      ],
+      awards: [
+        { t: 'David and Nancy Hidy Wilson Scholarship Fund', o: 'Baylor University', d: 'Junior year', x: 'Awarded to the top 1% of Computer Science students in the program.', m: '1%' },
+        { t: "Dean's Academic Honor List", o: 'Baylor University', d: '2018 – 2022', x: 'Recognized consistently for maintaining a 3.9 GPA across rigorous dual-major coursework in Mathematics and Computer Science.', m: 'BU' }
+      ],
+      skills: [
+        ['Machine learning', 'PyTorch · deep learning · NLP · reinforcement learning · multi-agent systems · agent harnesses'],
+        ['Computational biology', 'Single-cell & spatial omics foundations · structural biology · molecular mechanics'],
+        ['Compute & hardware', 'NVIDIA GPUs · GPU memory hierarchies · Raspberry Pi · Arduino'],
+        ['Systems & engineering', 'Distributed systems · backend services · Docker · Git · Linux · Tailscale · PostgreSQL · Redis · Kafka'],
+        ['Programming', 'Python · C++ · TypeScript · JavaScript · Java'],
+        ['Research practice', 'Literature review · experiment design · technical writing · science communication'],
+        ['Languages', 'English (native) · Mandarin Chinese (working proficiency)']
+      ],
+      explain: {
+        a: '<strong>A · Current.</strong> Dates sit inside the grey meta line after the institution, so they get lost when the institution name is long (see the SIMIS entry, which wraps onto two lines).',
+        b: '<strong>B · Dates on the right.</strong> Dates align in one clean column, so a visitor can scan the timeline without reading the meta line. Skills become a two-column label/value table. Best match for your current look, with the smallest code change.',
+        c: '<strong>C · Date column on the left.</strong> The classic CV layout: dates read as a timeline down the page, and titles line up on one edge. Slightly more formal, and takes about 130px of width from the text.'
+      },
+      logoNote: 'Preview uses monograms in place of your logos. Experience and awards also get one so every row aligns (add IBM / GBizAI logos, or keep monograms).'
+    },
+    zh: {
+      title: '教育与工作经历',
+      h: { edu: '教育经历', visit: '访问经历', exp: '工作经历', awards: '奖项与荣誉', skills: '专业技能' },
+      edu: [
+        { t: '计算机科学硕士（机器学习方向）', o: '佐治亚理工学院（OMSCS）', d: '2025年秋季至今', x: '已完成：操作系统、交易机器学习、机器学习。正在修读：深度学习（CS 7643）。', m: 'GT' },
+        { t: '汉语学习', o: '上海交通大学', d: '两个学期', x: '', m: 'SJTU' },
+        { t: '汉语强化课程', o: '北京语言大学', d: '2025年8月', x: '', m: 'BLCU' },
+        { t: '数学与计算机科学理学学士', o: '贝勒大学', d: '2018年8月 – 2022年5月', x: 'GPA 3.9', m: 'BU' }
+      ],
+      visit: [
+        { t: '访问研究员', o: '上海数学与交叉学科研究院（SIMIS）· 与复旦大学有合作关系', d: '2026年5月', x: '合作者：Dr. Leon Witt、Dr. Lucy Klinger。合作研究基于博弈论的多智能体对齐、同伴预测机制与无知识相关一致性。', m: 'FD' }
+      ],
+      exp: [
+        { t: 'AI 与软件工程师', o: 'Global Business AI (GBizAI)', d: '2026年8月至今', x: '负责企业级多租户聊天机器人管理平台及大语言模型流式数据平面的架构设计。', m: 'GB' },
+        { t: '软件工程师', o: 'IBM Consulting', d: '2022年6月 – 2025年9月', x: '三年来负责高吞吐企业后端系统、分布式服务及机器学习算法集成。', m: 'IBM' }
+      ],
+      awards: [
+        { t: 'David 与 Nancy Hidy Wilson 奖学金基金', o: '贝勒大学', d: '大三', x: '授予项目中计算机科学专业排名前 1% 的学生。', m: '1%' },
+        { t: '院长学术荣誉名单', o: '贝勒大学', d: '2018 – 2022', x: '因在数学与计算机科学双专业高强度课程中持续保持 3.9 GPA 而获表彰。', m: 'BU' }
+      ],
+      skills: [
+        ['机器学习', 'PyTorch · 深度学习 · 自然语言处理 · 强化学习 · 多智能体系统 · 智能体运行框架'],
+        ['计算生物学', '单细胞与空间组学基础 · 结构生物学 · 分子力学'],
+        ['计算与硬件', 'NVIDIA GPU · GPU 内存层级 · 树莓派 · Arduino'],
+        ['系统与工程', '分布式系统 · 后端服务 · Docker · Git · Linux · Tailscale · PostgreSQL · Redis · Kafka'],
+        ['编程', 'Python · C++ · TypeScript · JavaScript · Java'],
+        ['科研实践', '文献综述 · 实验设计 · 技术写作 · 科学传播'],
+        ['语言', '英语（母语） · 汉语普通话（工作交流水平）']
+      ],
+      explain: {
+        a: '<strong>A · 现状。</strong>日期嵌在机构名称后的灰色文字里，机构名较长时容易被淹没（例如 SIMIS 条目会折成两行）。',
+        b: '<strong>B · 日期靠右。</strong>日期对齐成一列，访客无需读完整行就能扫过时间线；技能改为左右两列。与现有风格最接近，改动最小。',
+        c: '<strong>C · 左侧日期列。</strong>经典简历排版：日期自上而下形成时间线，标题左边缘对齐。更正式，但会占用约 130px 的正文宽度。'
+      },
+      logoNote: '预览中用字母标识代替校徽；工作经历和奖项也加了标识以保证每行对齐（可补充 IBM / GBizAI 的 logo，或保留字母标识）。'
+    }
+  };
+
+  function row(e, withLogo) {
+    var logo = withLogo ? '<div class="logo ' + (e.real ? '' : 'mono') + '" aria-hidden="true">' + e.m + '</div>' : '';
+    return '<article class="row' + (withLogo ? '' : ' no-logo') + '">' + logo +
+      '<div class="main"><h3>' + e.t + '</h3>' +
+      '<div class="org">' + e.o + '<span class="org-date"> · ' + e.d + '</span></div>' +
+      (e.x ? '<p class="detail">' + e.x + '</p>' : '') + '</div>' +
+      '<div class="date">' + e.d + '</div></article>';
+  }
+  function skill(s) {
+    return '<div class="skill"><span class="label">' + s[0] + '</span><span>' + s[1] + '</span></div>';
+  }
+  function section(title, rows) { return '<h2>' + title + '</h2>' + rows; }
+
+  function render() {
+    var D = DATA[lang];
+    var withLogo = true;
+    document.getElementById('title').textContent = D.title;
+    document.getElementById('explain').innerHTML = D.explain[variant] + '<br><span style="opacity:.85">' + D.logoNote + '</span>';
+    document.getElementById('content').className = 'v-' + variant;
+    document.getElementById('content').innerHTML =
+      section(D.h.edu, D.edu.map(function (e) { return row(e, withLogo); }).join('')) +
+      section(D.h.visit, D.visit.map(function (e) { return row(e, withLogo); }).join('')) +
+      section(D.h.exp, D.exp.map(function (e) { return row(e, withLogo); }).join('')) +
+      section(D.h.awards, D.awards.map(function (e) { return row(e, withLogo); }).join('')) +
+      section(D.h.skills, D.skills.map(skill).join(''));
+    Array.prototype.forEach.call(document.querySelectorAll('[data-variant]'), function (b) {
+      b.classList.toggle('on', b.getAttribute('data-variant') === variant);
+    });
+    document.getElementById('lang').textContent = lang === 'en' ? '中文' : 'EN';
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-Hans';
+    syncTheme();
+  }
+
+  function systemDark() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+  function themeNow() { return document.documentElement.getAttribute('data-theme') || (systemDark() ? 'dark' : 'light'); }
+  function syncTheme() { document.getElementById('theme').textContent = themeNow() === 'dark' ? 'Light mode' : 'Dark mode'; }
+
+  document.querySelector('.switcher').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.hasAttribute('data-variant')) { variant = b.getAttribute('data-variant'); render(); }
+    else if (b.id === 'lang') { lang = lang === 'en' ? 'zh' : 'en'; render(); }
+    else if (b.id === 'theme') {
+      var next = themeNow() === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (err) {}
+      syncTheme();
+    }
+  });
+  render();
+})();
+</script>
+</body>
+</html>

@@ -58,7 +58,7 @@ export function buildGlobalGraph(lang: Locale = "en"): readonly JsonLdObject[] {
         },
         {
           "@type": "Organization",
-          name: "Global Business AI (GBizAI)",
+          name: "Global Business AI",
         },
         {
           "@type": "ResearchOrganization",

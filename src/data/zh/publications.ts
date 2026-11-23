@@ -10,7 +10,7 @@ export const PUBLICATIONS_CONTENT: PublicationsContent = {
       venue: "已投稿至 NeurIPS 2026",
       coAuthors: "与 SIMIS 及复旦大学、清华大学的合作者共同完成",
       summary:
-        "运用多任务同伴预测与无知识相关一致性（Knowledge-Free Correlated Agreement）机制，研究 AI 智能体群体的治理问题。",
+        "运用多任务同伴预测与无知识相关一致性机制，研究 AI 智能体群体的治理问题。",
       status: "审稿中",
       tags: ["博弈论", "机制设计", "多智能体系统"],
     },

@@ -19,8 +19,8 @@ export const CONTACT_CONTENT: ContactContent = {
       href: "https://github.com/olmurphy",
     },
     {
-      label: "Google Scholar",
-      value: "Google Scholar 个人主页",
+      label: "Google 学术搜索",
+      value: "Google 学术搜索个人主页",
       href: "https://scholar.google.com/citations?user=A667B6MAAAAJ&hl=zh-CN",
     },
     {

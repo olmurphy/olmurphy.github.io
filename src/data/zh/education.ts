@@ -5,7 +5,7 @@ export const EDUCATION_CONTENT: EducationContent = {
   education: [
     {
       degree: "计算机科学硕士（机器学习方向）",
-      institution: "佐治亚理工学院（Georgia Institute of Technology）",
+      institution: "佐治亚理工学院",
       institutionSuffix: "（OMSCS）",
       institutionHref: "https://www.gatech.edu/",
       logoSrc: "/logos/gatech.webp",
@@ -15,24 +15,26 @@ export const EDUCATION_CONTENT: EducationContent = {
     },
     {
       degree: "汉语学习",
-      institution: "上海交通大学（Shanghai Jiao Tong University）",
+      institution: "上海交通大学",
       institutionHref: "https://en.sjtu.edu.cn/",
       logoSrc: "/logos/sjtu.webp",
-      period: "两个学期（相当于高中三年级水平）",
+      period: "2025年9月 – 2026年6月",
+      details: "两个学期（高三班）",
     },
     {
       degree: "汉语强化课程",
-      institution: "北京语言大学（Beijing Language and Culture University）",
+      institution: "北京语言大学",
       institutionHref: "https://www.blcu.edu.cn/",
       logoSrc: "/logos/blcu.webp",
-      period: "2025年8月",
+      period: "2024年8月",
     },
     {
       degree: "数学与计算机科学理学学士",
-      institution: "贝勒大学（Baylor University）",
+      institution: "贝勒大学",
       institutionHref: "https://www.baylor.edu/",
       logoSrc: "/logos/baylor.webp",
-      period: "2018年8月 – 2022年5月 · GPA 3.9",
+      period: "2018年8月 – 2022年5月",
+      details: "GPA 3.9",
     },
   ],
   experience: [
@@ -53,13 +55,13 @@ export const EDUCATION_CONTENT: EducationContent = {
   awards: [
     {
       title: "David 与 Nancy Hidy Wilson 奖学金基金",
-      issuer: "贝勒大学（Baylor University）",
+      issuer: "贝勒大学",
       date: "大三",
       description: "授予项目中计算机科学专业排名前 1% 的学生。",
     },
     {
       title: "院长学术荣誉名单",
-      issuer: "贝勒大学（Baylor University）",
+      issuer: "贝勒大学",
       date: "2018 – 2022",
       description:
         "因在数学与计算机科学双专业高强度课程中持续保持 3.9 GPA 而获表彰。",
@@ -100,8 +102,7 @@ export const EDUCATION_CONTENT: EducationContent = {
   visiting: [
     {
       role: "访问研究员",
-      institution:
-        "上海数学与交叉学科研究院（Shanghai Institute for Mathematics and Interdisciplinary Sciences，SIMIS）",
+      institution: "上海数学与交叉学科研究院（SIMIS）",
       institutionNote: " · 与复旦大学有合作关系",
       institutionHref: "https://www.simis.cn/",
       logoSrc: "/logos/fudan.webp",
