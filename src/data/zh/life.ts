@@ -20,7 +20,7 @@ const photoTranslations: Record<
   "Spending time with Li Kun and his family in Guangzhou": {
     alt: "在广州与李堃及其家人相聚",
     caption: "在广州拜访李堃及其家人",
-    meta: "广州 · 2026年",
+    meta: "广州 · 2026年11月",
     captionParts: [
       { text: "在广州拜访" },
       {

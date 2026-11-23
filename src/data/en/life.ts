@@ -58,7 +58,7 @@ export const LIFE_CONTENT: LifeContent = {
         },
         { text: " and his family in Guangzhou" },
       ],
-      meta: "Guangzhou · 2026",
+      meta: "Guangzhou · Nov 2026",
       todo: false,
     },
     {
