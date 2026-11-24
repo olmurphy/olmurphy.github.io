@@ -46,6 +46,22 @@ export const LIFE_CONTENT: LifeContent = {
     "Outside of work and coursework, I spend most weekends running with Move Crew along the riverfront in Shanghai, riding my road bike, or tinkering with hardware and 3D-printed builds. These snapshots are a small record of the cities, training routines, and friends along the way.",
   photos: [
     {
+      src: mediaUrl("life/everyday/li_kun_family_guangzhou_2026.webp"),
+      alt: "Spending time with Li Kun and his family in Guangzhou",
+      category: "everyday",
+      caption: "Visiting Li Kun and his family in Guangzhou",
+      captionParts: [
+        { text: "Visiting " },
+        {
+          text: "Li Kun",
+          href: "https://www.linkedin.com/in/mac-li-16789b175/",
+        },
+        { text: " and his family in Guangzhou" },
+      ],
+      meta: "Guangzhou · Nov 2026",
+      todo: false,
+    },
+    {
       src: mediaUrl("life/places/three-gorges-dam-october-2026.webp"),
       alt: "View of the Three Gorges Dam spanning the Yangtze River in Hubei, China",
       category: "places",
@@ -83,7 +99,7 @@ export const LIFE_CONTENT: LifeContent = {
       alt: "View along the Great Wall of China winding over green mountain ridges near Beijing",
       category: "places",
       caption: "Hiking the Great Wall during language immersion",
-      meta: "Beijing · Aug 2025",
+      meta: "Beijing · Aug 2024",
       todo: false,
     },
     {
@@ -91,7 +107,7 @@ export const LIFE_CONTENT: LifeContent = {
       alt: "Hall of Prayer for Good Harvests at the Temple of Heaven in Beijing",
       category: "places",
       caption: "Visiting the Temple of Heaven during language immersion",
-      meta: "Beijing · Aug 2025",
+      meta: "Beijing · Aug 2024",
       todo: false,
     },
     {

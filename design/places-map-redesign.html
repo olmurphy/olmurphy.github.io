@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Places — Owen Li Murphy</title>
+<meta name="description" content="Countries, states, and provinces Owen Li Murphy has lived in, studied in, or visited.">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<style>
+  /* ---------- Design tokens: exact match with olmurphy.github.io ---------- */
+  :root {
+    --bg: #fcfcfa;
+    --surface-subtle: #f4f4f0;
+    --text: #1f2328;
+    --muted: #5d6570;
+    --line: #e3e3de;
+    --accent: #1f4e79;
+    --accent-soft: #eaf1f8;
+    --max: 760px;
+    --radius-sm: 4px;
+    --radius-card: 8px;
+    --radius-pill: 999px;
+    --font-serif: Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #15181c;
+    --surface-subtle: #1e2228;
+    --text: #e6e8ea;
+    --muted: #9aa3ad;
+    --line: #2a2f35;
+    --accent: #7fb2e5;
+    --accent-soft: #1c2530;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c;
+      --surface-subtle: #1e2228;
+      --text: #e6e8ea;
+      --muted: #9aa3ad;
+      --line: #2a2f35;
+      --accent: #7fb2e5;
+      --accent-soft: #1c2530;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-serif);
+    line-height: 1.65;
+    font-size: 17px;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+  [hidden] { display: none !important; }
+
+  /* ---------- Header / nav (mirrors site layout) ---------- */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0 0;
+  }
+
+  .site-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--text);
+    border: none;
+  }
+  .site-name:hover { border: none; }
+
+  .tagline {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin: 2px 0 14px;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+
+  nav a {
+    color: var(--muted);
+    padding: 8px 0 10px;
+    border-bottom: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); border-bottom-color: var(--line); }
+  nav a.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  .nav-controls {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+
+  .pill-btn {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .pill-btn:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ---------- Main typography ---------- */
+  main { padding: 48px 0 72px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; line-height: 1.25; }
+  h2 {
+    font-size: 1.05rem;
+    margin: 38px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  h3 { font-size: 1.05rem; margin: 0 0 2px; line-height: 1.35; }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 0.9rem; }
+
+  /* ---------- Overview Stats Strip ---------- */
+  .stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 36px;
+    margin: 20px 0 24px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface-subtle);
+  }
+  .stat-item .stat-num {
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text);
+  }
+  .stat-item .stat-lbl {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ---------- Searchable Country Combobox + Quick Filters ---------- */
+  .explorer-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: var(--font-sans);
+  }
+
+  .search-box {
+    position: relative;
+    flex: 1 1 260px;
+    min-width: 220px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 8px 34px 8px 35px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 50%;
+  }
+  .search-clear:hover { color: var(--text); background: var(--surface-subtle); }
+
+  .search-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 290px;
+    overflow-y: auto;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+    z-index: 30;
+    padding: 4px;
+  }
+
+  .dropdown-group-hdr {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 8px 10px 4px;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .dropdown-item:hover,
+  .dropdown-item.highlighted {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .dropdown-item-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .badge-visited {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 1px 8px;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+
+  .dropdown-empty {
+    padding: 14px 12px;
+    font-size: 0.86rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .quick-jumps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .jump-chip {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    border-radius: var(--radius-pill);
+    padding: 5px 12px;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .jump-chip:hover { color: var(--text); border-color: var(--muted); }
+  .jump-chip.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: transparent;
+    font-weight: 600;
+  }
+
+  /* ---------- Interactive Map Shell ---------- */
+  .map-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .crumb {
+    background: none;
+    border: none;
+    padding: 2px 7px;
+    font: inherit;
+    color: var(--accent);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+  }
+  .crumb:hover { background: var(--accent-soft); }
+  .crumb.active {
+    color: var(--text);
+    font-weight: 600;
+    cursor: default;
+  }
+  .crumb.active:hover { background: none; }
+  .crumb-sep, .crumb-current { color: var(--muted); }
+
+  .zoom-controls { display: flex; gap: 6px; }
+  .ctrl-btn {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    border-radius: var(--radius-pill);
+    padding: 2px 10px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .ctrl-btn:hover { color: var(--text); border-color: var(--muted); }
+
+  .canvas-wrap {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  svg#visited-map-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+  }
+  svg#visited-map-svg:active { cursor: grabbing; }
+
+  .country {
+    fill: var(--surface-subtle);
+    stroke: var(--line);
+    stroke-width: 0.6px;
+    transition: fill 0.15s ease, fill-opacity 0.15s ease;
+  }
+  .country.visited {
+    fill: var(--accent);
+    fill-opacity: 0.72;
+    cursor: pointer;
+  }
+  .country.visited:hover { fill-opacity: 0.95; }
+  .country.inspected {
+    fill: var(--muted);
+    fill-opacity: 0.45;
+    stroke: var(--text);
+    stroke-width: 1.1px;
+  }
+
+  .subdivision {
+    fill: var(--surface-subtle);
+    stroke: var(--line);
+    stroke-width: 0.6px;
+    vector-effect: non-scaling-stroke;
+    transition: fill 0.15s ease, fill-opacity 0.15s ease, stroke 0.15s ease;
+  }
+  .subdivision.visited {
+    fill: var(--accent);
+    fill-opacity: 0.76;
+    cursor: pointer;
+  }
+  .subdivision.visited:hover { fill-opacity: 0.96; }
+  .subdivision.selected {
+    fill: var(--accent);
+    fill-opacity: 1;
+    stroke: var(--text);
+    stroke-width: 1.4px;
+  }
+
+  .map-legend {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    display: flex;
+    gap: 14px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .legend-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  .legend-dot.on { background: var(--accent); opacity: 0.82; }
+  .legend-dot.off { background: var(--surface-subtle); border: 1px solid var(--line); }
+
+  .map-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .map-hint { margin-top: 8px; }
+
+  /* ---------- Enhanced Country / Subdivision Detail Inspector ---------- */
+  .inspector {
+    margin-top: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    padding: 20px 22px;
+    background: var(--bg);
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .inspector-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .inspector-title-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .inspector-title-group h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-transform: none;
+    letter-spacing: normal;
+    font-family: var(--font-serif);
+    font-size: 1.38rem;
+    color: var(--text);
+  }
+
+  .status-pill {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .status-pill.unvisited {
+    background: var(--surface-subtle);
+    color: var(--muted);
+    border: 1px solid var(--line);
+    font-weight: 500;
+  }
+
+  .inspector-meta {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .inspector-summary {
+    font-size: 0.96rem;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  /* Filter pills for states/provinces inside the active country */
+  .sub-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-sans);
+  }
+
+  .sub-pill {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    border-radius: var(--radius-pill);
+    padding: 3px 11px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .sub-pill:hover { color: var(--text); border-color: var(--muted); }
+  .sub-pill.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Structured Region / State / Province Story Cards */
+  .region-cards {
+    display: grid;
+    gap: 12px;
+  }
+
+  .region-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    padding: 14px 16px;
+    background: var(--bg);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .region-card:hover { border-color: var(--accent); }
+  .region-card.active {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent-soft) 45%, var(--bg));
+  }
+
+  .region-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .region-name {
+    font-family: var(--font-serif);
+    font-size: 1.04rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .region-period {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .region-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 8px;
+    font-family: var(--font-sans);
+  }
+
+  .city-tag {
+    font-size: 0.73rem;
+    padding: 1px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--surface-subtle);
+    border: 1px solid var(--line);
+    color: var(--text);
+  }
+
+  .role-tag {
+    font-size: 0.73rem;
+    padding: 1px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .region-note {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--text);
+  }
+
+  .region-note.placeholder {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ---------- Complete Visited Countries & Regions Directory ---------- */
+  .directory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 40px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .directory-header h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .directory-sub {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .directory-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .dir-country {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    transition: border-color 0.15s ease;
+  }
+  .dir-country:hover { border-color: var(--accent); }
+
+  .dir-country-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+
+  .dir-country-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dir-country-title h3 {
+    font-size: 1.12rem;
+    margin: 0;
+  }
+
+  .view-on-map-btn {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--accent);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .view-on-map-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  .dir-sub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .dir-sub-item {
+    text-align: left;
+    background: var(--surface-subtle);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 8px 11px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .dir-sub-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .dir-sub-name {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .dir-sub-cities {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 24px 0 44px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-family: var(--font-sans);
+  }
+
+  @media (max-width: 600px) {
+    .stats-row { gap: 12px 24px; }
+    .inspector { padding: 16px; }
+    .region-card-head { flex-direction: column; gap: 2px; }
+  }
+</style>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="site-name" href="#top" id="site-name">Owen Li Murphy</a>
+    <div class="tagline" id="site-tagline">Deep learning · Computational biology · Multi-agent systems</div>
+    <nav aria-label="Primary navigation">
+      <a href="#top">Home</a>
+      <a href="#top">About</a>
+      <a href="#top">Timeline</a>
+      <a href="#top">Life</a>
+      <a href="#top" class="active" aria-current="page" id="nav-places">Places</a>
+      <a href="#top">Research</a>
+      <a href="#top">Contact</a>
+      <div class="nav-controls">
+        <button type="button" class="pill-btn" id="lang-toggle">中文</button>
+        <button type="button" class="pill-btn" id="theme-toggle">Dark mode</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <h1 id="page-title">Places</h1>
+  <p class="muted" id="page-subtitle">Countries, states, and provinces I have lived in, studied in, or visited.</p>
+
+  <!-- Summary Metrics -->
+  <div class="stats-row" id="stats-row" aria-label="Travel summary statistics"></div>
+
+  <!-- Searchable Country Combobox (200+ countries) + Quick Jump Chips -->
+  <div class="explorer-controls">
+    <div class="search-box" id="country-search-box">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="8.5" cy="8.5" r="5.75"></circle>
+        <path d="M13 13l4.2 4.2" stroke-linecap="round"></path>
+      </svg>
+      <input
+        type="text"
+        id="country-search-input"
+        class="search-input"
+        autocomplete="off"
+        role="combobox"
+        aria-expanded="false"
+        aria-autocomplete="list"
+        aria-controls="country-search-dropdown"
+        placeholder="Search 240+ countries or regions..."
+      />
+      <button type="button" class="search-clear" id="country-search-clear" aria-label="Clear search" hidden>×</button>
+      <div class="search-dropdown" id="country-search-dropdown" role="listbox" hidden></div>
+    </div>
+
+    <div class="quick-jumps" id="quick-jumps" aria-label="Quick country filters"></div>
+  </div>
+
+  <!-- Interactive D3 Map -->
+  <div class="map-shell" id="visited-map-shell">
+    <div class="map-toolbar">
+      <nav class="breadcrumb" aria-label="Map zoom level">
+        <button type="button" class="crumb active" id="crumb-world">World</button>
+        <span class="crumb-sep" id="crumb-sep" hidden>/</span>
+        <span class="crumb-current" id="crumb-country" hidden></span>
+      </nav>
+
+      <div class="zoom-controls">
+        <button type="button" class="ctrl-btn" id="zoom-in" aria-label="Zoom in">+</button>
+        <button type="button" class="ctrl-btn" id="zoom-out" aria-label="Zoom out">−</button>
+        <button type="button" class="ctrl-btn" id="zoom-reset">Reset view</button>
+      </div>
+    </div>
+
+    <div class="canvas-wrap" id="canvas-wrap">
+      <svg id="visited-map-svg" viewBox="0 0 800 440" role="img" aria-label="Visited places map"></svg>
+      <div class="map-legend">
+        <span><span class="legend-dot on"></span><span id="legend-visited">Visited</span></span>
+        <span><span class="legend-dot off"></span><span id="legend-unvisited">Not yet visited</span></span>
+      </div>
+      <div class="map-tooltip" id="map-tooltip" hidden></div>
+    </div>
+
+    <p class="small muted map-hint" id="map-hint">
+      Search any country above, scroll or pinch to zoom, or click a highlighted country to inspect states and provinces.
+    </p>
+  </div>
+
+  <!-- Enhanced Country / State / Province Detail Inspector -->
+  <section class="inspector" id="inspector" hidden aria-live="polite">
+    <div class="inspector-top">
+      <div class="inspector-title-group">
+        <h2 id="inspector-title"></h2>
+        <span class="status-pill" id="inspector-badge"></span>
+      </div>
+      <span class="inspector-meta" id="inspector-meta"></span>
+    </div>
+
+    <p class="inspector-summary" id="inspector-summary"></p>
+
+    <div class="sub-filter-bar" id="sub-filter-bar" hidden></div>
+    <div class="region-cards" id="region-cards"></div>
+  </section>
+
+  <!-- Complete Browsable List of Visited Countries & States/Provinces -->
+  <section aria-labelledby="directory-heading">
+    <div class="directory-header">
+      <h2 id="directory-heading">All Visited Countries &amp; Regions</h2>
+      <span class="directory-sub" id="directory-sub">Click any country or region to focus on the map</span>
+    </div>
+    <div class="directory-list" id="directory-list"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Owen Li Murphy</div>
+</footer>
+
+<script>
+(function () {
+  // =========================================================================
+  // 1. DATA MODEL (Matches src/data/en/places.ts & src/data/zh/places.ts,
+  //    enriched with optional role/period metadata for richer region cards)
+  // =========================================================================
+  var CONTENT = {
+    en: {
+      siteName: "Owen Li Murphy",
+      tagline: "Deep learning · Computational biology · Multi-agent systems",
+      navPlaces: "Places",
+      title: "Places",
+      subtitle: "Countries, states, and provinces I have lived in, studied in, or visited.",
+      searchPlaceholder: "Search 240+ countries or regions...",
+      visitedGroupLabel: "Visited Countries",
+      allCountriesGroupLabel: "All Countries & Territories",
+      noSearchResults: "No matching countries found.",
+      worldLabel: "World",
+      resetLabel: "Reset view",
+      visitedBadge: "Visited",
+      unvisitedBadge: "Not yet visited",
+      unvisitedNote: "Haven't visited yet — explore another country from the search bar or click a highlighted region on the map.",
+      allSubdivisionsLabel: "All regions",
+      instructions: "Search any country above, scroll or pinch to zoom, or click a highlighted country to inspect states and provinces.",
+      directoryHeading: "All Visited Countries & Regions",
+      directorySub: "Click any country or region to inspect details on the map",
+      viewOnMap: "Explore on map →",
+      stats: {
+        countries: "Countries",
+        subdivisions: "States & Provinces",
+        cities: "Cities"
+      },
+      countries: [
+        {
+          isoNumeric: "840",
+          name: "United States",
+          statusLabel: "Home Country · Lived & Studied",
+          period: "1999 – 2025",
+          summary: "Grew up in the U.S., earned my B.S. in Mathematics and Computer Science at Baylor University, and started my software engineering career in New York.",
+          subdivisions: [
+            {
+              name: "Texas",
+              role: "Education",
+              period: "2018 – 2022",
+              cities: ["Waco", "Dallas"],
+              note: "B.S. in Mathematics & Computer Science at Baylor University (2018–2022), undergraduate TA for Foundations of Mathematics, and Dean's Honor List."
+            },
+            {
+              name: "New York",
+              role: "Career",
+              period: "2022 – 2025",
+              cities: ["New York City"],
+              note: "Software Engineer at IBM Consulting (2022–2025), building high-throughput enterprise backend systems and distributed services."
+            },
+            {
+              name: "New Jersey",
+              role: "Residence",
+              period: "2024 – 2025",
+              cities: ["Union City"],
+              note: "Lived in Union City across the Hudson from Manhattan prior to relocating to Shanghai."
+            },
+            {
+              name: "Georgia",
+              role: "Graduate Studies",
+              period: "2025 – Present",
+              cities: ["Atlanta"],
+              note: "Georgia Tech M.S. in Computer Science (Machine Learning specialization)."
+            },
+            {
+              name: "California",
+              role: "Travel",
+              cities: ["Los Angeles"],
+              note: "Visited Southern California and transited through LAX."
+            }
+          ]
+        },
+        {
+          isoNumeric: "156",
+          name: "China",
+          statusLabel: "Current Base · Lived & Studied",
+          period: "2024, 2025 – Present",
+          summary: "Living and working in Shanghai as an AI & Software Engineer after intensive Mandarin studies in Beijing and Shanghai.",
+          subdivisionsUrl: "https://cdn.jsdelivr.net/gh/longwosion/geojson-map-china@master/china.json",
+          subdivisions: [
+            {
+              name: "上海市",
+              displayName: "Shanghai (上海市)",
+              role: "Home Base & Work",
+              period: "Sep 2025 – Present",
+              cities: ["Shanghai"],
+              note: "Home base; two semesters of Chinese studies at Shanghai Jiao Tong University, AI & Software Engineer at Global Business AI (GBizAI), and Move Crew run club."
+            },
+            {
+              name: "北京市",
+              displayName: "Beijing (北京市)",
+              role: "Language Immersion",
+              period: "Aug 2024",
+              cities: ["Beijing"],
+              note: "Intensive Chinese language program at Beijing Language and Culture University (BLCU); hiked the Great Wall and visited the Temple of Heaven."
+            },
+            {
+              name: "湖北省",
+              displayName: "Hubei (湖北省)",
+              role: "Travel",
+              period: "Oct 2026",
+              cities: ["Yichang"],
+              note: "Visited the Three Gorges Dam spanning the Yangtze River in Yichang (Oct 2026)."
+            }
+          ]
+        }
+      ]
+    },
+    zh: {
+      siteName: "Owen Li Murphy · 李晓党",
+      tagline: "深度学习 · 计算生物学 · 多智能体系统",
+      navPlaces: "足迹地图",
+      title: "足迹地图",
+      subtitle: "我曾生活、求学或旅行过的国家与省市。",
+      searchPlaceholder: "搜索全球 240+ 个国家或地区...",
+      visitedGroupLabel: "已到访国家",
+      allCountriesGroupLabel: "全部国家与地区",
+      noSearchResults: "未找到匹配的国家或地区。",
+      worldLabel: "全球",
+      resetLabel: "重置视图",
+      visitedBadge: "到访过",
+      unvisitedBadge: "暂未到访",
+      unvisitedNote: "暂未到访此地——可通过上方搜索框探索其他国家，或点击地图上高亮的区域查看详情。",
+      allSubdivisionsLabel: "全部地区",
+      instructions: "在上方搜索任意国家，滚轮或双指缩放地图，或点击高亮国家下钻查看州/省详情。",
+      directoryHeading: "已到访国家与地区列表",
+      directorySub: "点击任意国家或省市可在地图上定位并查看详情",
+      viewOnMap: "在地图中查看 →",
+      stats: {
+        countries: "个国家",
+        subdivisions: "个州 / 省级行政区",
+        cities: "座城市"
+      },
+      countries: [
+        {
+          isoNumeric: "840",
+          name: "美国 (United States)",
+          statusLabel: "成长与求学 · 常住地",
+          period: "1999 – 2025",
+          summary: "在美国长大，本科就读于贝勒大学数学与计算机科学专业，并在纽约开启软件工程师职业生涯。",
+          subdivisions: [
+            {
+              name: "Texas",
+              displayName: "德克萨斯州 (Texas)",
+              role: "本科求学",
+              period: "2018 – 2022",
+              cities: ["韦科 (Waco)", "达拉斯 (Dallas)"],
+              note: "贝勒大学数学与计算机科学理学学士（2018–2022），担任《数学基础》课程本科助教并入选院长荣誉名单。"
+            },
+            {
+              name: "New York",
+              displayName: "纽约州 (New York)",
+              role: "职业生涯",
+              period: "2022 – 2025",
+              cities: ["纽约 (New York City)"],
+              note: "在 IBM Consulting 担任软件工程师（2022–2025），负责高吞吐企业后端系统与分布式服务。"
+            },
+            {
+              name: "New Jersey",
+              displayName: "新泽西州 (New Jersey)",
+              role: "居住",
+              period: "2024 – 2025",
+              cities: ["联合市 (Union City)"],
+              note: "迁居上海前居住于哈德逊河畔的联合市。"
+            },
+            {
+              name: "Georgia",
+              displayName: "佐治亚州 (Georgia)",
+              role: "研究生学习",
+              period: "2025 – 至今",
+              cities: ["亚特兰大 (Atlanta)"],
+              note: "佐治亚理工学院计算机科学硕士项目（机器学习方向）。"
+            },
+            {
+              name: "California",
+              displayName: "加利福尼亚州 (California)",
+              role: "旅行",
+              cities: ["洛杉矶 (Los Angeles)"],
+              note: "到访南加州并经洛杉矶国际机场中转。"
+            }
+          ]
+        },
+        {
+          isoNumeric: "156",
+          name: "中国 (China)",
+          statusLabel: "当前常驻 · 学习与工作",
+          period: "2024, 2025 – 至今",
+          summary: "在北京和上海完成密集汉语学习后，目前定居上海担任 AI 与软件工程师。",
+          subdivisionsUrl: "https://cdn.jsdelivr.net/gh/longwosion/geojson-map-china@master/china.json",
+          subdivisions: [
+            {
+              name: "上海市",
+              displayName: "上海市",
+              role: "常驻城市与工作",
+              period: "2025年9月 – 至今",
+              cities: ["上海"],
+              note: "常驻城市；于上海交通大学进修两个学期汉语，任职于 Global Business AI (GBizAI)，并加入 Move Crew 跑团。"
+            },
+            {
+              name: "北京市",
+              displayName: "北京市",
+              role: "语言沉浸",
+              period: "2024年8月",
+              cities: ["北京"],
+              note: "于北京语言大学参加汉语强化项目，游览长城与天坛。"
+            },
+            {
+              name: "湖北省",
+              displayName: "湖北省",
+              role: "旅行",
+              period: "2026年10月",
+              cities: ["宜昌"],
+              note: "参观横跨长江的三峡大坝（2026年10月）。"
+            }
+          ]
+        }
+      ]
+    }
+  };
+
+  // =========================================================================
+  // 2. STATE & DOM REFERENCES
+  // =========================================================================
+  var lang = "en";
+  var activeCountryIso = null;      // Currently focused country ISO numeric (visited or unvisited)
+  var activeSubdivision = null;     // Currently selected state/province raw name
+  var worldGeo = null;
+  var usStatesGeo = null;
+  var subGeoCache = new Map();
+  var allWorldCountries = [];       // List of all 200+ world countries from world-atlas
+  var dropdownHighlightIdx = -1;
+
+  var width = 800;
+  var height = 440;
+  var padding = 24;
+
+  var svg = d3.select("#visited-map-svg");
+  var rootLayer = svg.append("g");
+  var countriesLayer = rootLayer.append("g");
+  var subdivisionsLayer = rootLayer.append("g");
+
+  var canvasWrap = document.getElementById("canvas-wrap");
+  var tooltip = document.getElementById("map-tooltip");
+  var crumbWorld = document.getElementById("crumb-world");
+  var crumbSep = document.getElementById("crumb-sep");
+  var crumbCountry = document.getElementById("crumb-country");
+
+  var searchInput = document.getElementById("country-search-input");
+  var searchClear = document.getElementById("country-search-clear");
+  var searchDropdown = document.getElementById("country-search-dropdown");
+  var quickJumpsEl = document.getElementById("quick-jumps");
+
+  var inspector = document.getElementById("inspector");
+  var inspectorTitle = document.getElementById("inspector-title");
+  var inspectorBadge = document.getElementById("inspector-badge");
+  var inspectorMeta = document.getElementById("inspector-meta");
+  var inspectorSummary = document.getElementById("inspector-summary");
+  var subFilterBar = document.getElementById("sub-filter-bar");
+  var regionCards = document.getElementById("region-cards");
+
+  var worldProjection = d3.geoNaturalEarth1();
+  var worldPath = d3.geoPath().projection(worldProjection);
+
+  var zoom = d3.zoom()
+    .scaleExtent([1, 14])
+    .on("zoom", function (event) {
+      rootLayer.attr("transform", event.transform.toString());
+    });
+
+  svg.call(zoom);
+
+  // =========================================================================
+  // 3. HELPERS
+  // =========================================================================
+  function getData() { return CONTENT[lang]; }
+
+  function getVisitedMap() {
+    var map = new Map();
+    getData().countries.forEach(function (c) {
+      map.set(c.isoNumeric.padStart(3, "0"), c);
+    });
+    return map;
+  }
+
+  function showTooltip(event, text) {
+    var rect = canvasWrap.getBoundingClientRect();
+    tooltip.textContent = text;
+    tooltip.hidden = false;
+    tooltip.style.left = (event.clientX - rect.left + 12) + "px";
+    tooltip.style.top = (event.clientY - rect.top - 28) + "px";
+  }
+
+  function hideTooltip() {
+    tooltip.hidden = true;
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // =========================================================================
+  // 4. RENDER SUMMARY STATS, QUICK JUMPS, AND FULL DIRECTORY
+  // =========================================================================
+  function renderStats() {
+    var D = getData();
+    var totalCountries = D.countries.length;
+    var totalSubs = 0;
+    var citySet = new Set();
+    D.countries.forEach(function (c) {
+      totalSubs += c.subdivisions.length;
+      c.subdivisions.forEach(function (s) {
+        (s.cities || []).forEach(function (city) { citySet.add(city); });
+      });
+    });
+
+    document.getElementById("stats-row").innerHTML =
+      '<div class="stat-item"><div class="stat-num">' + totalCountries + '</div><div class="stat-lbl">' + D.stats.countries + '</div></div>' +
+      '<div class="stat-item"><div class="stat-num">' + totalSubs + '</div><div class="stat-lbl">' + D.stats.subdivisions + '</div></div>' +
+      '<div class="stat-item"><div class="stat-num">' + citySet.size + '</div><div class="stat-lbl">' + D.stats.cities + '</div></div>';
+  }
+
+  function renderQuickJumps() {
+    var D = getData();
+    var html = '<button type="button" class="jump-chip' + (!activeCountryIso ? ' active' : '') + '" data-jump="world">' +
+      escapeHtml(D.worldLabel) + '</button>';
+
+    D.countries.forEach(function (c) {
+      var iso = c.isoNumeric.padStart(3, "0");
+      var isOn = activeCountryIso === iso;
+      html += '<button type="button" class="jump-chip' + (isOn ? ' active' : '') + '" data-jump="' + iso + '">' +
+        escapeHtml(c.name) + ' (' + c.subdivisions.length + ')</button>';
+    });
+    quickJumpsEl.innerHTML = html;
+  }
+
+  function renderDirectory() {
+    var D = getData();
+    var dirEl = document.getElementById("directory-list");
+    dirEl.innerHTML = D.countries.map(function (country) {
+      var iso = country.isoNumeric.padStart(3, "0");
+      var subItemsHtml = country.subdivisions.map(function (sub) {
+        var title = sub.displayName || sub.name;
+        var cities = (sub.cities && sub.cities.length) ? sub.cities.join(" · ") : (sub.role || "");
+        return '<button type="button" class="dir-sub-item" data-dir-iso="' + iso + '" data-dir-sub="' + escapeHtml(sub.name) + '">' +
+          '<span class="dir-sub-name">' + escapeHtml(title) + '</span>' +
+          (cities ? '<span class="dir-sub-cities">' + escapeHtml(cities) + '</span>' : '') +
+        '</button>';
+      }).join("");
+
+      return '<article class="dir-country">' +
+        '<div class="dir-country-top">' +
+          '<div class="dir-country-title">' +
+            '<h3>' + escapeHtml(country.name) + '</h3>' +
+            '<span class="status-pill">' + escapeHtml(country.statusLabel || D.visitedBadge) + '</span>' +
+          '</div>' +
+          '<button type="button" class="view-on-map-btn" data-dir-iso="' + iso + '">' + escapeHtml(D.viewOnMap) + '</button>' +
+        '</div>' +
+        '<p class="small muted" style="margin-bottom:4px">' + escapeHtml(country.summary) + '</p>' +
+        '<div class="dir-sub-grid">' + subItemsHtml + '</div>' +
+      '</article>';
+    }).join("");
+  }
+
+  // =========================================================================
+  // 5. SEARCHABLE COUNTRY COMBOBOX (200+ COUNTRIES)
+  // =========================================================================
+  function buildWorldCountryIndex() {
+    if (!worldGeo) return;
+    var visitedMap = getVisitedMap();
+    var seenIso = new Set();
+    var items = [];
+
+    worldGeo.features.forEach(function (feat) {
+      var iso = String(feat.id != null ? feat.id : "").padStart(3, "0");
+      var rawName = (feat.properties && feat.properties.name) ? String(feat.properties.name) : "";
+      if (!rawName || iso === "000" || seenIso.has(iso)) return;
+      seenIso.add(iso);
+
+      var visitedObj = visitedMap.get(iso);
+      items.push({
+        iso: iso,
+        name: visitedObj ? visitedObj.name : rawName,
+        rawName: rawName,
+        visited: Boolean(visitedObj),
+        subCount: visitedObj ? visitedObj.subdivisions.length : 0,
+        feature: feat
+      });
+    });
+
+    items.sort(function (a, b) {
+      if (a.visited !== b.visited) return a.visited ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    allWorldCountries = items;
+  }
+
+  function renderDropdown(query) {
+    var D = getData();
+    var q = (query || "").trim().toLowerCase();
+    var filtered = allWorldCountries.filter(function (item) {
+      if (!q) return true;
+      return item.name.toLowerCase().indexOf(q) !== -1 ||
+             item.rawName.toLowerCase().indexOf(q) !== -1;
+    });
+
+    dropdownHighlightIdx = -1;
+
+    if (filtered.length === 0) {
+      searchDropdown.innerHTML = '<div class="dropdown-empty">' + escapeHtml(D.noSearchResults) + '</div>';
+      searchDropdown.hidden = false;
+      searchInput.setAttribute("aria-expanded", "true");
+      return;
+    }
+
+    var visitedItems = filtered.filter(function (i) { return i.visited; });
+    var otherItems = filtered.filter(function (i) { return !i.visited; });
+
+    var html = "";
+    if (visitedItems.length > 0) {
+      html += '<div class="dropdown-group-hdr">' + escapeHtml(D.visitedGroupLabel) + ' (' + visitedItems.length + ')</div>';
+      visitedItems.forEach(function (item) {
+        html += '<button type="button" class="dropdown-item" role="option" data-iso="' + item.iso + '">' +
+          '<span>' + escapeHtml(item.name) + '</span>' +
+          '<span class="dropdown-item-meta"><span class="badge-visited">' + escapeHtml(D.visitedBadge) + ' · ' + item.subCount + '</span></span>' +
+        '</button>';
+      });
+    }
+
+    if (otherItems.length > 0) {
+      html += '<div class="dropdown-group-hdr">' + escapeHtml(D.allCountriesGroupLabel) + ' (' + otherItems.length + ')</div>';
+      otherItems.forEach(function (item) {
+        html += '<button type="button" class="dropdown-item" role="option" data-iso="' + item.iso + '">' +
+          '<span>' + escapeHtml(item.name) + '</span>' +
+        '</button>';
+      });
+    }
+
+    searchDropdown.innerHTML = html;
+    searchDropdown.hidden = false;
+    searchInput.setAttribute("aria-expanded", "true");
+  }
+
+  function closeDropdown() {
+    searchDropdown.hidden = true;
+    searchInput.setAttribute("aria-expanded", "false");
+    dropdownHighlightIdx = -1;
+  }
+
+  function selectCountryByIso(iso, targetSubName, shouldScroll) {
+    var padded = String(iso).padStart(3, "0");
+    var entry = allWorldCountries.find(function (c) { return c.iso === padded; });
+    if (!entry) return;
+
+    closeDropdown();
+    searchInput.value = entry.name;
+    searchClear.hidden = false;
+
+    if (entry.visited) {
+      var visitedObj = getVisitedMap().get(padded);
+      if (visitedObj) {
+        drillIntoVisitedCountry(entry.feature, visitedObj, targetSubName || null);
+      }
+    } else {
+      focusUnvisitedCountry(entry);
+    }
+
+    if (shouldScroll) {
+      document.getElementById("visited-map-shell").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
+
+  // =========================================================================
+  // 6. INSPECTOR PANEL (RICH COUNTRY + STATE/PROVINCE CARDS)
+  // =========================================================================
+  function renderVisitedInspector(country) {
+    var D = getData();
+    inspector.hidden = false;
+    inspectorTitle.textContent = country.name;
+    inspectorBadge.textContent = country.statusLabel || D.visitedBadge;
+    inspectorBadge.className = "status-pill";
+    inspectorMeta.textContent = country.period || "";
+    inspectorSummary.textContent = country.summary;
+
+    // Subdivision filter pill bar
+    subFilterBar.hidden = false;
+    var pillsHtml = '<button type="button" class="sub-pill' + (!activeSubdivision ? ' active' : '') + '" data-sub-filter="">' +
+      escapeHtml(D.allSubdivisionsLabel) + ' (' + country.subdivisions.length + ')</button>';
+
+    country.subdivisions.forEach(function (sub) {
+      var isSelected = activeSubdivision && activeSubdivision.toLowerCase() === sub.name.toLowerCase();
+      pillsHtml += '<button type="button" class="sub-pill' + (isSelected ? ' active' : '') + '" data-sub-filter="' + escapeHtml(sub.name) + '">' +
+        escapeHtml(sub.displayName || sub.name) + '</button>';
+    });
+    subFilterBar.innerHTML = pillsHtml;
+
+    // Subdivision story cards
+    var cardsHtml = country.subdivisions.map(function (sub) {
+      var isSelected = activeSubdivision && activeSubdivision.toLowerCase() === sub.name.toLowerCase();
+      var displayTitle = sub.displayName || sub.name;
+      var tagsHtml = "";
+      if (sub.role) {
+        tagsHtml += '<span class="role-tag">' + escapeHtml(sub.role) + '</span>';
+      }
+      if (sub.cities && sub.cities.length) {
+        sub.cities.forEach(function (city) {
+          tagsHtml += '<span class="city-tag">' + escapeHtml(city) + '</span>';
+        });
+      }
+
+      return '<article class="region-card' + (isSelected ? ' active' : '') + '" data-card-sub="' + escapeHtml(sub.name) + '">' +
+        '<div class="region-card-head">' +
+          '<span class="region-name">' + escapeHtml(displayTitle) + '</span>' +
+          (sub.period ? '<span class="region-period">' + escapeHtml(sub.period) + '</span>' : '') +
+        '</div>' +
+        (tagsHtml ? '<div class="region-tags">' + tagsHtml + '</div>' : '') +
+        (sub.note
+          ? '<p class="region-note">' + escapeHtml(sub.note) + '</p>'
+          : '<p class="region-note placeholder">Visited ' + escapeHtml(displayTitle) + '.</p>') +
+      '</article>';
+    }).join("");
+
+    regionCards.innerHTML = cardsHtml;
+  }
+
+  function renderUnvisitedInspector(entry) {
+    var D = getData();
+    inspector.hidden = false;
+    inspectorTitle.textContent = entry.name;
+    inspectorBadge.textContent = D.unvisitedBadge;
+    inspectorBadge.className = "status-pill unvisited";
+    inspectorMeta.textContent = "";
+    inspectorSummary.textContent = D.unvisitedNote;
+    subFilterBar.hidden = true;
+    regionCards.innerHTML = "";
+  }
+
+  function highlightSubdivisionOnMap() {
+    subdivisionsLayer.selectAll("path.subdivision").classed("selected", function (d) {
+      if (!activeSubdivision) return false;
+      var rawName = String((d.properties && (d.properties.name || d.properties.NAME)) || "");
+      return rawName.toLowerCase() === activeSubdivision.toLowerCase();
+    });
+  }
+
+  // =========================================================================
+  // 7. MAP RENDERING & DRILL-DOWN
+  // =========================================================================
+  async function loadSubdivisions(country) {
+    var iso = country.isoNumeric.padStart(3, "0");
+    if (iso === "840") return usStatesGeo;
+    if (!country.subdivisionsUrl) return null;
+    if (subGeoCache.has(country.subdivisionsUrl)) {
+      return subGeoCache.get(country.subdivisionsUrl);
+    }
+    try {
+      var res = await fetch(country.subdivisionsUrl);
+      if (!res.ok) return null;
+      var json = await res.json();
+      subGeoCache.set(country.subdivisionsUrl, json);
+      return json;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function getFlatCountryProjection(country, targetGeo) {
+    var bounds = [[padding, padding], [width - padding, height - padding]];
+    if (country.isoNumeric.padStart(3, "0") === "840") {
+      return d3.geoAlbersUsa().fitExtent(bounds, targetGeo);
+    }
+    return d3.geoMercator().fitExtent(bounds, targetGeo);
+  }
+
+  async function drillIntoVisitedCountry(feature, country, targetSubName) {
+    hideTooltip();
+    var D = getData();
+    activeCountryIso = country.isoNumeric.padStart(3, "0");
+    activeSubdivision = targetSubName || null;
+
+    crumbWorld.classList.remove("active");
+    crumbSep.hidden = false;
+    crumbCountry.hidden = false;
+    crumbCountry.textContent = country.name;
+
+    renderQuickJumps();
+    renderVisitedInspector(country);
+
+    var subGeo = await loadSubdivisions(country);
+    var fitTarget = subGeo || feature;
+    var flatProjection = getFlatCountryProjection(country, fitTarget);
+    var flatPath = d3.geoPath().projection(flatProjection);
+
+    countriesLayer.style("display", "none");
+    svg.call(zoom.transform, d3.zoomIdentity);
+    subdivisionsLayer.selectAll("*").remove();
+
+    var visitedSubMap = new Map(
+      country.subdivisions.map(function (s) { return [s.name.toLowerCase(), s]; })
+    );
+
+    var featuresToDraw = subGeo ? subGeo.features : [feature];
+
+    subdivisionsLayer
+      .selectAll("path")
+      .data(featuresToDraw)
+      .join("path")
+      .attr("d", flatPath)
+      .attr("class", function (d) {
+        if (!subGeo) return "subdivision visited";
+        var rawName = String((d.properties && (d.properties.name || d.properties.NAME)) || "");
+        var isVis = visitedSubMap.has(rawName.toLowerCase());
+        var isSel = activeSubdivision && rawName.toLowerCase() === activeSubdivision.toLowerCase();
+        return "subdivision" + (isVis ? " visited" : "") + (isSel ? " selected" : "");
+      })
+      .on("mousemove", function (event, d) {
+        var rawName = String((d.properties && (d.properties.name || d.properties.NAME)) || country.name);
+        var subObj = visitedSubMap.get(rawName.toLowerCase());
+        var label = subObj ? (subObj.displayName || subObj.name) : rawName;
+        if (label) showTooltip(event, label);
+      })
+      .on("mouseleave", hideTooltip)
+      .on("click", function (event, d) {
+        event.stopPropagation();
+        var rawName = String((d.properties && (d.properties.name || d.properties.NAME)) || "");
+        if (visitedSubMap.has(rawName.toLowerCase())) {
+          activeSubdivision = (activeSubdivision && activeSubdivision.toLowerCase() === rawName.toLowerCase())
+            ? null
+            : rawName;
+          highlightSubdivisionOnMap();
+          renderVisitedInspector(country);
+        }
+      });
+  }
+
+  function focusUnvisitedCountry(entry) {
+    hideTooltip();
+    activeCountryIso = entry.iso;
+    activeSubdivision = null;
+
+    subdivisionsLayer.selectAll("*").remove();
+    countriesLayer.style("display", null);
+
+    crumbWorld.classList.remove("active");
+    crumbSep.hidden = false;
+    crumbCountry.hidden = false;
+    crumbCountry.textContent = entry.name;
+
+    countriesLayer.selectAll("path.country").classed("inspected", function (d) {
+      return String(d.id != null ? d.id : "").padStart(3, "0") === entry.iso;
+    });
+
+    // Zoom smoothly to center on the selected unvisited country
+    var bounds = worldPath.bounds(entry.feature);
+    var dx = bounds[1][0] - bounds[0][0];
+    var dy = bounds[1][1] - bounds[0][1];
+    var x = (bounds[0][0] + bounds[1][0]) / 2;
+    var y = (bounds[0][1] + bounds[1][1]) / 2;
+    var scale = Math.max(1.4, Math.min(6, 0.55 / Math.max(dx / width, dy / height)));
+    var translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+    svg.transition().duration(450).call(
+      zoom.transform,
+      d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+    );
+
+    renderQuickJumps();
+    renderUnvisitedInspector(entry);
+  }
+
+  function resetToWorld() {
+    hideTooltip();
+    activeCountryIso = null;
+    activeSubdivision = null;
+    subdivisionsLayer.selectAll("*").remove();
+    countriesLayer.style("display", null);
+    countriesLayer.selectAll("path.country").classed("inspected", false);
+
+    crumbWorld.classList.add("active");
+    crumbSep.hidden = true;
+    crumbCountry.hidden = true;
+    inspector.hidden = true;
+
+    renderQuickJumps();
+    svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+  }
+
+  function drawWorldMap() {
+    if (!worldGeo) return;
+    var D = getData();
+    var visitedMap = getVisitedMap();
+
+    worldProjection.fitSize([width, height], worldGeo);
+    worldPath = d3.geoPath().projection(worldProjection);
+
+    countriesLayer
+      .selectAll("path")
+      .data(worldGeo.features)
+      .join("path")
+      .attr("d", worldPath)
+      .attr("class", function (d) {
+        var id = String(d.id != null ? d.id : "").padStart(3, "0");
+        return visitedMap.has(id) ? "country visited" : "country";
+      })
+      .on("mousemove", function (event, d) {
+        var id = String(d.id != null ? d.id : "").padStart(3, "0");
+        var visited = visitedMap.get(id);
+        var name = visited ? visited.name : ((d.properties && d.properties.name) || "");
+        if (name) {
+          showTooltip(event, visited ? (name + " · " + D.visitedBadge) : name);
+        }
+      })
+      .on("mouseleave", hideTooltip)
+      .on("click", function (event, d) {
+        event.stopPropagation();
+        var id = String(d.id != null ? d.id : "").padStart(3, "0");
+        var visited = visitedMap.get(id);
+        if (visited) {
+          searchInput.value = visited.name;
+          searchClear.hidden = false;
+          drillIntoVisitedCountry(d, visited, null);
+        }
+      });
+  }
+
+  // =========================================================================
+  // 8. LOCALIZATION & THEME SYNC
+  // =========================================================================
+  function syncLanguageUI() {
+    var D = getData();
+    document.documentElement.lang = lang === "en" ? "en" : "zh-Hans";
+    document.getElementById("site-name").textContent = D.siteName;
+    document.getElementById("site-tagline").textContent = D.tagline;
+    document.getElementById("nav-places").textContent = D.navPlaces;
+    document.getElementById("page-title").textContent = D.title;
+    document.getElementById("page-subtitle").textContent = D.subtitle;
+    searchInput.placeholder = D.searchPlaceholder;
+    crumbWorld.textContent = D.worldLabel;
+    document.getElementById("zoom-reset").textContent = D.resetLabel;
+    document.getElementById("legend-visited").textContent = D.visitedBadge;
+    document.getElementById("legend-unvisited").textContent = D.unvisitedBadge;
+    document.getElementById("map-hint").textContent = D.instructions;
+    document.getElementById("directory-heading").textContent = D.directoryHeading;
+    document.getElementById("directory-sub").textContent = D.directorySub;
+    document.getElementById("lang-toggle").textContent = lang === "en" ? "中文" : "EN";
+
+    buildWorldCountryIndex();
+    renderStats();
+    renderQuickJumps();
+    renderDirectory();
+    drawWorldMap();
+
+    if (activeCountryIso) {
+      var visitedObj = getVisitedMap().get(activeCountryIso);
+      var entry = allWorldCountries.find(function (c) { return c.iso === activeCountryIso; });
+      if (visitedObj && entry) {
+        drillIntoVisitedCountry(entry.feature, visitedObj, activeSubdivision);
+      } else if (entry) {
+        renderUnvisitedInspector(entry);
+      }
+    }
+  }
+
+  // =========================================================================
+  // 9. EVENT LISTENERS
+  // =========================================================================
+  // Search box interactions
+  searchInput.addEventListener("focus", function () {
+    renderDropdown(searchInput.value);
+  });
+
+  searchInput.addEventListener("input", function () {
+    searchClear.hidden = searchInput.value.length === 0;
+    renderDropdown(searchInput.value);
+  });
+
+  searchClear.addEventListener("click", function () {
+    searchInput.value = "";
+    searchClear.hidden = true;
+    resetToWorld();
+    searchInput.focus();
+    renderDropdown("");
+  });
+
+  searchInput.addEventListener("keydown", function (e) {
+    var items = Array.prototype.slice.call(searchDropdown.querySelectorAll(".dropdown-item"));
+    if (e.key === "Escape") {
+      closeDropdown();
+      return;
+    }
+    if (items.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (searchDropdown.hidden) renderDropdown(searchInput.value);
+      dropdownHighlightIdx = (dropdownHighlightIdx + 1) % items.length;
+      items.forEach(function (el, idx) { el.classList.toggle("highlighted", idx === dropdownHighlightIdx); });
+      items[dropdownHighlightIdx].scrollIntoView({ block: "nearest" });
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      dropdownHighlightIdx = (dropdownHighlightIdx - 1 + items.length) % items.length;
+      items.forEach(function (el, idx) { el.classList.toggle("highlighted", idx === dropdownHighlightIdx); });
+      items[dropdownHighlightIdx].scrollIntoView({ block: "nearest" });
+    } else if (e.key === "Enter" && dropdownHighlightIdx >= 0 && items[dropdownHighlightIdx]) {
+      e.preventDefault();
+      selectCountryByIso(items[dropdownHighlightIdx].getAttribute("data-iso"), null, false);
+    }
+  });
+
+  searchDropdown.addEventListener("click", function (e) {
+    var btn = e.target.closest(".dropdown-item");
+    if (!btn) return;
+    selectCountryByIso(btn.getAttribute("data-iso"), null, false);
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!document.getElementById("country-search-box").contains(e.target)) {
+      closeDropdown();
+    }
+  });
+
+  // Quick jump chips
+  quickJumpsEl.addEventListener("click", function (e) {
+    var chip = e.target.closest(".jump-chip");
+    if (!chip) return;
+    var target = chip.getAttribute("data-jump");
+    if (target === "world") {
+      searchInput.value = "";
+      searchClear.hidden = true;
+      resetToWorld();
+    } else {
+      selectCountryByIso(target, null, false);
+    }
+  });
+
+  // Inspector subdivision pill & card interactions
+  subFilterBar.addEventListener("click", function (e) {
+    var pill = e.target.closest(".sub-pill");
+    if (!pill || !activeCountryIso) return;
+    var subName = pill.getAttribute("data-sub-filter") || null;
+    activeSubdivision = subName;
+    highlightSubdivisionOnMap();
+    var visitedObj = getVisitedMap().get(activeCountryIso);
+    if (visitedObj) renderVisitedInspector(visitedObj);
+  });
+
+  regionCards.addEventListener("click", function (e) {
+    var card = e.target.closest(".region-card");
+    if (!card || !activeCountryIso) return;
+    var subName = card.getAttribute("data-card-sub");
+    activeSubdivision = (activeSubdivision && activeSubdivision.toLowerCase() === subName.toLowerCase())
+      ? null
+      : subName;
+    highlightSubdivisionOnMap();
+    var visitedObj = getVisitedMap().get(activeCountryIso);
+    if (visitedObj) renderVisitedInspector(visitedObj);
+  });
+
+  // Directory list interactions
+  document.getElementById("directory-list").addEventListener("click", function (e) {
+    var subBtn = e.target.closest("[data-dir-sub]");
+    if (subBtn) {
+      selectCountryByIso(subBtn.getAttribute("data-dir-iso"), subBtn.getAttribute("data-dir-sub"), true);
+      return;
+    }
+    var countryBtn = e.target.closest("[data-dir-iso]");
+    if (countryBtn) {
+      selectCountryByIso(countryBtn.getAttribute("data-dir-iso"), null, true);
+    }
+  });
+
+  // Toolbar controls
+  crumbWorld.addEventListener("click", function () {
+    searchInput.value = "";
+    searchClear.hidden = true;
+    resetToWorld();
+  });
+  document.getElementById("zoom-reset").addEventListener("click", function () {
+    searchInput.value = "";
+    searchClear.hidden = true;
+    resetToWorld();
+  });
+  document.getElementById("zoom-in").addEventListener("click", function () {
+    svg.transition().duration(250).call(zoom.scaleBy, 1.5);
+  });
+  document.getElementById("zoom-out").addEventListener("click", function () {
+    svg.transition().duration(250).call(zoom.scaleBy, 0.67);
+  });
+
+  // Language & theme toggles
+  document.getElementById("lang-toggle").addEventListener("click", function () {
+    lang = lang === "en" ? "zh" : "en";
+    syncLanguageUI();
+  });
+
+  var root = document.documentElement;
+  var themeBtn = document.getElementById("theme-toggle");
+  function systemDark() { return !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches); }
+  function currentTheme() { return root.getAttribute("data-theme") || (systemDark() ? "dark" : "light"); }
+  function syncThemeLabel() { themeBtn.textContent = currentTheme() === "dark" ? "Light mode" : "Dark mode"; }
+  themeBtn.addEventListener("click", function () {
+    var next = currentTheme() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    syncThemeLabel();
+  });
+  syncThemeLabel();
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // =========================================================================
+  // 10. INITIALIZE ATLAS TOPOJSON DATA
+  // =========================================================================
+  Promise.all([
+    fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(function (r) { return r.json(); }),
+    fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(function (r) { return r.json(); })
+  ]).then(function (results) {
+    var worldAtlas = results[0];
+    var usAtlas = results[1];
+    worldGeo = topojson.feature(worldAtlas, worldAtlas.objects.countries);
+    usStatesGeo = topojson.feature(usAtlas, usAtlas.objects.states);
+    syncLanguageUI();
+  }).catch(function (err) {
+    console.error("Failed to load map atlas:", err);
+    syncLanguageUI();
+  });
+})();
+</script>
+</body>
+</html>

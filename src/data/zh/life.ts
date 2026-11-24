@@ -17,6 +17,19 @@ const photoTranslations: Record<
     captionParts?: LifeContent["photos"][number]["captionParts"];
   }
 > = {
+  "Spending time with Li Kun and his family in Guangzhou": {
+    alt: "在广州与李堃及其家人相聚",
+    caption: "在广州拜访李堃及其家人",
+    meta: "广州 · 2026年11月",
+    captionParts: [
+      { text: "在广州拜访" },
+      {
+        text: "李堃",
+        href: "https://www.linkedin.com/in/mac-li-16789b175/",
+      },
+      { text: "及其家人" },
+    ],
+  },
   "View of the Three Gorges Dam spanning the Yangtze River in Hubei, China": {
     alt: "中国湖北横跨长江的三峡大坝",
     caption:
@@ -47,12 +60,12 @@ const photoTranslations: Record<
     {
       alt: "北京附近蜿蜒于青山之上的长城景色",
       caption: "语言沉浸学习期间徒步长城",
-      meta: "北京 · 2025年8月",
+      meta: "北京 · 2024年8月",
     },
   "Hall of Prayer for Good Harvests at the Temple of Heaven in Beijing": {
     alt: "北京天坛祈年殿",
     caption: "语言沉浸学习期间参观天坛",
-    meta: "北京 · 2025年8月",
+    meta: "北京 · 2024年8月",
   },
   "Celebrating Hendry's birthday in New York City": {
     alt: "在纽约市为 Hendry 庆祝生日",
