@@ -1,0 +1,252 @@
+---
+import type { PlacesContent } from "@data/en/places";
+import { normalizeIso } from "@lib/places/explorer";
+
+interface Props {
+  content: PlacesContent;
+}
+
+const { content } = Astro.props;
+---
+
+<div class="explorer-controls">
+  <div class="search-box" id="country-search-box">
+    <svg
+      class="search-icon"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      aria-hidden="true"
+    >
+      <circle cx="8.5" cy="8.5" r="5.75"></circle>
+      <path d="M13 13l4.2 4.2" stroke-linecap="round"></path>
+    </svg>
+    <input
+      type="text"
+      id="country-search-input"
+      class="search-input"
+      autocomplete="off"
+      role="combobox"
+      aria-expanded="false"
+      aria-autocomplete="list"
+      aria-controls="country-search-dropdown"
+      placeholder={content.searchPlaceholder}
+    />
+    <button
+      type="button"
+      class="search-clear"
+      id="country-search-clear"
+      aria-label={content.clearSearchAria}
+      hidden
+    >
+      ×
+    </button>
+    <div
+      class="search-dropdown"
+      id="country-search-dropdown"
+      role="listbox"
+      hidden
+    ></div>
+  </div>
+
+  <div class="quick-jumps" id="quick-jumps" aria-label={content.title}>
+    <button type="button" class="jump-chip active" data-jump="world">
+      {content.worldLabel}
+    </button>
+    {content.countries.map((country) => (
+      <button
+        type="button"
+        class="jump-chip"
+        data-jump={normalizeIso(country.isoNumeric)}
+      >
+        {country.name} ({country.subdivisions.length})
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  [hidden] {
+    display: none !important;
+  }
+
+  .explorer-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: var(--font-sans);
+  }
+
+  .search-box {
+    position: relative;
+    flex: 1 1 260px;
+    min-width: 220px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 8px 34px 8px 35px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .search-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-soft);
+  }
+
+  .search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 50%;
+    transition:
+      color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .search-clear:hover {
+    color: var(--color-text);
+    background: var(--color-surface-subtle);
+  }
+
+  .search-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 290px;
+    overflow-y: auto;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+    z-index: 30;
+    padding: 4px;
+  }
+
+  :global(.dropdown-group-hdr) {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    padding: 8px 10px 4px;
+  }
+
+  :global(.dropdown-item) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  :global(.dropdown-item:hover),
+  :global(.dropdown-item.highlighted) {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  :global(.dropdown-item-meta) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  :global(.badge-visited) {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    padding: 1px 8px;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+
+  :global(.dropdown-empty) {
+    padding: 14px 12px;
+    font-size: 0.86rem;
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .quick-jumps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .jump-chip {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 5px 12px;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .jump-chip:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+
+  .jump-chip.active {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: transparent;
+    font-weight: 600;
+  }
+</style>

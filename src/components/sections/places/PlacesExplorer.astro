@@ -1,0 +1,692 @@
+---
+import type { PlacesContent } from "@data/en/places";
+import PlacesStats from "./PlacesStats.astro";
+import CountrySearchBox from "./CountrySearchBox.astro";
+import VisitedMapCanvas from "./VisitedMapCanvas.astro";
+import RegionInspector from "./RegionInspector.astro";
+import VisitedDirectory from "./VisitedDirectory.astro";
+
+interface Props {
+  content: PlacesContent;
+}
+
+const { content } = Astro.props;
+---
+
+<div class="places-explorer" id="places-explorer">
+  <PlacesStats content={content} />
+  <CountrySearchBox content={content} />
+  <VisitedMapCanvas content={content} />
+  <RegionInspector />
+  <VisitedDirectory content={content} />
+</div>
+
+<script
+  type="application/json"
+  id="places-explorer-data"
+  set:html={JSON.stringify(content)}
+/>
+<script>
+  import * as d3 from "d3";
+  import * as topojson from "topojson-client";
+  import worldAtlas from "world-atlas/countries-110m.json";
+  import usAtlas from "us-atlas/states-10m.json";
+  import type { CountryVisit, PlacesContent } from "@data/en/places";
+  import {
+    buildWorldCountryIndex,
+    escapeHtml,
+    filterCountryOptions,
+    formatVisitRange,
+    getSubdivisionDisplayName,
+    getSubdivisionSummaryMeta,
+    getVisitCountLabel,
+    normalizeIso,
+    type WorldCountryOption,
+  } from "@lib/places/explorer";
+
+  const dataEl = document.getElementById("places-explorer-data");
+  if (dataEl?.textContent) {
+    const content: PlacesContent = JSON.parse(dataEl.textContent);
+
+    const visitedByIso = new Map<string, CountryVisit>(
+      content.countries.map((c) => [normalizeIso(c.isoNumeric), c]),
+    );
+
+    // Convert bundled TopoJSON -> GeoJSON
+    const worldGeo = topojson.feature(
+      worldAtlas as unknown as Parameters<typeof topojson.feature>[0],
+      (worldAtlas as any).objects.countries,
+    ) as unknown as GeoJSON.FeatureCollection;
+
+    const usStatesGeo = topojson.feature(
+      usAtlas as unknown as Parameters<typeof topojson.feature>[0],
+      (usAtlas as any).objects.states,
+    ) as unknown as GeoJSON.FeatureCollection;
+
+    const allWorldCountries = buildWorldCountryIndex(worldGeo, visitedByIso);
+    const subGeoCache = new Map<string, GeoJSON.FeatureCollection>();
+
+    // Explorer State
+    let activeCountryIso: string | null = null;
+    let activeSubdivision: string | null = null;
+    let dropdownHighlightIdx = -1;
+
+    // Map Dimensions & D3 Layers
+    const width = 800;
+    const height = 440;
+    const padding = 24;
+
+    const svg = d3.select<SVGSVGElement, unknown>("#visited-map-svg");
+    const rootLayer = svg.append("g");
+    const countriesLayer = rootLayer.append("g");
+    const subdivisionsLayer = rootLayer.append("g");
+
+    const worldProjection = d3
+      .geoNaturalEarth1()
+      .fitSize([width, height], worldGeo);
+    const worldPath = d3.geoPath().projection(worldProjection);
+
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
+      .scaleExtent([1, 14])
+      .on("zoom", (event) => {
+        rootLayer.attr("transform", event.transform.toString());
+      });
+
+    svg.call(zoom);
+
+    // DOM Elements
+    const canvasWrap = document.getElementById("canvas-wrap")!;
+    const tooltip = document.getElementById("map-tooltip")!;
+    const crumbWorld = document.getElementById("crumb-world")!;
+    const crumbSep = document.getElementById("crumb-sep")!;
+    const crumbCountry = document.getElementById("crumb-country")!;
+
+    const searchBox = document.getElementById("country-search-box")!;
+    const searchInput = document.getElementById(
+      "country-search-input",
+    ) as HTMLInputElement;
+    const searchClear = document.getElementById(
+      "country-search-clear",
+    ) as HTMLButtonElement;
+    const searchDropdown = document.getElementById("country-search-dropdown")!;
+    const quickJumpsEl = document.getElementById("quick-jumps")!;
+
+    const inspector = document.getElementById("inspector")!;
+    const inspectorTitle = document.getElementById("inspector-title")!;
+    const inspectorBadge = document.getElementById("inspector-badge")!;
+    const inspectorMeta = document.getElementById("inspector-meta")!;
+    const inspectorSummary = document.getElementById("inspector-summary")!;
+    const subFilterBar = document.getElementById("sub-filter-bar")!;
+    const regionCards = document.getElementById("region-cards")!;
+
+    function showTooltip(event: MouseEvent, text: string) {
+      const rect = canvasWrap.getBoundingClientRect();
+      tooltip.textContent = text;
+      tooltip.hidden = false;
+      tooltip.style.left = `${event.clientX - rect.left + 12}px`;
+      tooltip.style.top = `${event.clientY - rect.top - 28}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.hidden = true;
+    }
+
+    function syncQuickJumps() {
+      quickJumpsEl
+        .querySelectorAll<HTMLButtonElement>(".jump-chip")
+        .forEach((chip) => {
+          const jump = chip.dataset.jump;
+          const isActive =
+            (!activeCountryIso && jump === "world") ||
+            (activeCountryIso !== null && jump === activeCountryIso);
+          chip.classList.toggle("active", isActive);
+        });
+    }
+
+    function renderDropdown(query: string) {
+      const { visited, other } = filterCountryOptions(allWorldCountries, query);
+      dropdownHighlightIdx = -1;
+
+      if (visited.length === 0 && other.length === 0) {
+        searchDropdown.innerHTML = `<div class="dropdown-empty">${escapeHtml(content.noSearchResults)}</div>`;
+        searchDropdown.hidden = false;
+        searchInput.setAttribute("aria-expanded", "true");
+        return;
+      }
+
+      let html = "";
+      if (visited.length > 0) {
+        html += `<div class="dropdown-group-hdr">${escapeHtml(content.visitedGroupLabel)} (${visited.length})</div>`;
+        for (const item of visited) {
+          html += `<button type="button" class="dropdown-item" role="option" data-iso="${item.iso}">
+            <span>${escapeHtml(item.name)}</span>
+            <span class="dropdown-item-meta"><span class="badge-visited">${escapeHtml(content.visitedBadge)} · ${item.subCount}</span></span>
+          </button>`;
+        }
+      }
+
+      if (other.length > 0) {
+        html += `<div class="dropdown-group-hdr">${escapeHtml(content.allCountriesGroupLabel)} (${other.length})</div>`;
+        for (const item of other) {
+          html += `<button type="button" class="dropdown-item" role="option" data-iso="${item.iso}">
+            <span>${escapeHtml(item.name)}</span>
+          </button>`;
+        }
+      }
+
+      searchDropdown.innerHTML = html;
+      searchDropdown.hidden = false;
+      searchInput.setAttribute("aria-expanded", "true");
+    }
+
+    function closeDropdown() {
+      searchDropdown.hidden = true;
+      searchInput.setAttribute("aria-expanded", "false");
+      dropdownHighlightIdx = -1;
+    }
+
+    function renderVisitedInspector(country: CountryVisit) {
+      inspector.hidden = false;
+      inspectorTitle.textContent = country.name;
+      inspectorBadge.textContent = country.statusLabel ?? content.visitedBadge;
+      inspectorBadge.className = "status-pill";
+      inspectorMeta.textContent = country.period ?? "";
+      inspectorSummary.textContent = country.summary;
+
+      subFilterBar.hidden = false;
+      const allActive = !activeSubdivision;
+      let pillsHtml = `<button type="button" class="sub-pill${allActive ? " active" : ""}" data-sub-filter="">${escapeHtml(content.allSubdivisionsLabel)} (${country.subdivisions.length})</button>`;
+
+      for (const sub of country.subdivisions) {
+        const isSelected =
+          activeSubdivision !== null &&
+          activeSubdivision.toLowerCase() === sub.name.toLowerCase();
+        const vCount = sub.visits.length;
+        const label = getSubdivisionDisplayName(sub);
+        pillsHtml += `<button type="button" class="sub-pill${isSelected ? " active" : ""}" data-sub-filter="${escapeHtml(sub.name)}">${escapeHtml(label)}${vCount > 1 ? ` (${vCount})` : ""}</button>`;
+      }
+      subFilterBar.innerHTML = pillsHtml;
+
+      regionCards.innerHTML = country.subdivisions
+        .map((sub) => {
+          const isSelected =
+            activeSubdivision !== null &&
+            activeSubdivision.toLowerCase() === sub.name.toLowerCase();
+          const displayTitle = getSubdivisionDisplayName(sub);
+          const meta = getSubdivisionSummaryMeta(sub, content.presentLabel);
+          const countLabel = getVisitCountLabel(meta, content);
+
+          const badgeHtml = countLabel
+            ? `<span class="visit-count-badge${meta.hasCurrent ? " current" : ""}">${escapeHtml(countLabel)}</span>`
+            : "";
+
+          const timelineEntriesHtml = sub.visits
+            .map((visit) => {
+              const dotClass = visit.isCurrent
+                ? "is-current"
+                : visit.kind === "stay"
+                  ? "is-stay"
+                  : "is-trip";
+              const rangeLabel = formatVisitRange(visit, content.presentLabel);
+              const roleTag = visit.role
+                ? `<span class="role-tag">${escapeHtml(visit.role)}</span>`
+                : "";
+              const cityTags = (visit.cities ?? [])
+                .map(
+                  (city) => `<span class="city-tag">${escapeHtml(city)}</span>`,
+                )
+                .join("");
+
+              const noteHtml = visit.note
+                ? `<p class="visit-note">${escapeHtml(visit.note)}</p>`
+                : `<p class="visit-note placeholder">Visited ${escapeHtml(displayTitle)}.</p>`;
+
+              return `<div class="visit-entry ${dotClass}">
+                <div class="visit-meta-row">
+                  <span class="visit-date">${escapeHtml(rangeLabel)}</span>
+                  ${roleTag}${cityTags}
+                </div>
+                ${noteHtml}
+              </div>`;
+            })
+            .join("");
+
+          return `<article class="region-card${isSelected ? " active" : ""}" data-card-sub="${escapeHtml(sub.name)}">
+            <div class="region-card-head">
+              <div class="region-title-left">
+                <span class="region-name">${escapeHtml(displayTitle)}</span>
+                ${badgeHtml}
+              </div>
+              ${meta.spanText ? `<span class="region-span">${escapeHtml(meta.spanText)}</span>` : ""}
+            </div>
+            <div class="visit-timeline${sub.visits.length <= 1 ? " single" : ""}">
+              ${timelineEntriesHtml}
+            </div>
+          </article>`;
+        })
+        .join("");
+    }
+
+    function renderUnvisitedInspector(entry: WorldCountryOption) {
+      inspector.hidden = false;
+      inspectorTitle.textContent = entry.name;
+      inspectorBadge.textContent = content.unvisitedBadge;
+      inspectorBadge.className = "status-pill unvisited";
+      inspectorMeta.textContent = "";
+      inspectorSummary.textContent = content.unvisitedNote;
+      subFilterBar.hidden = true;
+      regionCards.innerHTML = "";
+    }
+
+    function highlightSubdivisionOnMap() {
+      subdivisionsLayer
+        .selectAll<SVGPathElement, any>("path.subdivision")
+        .classed("selected", (d) => {
+          if (!activeSubdivision) return false;
+          const rawName = String(
+            d.properties?.name ?? d.properties?.NAME ?? "",
+          );
+          return rawName.toLowerCase() === activeSubdivision.toLowerCase();
+        });
+    }
+
+    async function loadSubdivisions(
+      country: CountryVisit,
+    ): Promise<GeoJSON.FeatureCollection | null> {
+      const iso = normalizeIso(country.isoNumeric);
+      if (iso === "840") return usStatesGeo;
+      if (!country.subdivisionsUrl) return null;
+
+      const cached = subGeoCache.get(country.subdivisionsUrl);
+      if (cached) return cached;
+
+      try {
+        const res = await fetch(country.subdivisionsUrl);
+        if (!res.ok) return null;
+        const json = (await res.json()) as GeoJSON.FeatureCollection;
+        subGeoCache.set(country.subdivisionsUrl, json);
+        return json;
+      } catch {
+        return null;
+      }
+    }
+
+    function getFlatCountryProjection(
+      country: CountryVisit,
+      targetGeo: GeoJSON.Feature | GeoJSON.FeatureCollection,
+    ): d3.GeoProjection {
+      const bounds: [[number, number], [number, number]] = [
+        [padding, padding],
+        [width - padding, height - padding],
+      ];
+
+      if (normalizeIso(country.isoNumeric) === "840") {
+        return d3.geoAlbersUsa().fitExtent(bounds, targetGeo as any);
+      }
+      return d3.geoMercator().fitExtent(bounds, targetGeo as any);
+    }
+
+    async function drillIntoVisitedCountry(
+      feature: GeoJSON.Feature,
+      country: CountryVisit,
+      targetSubName: string | null = null,
+    ) {
+      hideTooltip();
+      activeCountryIso = normalizeIso(country.isoNumeric);
+      activeSubdivision = targetSubName;
+
+      crumbWorld.classList.remove("active");
+      crumbSep.hidden = false;
+      crumbCountry.hidden = false;
+      crumbCountry.textContent = country.name;
+
+      syncQuickJumps();
+      renderVisitedInspector(country);
+
+      const subGeo = await loadSubdivisions(country);
+      const fitTarget = subGeo ?? feature;
+      const flatProjection = getFlatCountryProjection(country, fitTarget);
+      const flatPath = d3.geoPath().projection(flatProjection);
+
+      countriesLayer.style("display", "none");
+      svg.call(zoom.transform, d3.zoomIdentity);
+      subdivisionsLayer.selectAll("*").remove();
+
+      const visitedSubMap = new Map(
+        country.subdivisions.map((s) => [s.name.toLowerCase(), s]),
+      );
+      const featuresToDraw = subGeo ? subGeo.features : [feature];
+
+      subdivisionsLayer
+        .selectAll("path")
+        .data(featuresToDraw)
+        .join("path")
+        .attr("d", flatPath as any)
+        .attr("class", (d: any) => {
+          if (!subGeo) return "subdivision visited";
+          const rawName = String(
+            d.properties?.name ?? d.properties?.NAME ?? "",
+          );
+          const isVis = visitedSubMap.has(rawName.toLowerCase());
+          const isSel =
+            activeSubdivision !== null &&
+            rawName.toLowerCase() === activeSubdivision.toLowerCase();
+          return `subdivision${isVis ? " visited" : ""}${isSel ? " selected" : ""}`;
+        })
+        .on("mousemove", (event: MouseEvent, d: any) => {
+          const rawName = String(
+            d.properties?.name ?? d.properties?.NAME ?? country.name,
+          );
+          const subObj = visitedSubMap.get(rawName.toLowerCase());
+          if (subObj) {
+            const meta = getSubdivisionSummaryMeta(
+              subObj,
+              content.presentLabel,
+            );
+            const title = getSubdivisionDisplayName(subObj);
+            const extra =
+              meta.count > 1
+                ? ` · ${meta.count} ${content.visitPlural}`
+                : meta.spanText
+                  ? ` · ${meta.spanText}`
+                  : "";
+            showTooltip(event, `${title}${extra}`);
+          } else if (rawName) {
+            showTooltip(event, rawName);
+          }
+        })
+        .on("mouseleave", hideTooltip)
+        .on("click", (event: MouseEvent, d: any) => {
+          event.stopPropagation();
+          const rawName = String(
+            d.properties?.name ?? d.properties?.NAME ?? "",
+          );
+          if (visitedSubMap.has(rawName.toLowerCase())) {
+            activeSubdivision =
+              activeSubdivision?.toLowerCase() === rawName.toLowerCase()
+                ? null
+                : rawName;
+            highlightSubdivisionOnMap();
+            renderVisitedInspector(country);
+          }
+        });
+    }
+
+    function focusUnvisitedCountry(entry: WorldCountryOption) {
+      hideTooltip();
+      activeCountryIso = entry.iso;
+      activeSubdivision = null;
+
+      subdivisionsLayer.selectAll("*").remove();
+      countriesLayer.style("display", null);
+
+      crumbWorld.classList.remove("active");
+      crumbSep.hidden = false;
+      crumbCountry.hidden = false;
+      crumbCountry.textContent = entry.name;
+
+      countriesLayer
+        .selectAll<SVGPathElement, GeoJSON.Feature>("path.country")
+        .classed("inspected", (d) => normalizeIso(d.id) === entry.iso);
+
+      const bounds = worldPath.bounds(entry.feature as any);
+      const dx = bounds[1][0] - bounds[0][0];
+      const dy = bounds[1][1] - bounds[0][1];
+      const x = (bounds[0][0] + bounds[1][0]) / 2;
+      const y = (bounds[0][1] + bounds[1][1]) / 2;
+      const scale = Math.max(
+        1.4,
+        Math.min(6, 0.55 / Math.max(dx / width, dy / height)),
+      );
+      const translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+      svg
+        .transition()
+        .duration(450)
+        .call(
+          zoom.transform,
+          d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale),
+        );
+
+      syncQuickJumps();
+      renderUnvisitedInspector(entry);
+    }
+
+    function resetToWorld() {
+      hideTooltip();
+      activeCountryIso = null;
+      activeSubdivision = null;
+      subdivisionsLayer.selectAll("*").remove();
+      countriesLayer.style("display", null);
+      countriesLayer.selectAll("path.country").classed("inspected", false);
+
+      crumbWorld.classList.add("active");
+      crumbSep.hidden = true;
+      crumbCountry.hidden = true;
+      inspector.hidden = true;
+
+      syncQuickJumps();
+      svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+    }
+
+    function selectCountryByIso(
+      iso: string,
+      targetSubName: string | null = null,
+      shouldScroll = false,
+    ) {
+      const padded = normalizeIso(iso);
+      const entry = allWorldCountries.find((c) => c.iso === padded);
+      if (!entry) return;
+
+      closeDropdown();
+      searchInput.value = entry.name;
+      searchClear.hidden = false;
+
+      if (entry.visited) {
+        const visitedObj = visitedByIso.get(padded);
+        if (visitedObj) {
+          drillIntoVisitedCountry(entry.feature, visitedObj, targetSubName);
+        }
+      } else {
+        focusUnvisitedCountry(entry);
+      }
+
+      if (shouldScroll) {
+        document
+          .getElementById("visited-map-shell")
+          ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+
+    // Draw initial world map
+    countriesLayer
+      .selectAll("path")
+      .data(worldGeo.features)
+      .join("path")
+      .attr("d", worldPath as any)
+      .attr("class", (d) =>
+        visitedByIso.has(normalizeIso(d.id)) ? "country visited" : "country",
+      )
+      .on("mousemove", (event: MouseEvent, d) => {
+        const id = normalizeIso(d.id);
+        const visited = visitedByIso.get(id);
+        const name = visited?.name ?? (d.properties as any)?.name ?? "";
+        if (name) {
+          showTooltip(
+            event,
+            visited ? `${name} · ${content.visitedBadge}` : name,
+          );
+        }
+      })
+      .on("mouseleave", hideTooltip)
+      .on("click", (event: MouseEvent, d) => {
+        event.stopPropagation();
+        const id = normalizeIso(d.id);
+        const visited = visitedByIso.get(id);
+        if (visited) {
+          searchInput.value = visited.name;
+          searchClear.hidden = false;
+          drillIntoVisitedCountry(d, visited, null);
+        }
+      });
+
+    // Event Listeners: Search Combobox
+    searchInput.addEventListener("focus", () =>
+      renderDropdown(searchInput.value),
+    );
+    searchInput.addEventListener("input", () => {
+      searchClear.hidden = searchInput.value.length === 0;
+      renderDropdown(searchInput.value);
+    });
+
+    searchClear.addEventListener("click", () => {
+      searchInput.value = "";
+      searchClear.hidden = true;
+      resetToWorld();
+      searchInput.focus();
+      renderDropdown("");
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+      const items = Array.from(
+        searchDropdown.querySelectorAll<HTMLButtonElement>(".dropdown-item"),
+      );
+      if (e.key === "Escape") {
+        closeDropdown();
+        return;
+      }
+      if (items.length === 0) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (searchDropdown.hidden) renderDropdown(searchInput.value);
+        dropdownHighlightIdx = (dropdownHighlightIdx + 1) % items.length;
+        items.forEach((el, idx) =>
+          el.classList.toggle("highlighted", idx === dropdownHighlightIdx),
+        );
+        items[dropdownHighlightIdx].scrollIntoView({ block: "nearest" });
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        dropdownHighlightIdx =
+          (dropdownHighlightIdx - 1 + items.length) % items.length;
+        items.forEach((el, idx) =>
+          el.classList.toggle("highlighted", idx === dropdownHighlightIdx),
+        );
+        items[dropdownHighlightIdx].scrollIntoView({ block: "nearest" });
+      } else if (
+        e.key === "Enter" &&
+        dropdownHighlightIdx >= 0 &&
+        items[dropdownHighlightIdx]
+      ) {
+        e.preventDefault();
+        const iso = items[dropdownHighlightIdx].dataset.iso;
+        if (iso) selectCountryByIso(iso, null, false);
+      }
+    });
+
+    searchDropdown.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
+        ".dropdown-item",
+      );
+      if (btn?.dataset.iso) {
+        selectCountryByIso(btn.dataset.iso, null, false);
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!searchBox.contains(e.target as Node)) {
+        closeDropdown();
+      }
+    });
+
+    // Event Listeners: Quick Jump Chips
+    quickJumpsEl.addEventListener("click", (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLButtonElement>(
+        ".jump-chip",
+      );
+      const target = chip?.dataset.jump;
+      if (!target) return;
+
+      if (target === "world") {
+        searchInput.value = "";
+        searchClear.hidden = true;
+        resetToWorld();
+      } else {
+        selectCountryByIso(target, null, false);
+      }
+    });
+
+    // Event Listeners: Inspector Filter Pills & Cards
+    subFilterBar.addEventListener("click", (e) => {
+      const pill = (e.target as HTMLElement).closest<HTMLButtonElement>(
+        ".sub-pill",
+      );
+      if (!pill || !activeCountryIso) return;
+      activeSubdivision = pill.dataset.subFilter || null;
+      highlightSubdivisionOnMap();
+      const visitedObj = visitedByIso.get(activeCountryIso);
+      if (visitedObj) renderVisitedInspector(visitedObj);
+    });
+
+    regionCards.addEventListener("click", (e) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>(
+        ".region-card",
+      );
+      const subName = card?.dataset.cardSub;
+      if (!subName || !activeCountryIso) return;
+
+      activeSubdivision =
+        activeSubdivision?.toLowerCase() === subName.toLowerCase()
+          ? null
+          : subName;
+      highlightSubdivisionOnMap();
+      const visitedObj = visitedByIso.get(activeCountryIso);
+      if (visitedObj) renderVisitedInspector(visitedObj);
+    });
+
+    // Event Listeners: Browsable Directory
+    document
+      .getElementById("directory-list")
+      ?.addEventListener("click", (e) => {
+        const subBtn = (e.target as HTMLElement).closest<HTMLElement>(
+          "[data-dir-sub]",
+        );
+        if (subBtn?.dataset.dirIso && subBtn.dataset.dirSub) {
+          selectCountryByIso(
+            subBtn.dataset.dirIso,
+            subBtn.dataset.dirSub,
+            true,
+          );
+          return;
+        }
+        const countryBtn = (e.target as HTMLElement).closest<HTMLElement>(
+          "[data-dir-iso]",
+        );
+        if (countryBtn?.dataset.dirIso) {
+          selectCountryByIso(countryBtn.dataset.dirIso, null, true);
+        }
+      });
+
+    // Event Listeners: Map Toolbar
+    crumbWorld.addEventListener("click", () => {
+      searchInput.value = "";
+      searchClear.hidden = true;
+      resetToWorld();
+    });
+
+    document.getElementById("zoom-reset")?.addEventListener("click", () => {
+      searchInput.value = "";
+      searchClear.hidden = true;
+      resetToWorld();
+    });
+
+    document.getElementById("zoom-in")?.addEventListener("click", () => {
+      svg.transition().duration(250).call(zoom.scaleBy, 1.5);
+    });
+
+    document.getElementById("zoom-out")?.addEventListener("click", () => {
+      svg.transition().duration(250).call(zoom.scaleBy, 0.67);
+    });
+  }
+</script>

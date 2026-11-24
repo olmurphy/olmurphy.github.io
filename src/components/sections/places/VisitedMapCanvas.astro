@@ -1,0 +1,267 @@
+---
+import type { PlacesContent } from "@data/en/places";
+
+interface Props {
+  content: PlacesContent;
+}
+
+const { content } = Astro.props;
+---
+
+<div class="map-shell" id="visited-map-shell">
+  <div class="map-toolbar">
+    <nav class="breadcrumb" aria-label="Map zoom level">
+      <button type="button" class="crumb active" id="crumb-world">
+        {content.worldLabel}
+      </button>
+      <span class="crumb-sep" id="crumb-sep" hidden>
+        /
+      </span>
+      <span class="crumb-current" id="crumb-country" hidden></span>
+    </nav>
+
+    <div class="zoom-controls">
+      <button type="button" class="ctrl-btn" id="zoom-in" aria-label="Zoom in">
+        +
+      </button>
+      <button
+        type="button"
+        class="ctrl-btn"
+        id="zoom-out"
+        aria-label="Zoom out"
+      >
+        −
+      </button>
+      <button type="button" class="ctrl-btn" id="zoom-reset">
+        {content.resetLabel}
+      </button>
+    </div>
+  </div>
+
+  <div class="canvas-wrap" id="canvas-wrap">
+    <svg
+      id="visited-map-svg"
+      viewBox="0 0 800 440"
+      role="img"
+      aria-label={content.title}
+    ></svg>
+    <div class="map-legend">
+      <span>
+        <span class="legend-dot on"></span>
+        {content.visitedBadge}
+      </span>
+      <span>
+        <span class="legend-dot off"></span>
+        {content.unvisitedBadge}
+      </span>
+    </div>
+    <div class="map-tooltip" id="map-tooltip" hidden></div>
+  </div>
+
+  <p class="small muted map-hint">{content.instructions}</p>
+</div>
+
+<style>
+  [hidden] {
+    display: none !important;
+  }
+
+  .map-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .crumb {
+    background: none;
+    border: none;
+    padding: 2px 7px;
+    font: inherit;
+    color: var(--color-accent);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+  }
+
+  .crumb:hover {
+    background: var(--color-accent-soft);
+  }
+
+  .crumb.active {
+    color: var(--color-text);
+    font-weight: 600;
+    cursor: default;
+  }
+
+  .crumb.active:hover {
+    background: none;
+  }
+
+  .crumb-sep,
+  .crumb-current {
+    color: var(--color-text-muted);
+  }
+
+  .zoom-controls {
+    display: flex;
+    gap: 6px;
+  }
+
+  .ctrl-btn {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-pill);
+    padding: 2px 10px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .ctrl-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+
+  .canvas-wrap {
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-bg);
+    overflow: hidden;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  svg:active {
+    cursor: grabbing;
+  }
+
+  :global(.country) {
+    fill: var(--color-surface-subtle);
+    stroke: var(--color-border);
+    stroke-width: 0.6px;
+    transition:
+      fill var(--transition-fast),
+      fill-opacity var(--transition-fast);
+  }
+
+  :global(.country.visited) {
+    fill: var(--color-accent);
+    fill-opacity: 0.72;
+    cursor: pointer;
+  }
+
+  :global(.country.visited:hover) {
+    fill-opacity: 0.95;
+  }
+
+  :global(.country.inspected) {
+    fill: var(--color-text-muted);
+    fill-opacity: 0.45;
+    stroke: var(--color-text);
+    stroke-width: 1.1px;
+  }
+
+  :global(.subdivision) {
+    fill: var(--color-surface-subtle);
+    stroke: var(--color-border);
+    stroke-width: 0.6px;
+    vector-effect: non-scaling-stroke;
+    transition:
+      fill var(--transition-fast),
+      fill-opacity var(--transition-fast),
+      stroke var(--transition-fast);
+  }
+
+  :global(.subdivision.visited) {
+    fill: var(--color-accent);
+    fill-opacity: 0.76;
+    cursor: pointer;
+  }
+
+  :global(.subdivision.visited:hover) {
+    fill-opacity: 0.96;
+  }
+
+  :global(.subdivision.selected) {
+    fill: var(--color-accent);
+    fill-opacity: 1;
+    stroke: var(--color-text);
+    stroke-width: 1.4px;
+  }
+
+  .map-legend {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    display: flex;
+    gap: 14px;
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .legend-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  .legend-dot.on {
+    background: var(--color-accent);
+    opacity: 0.82;
+  }
+
+  .legend-dot.off {
+    background: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+  }
+
+  .map-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .map-hint {
+    margin-top: 8px;
+  }
+</style>

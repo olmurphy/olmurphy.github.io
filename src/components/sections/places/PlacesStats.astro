@@ -1,0 +1,63 @@
+---
+import type { PlacesContent } from "@data/en/places";
+import { computePlacesMetrics } from "@lib/places/explorer";
+
+interface Props {
+  content: PlacesContent;
+}
+
+const { content } = Astro.props;
+const metrics = computePlacesMetrics(content.countries);
+
+const statItems = [
+  { value: metrics.countries, label: content.stats.countries },
+  { value: metrics.subdivisions, label: content.stats.subdivisions },
+  { value: metrics.visits, label: content.stats.visits },
+  { value: metrics.cities, label: content.stats.cities },
+];
+---
+
+<div class="stats-row" aria-label={content.title}>
+  {statItems.map((item) => (
+    <div class="stat-item">
+      <div class="stat-num">{item.value}</div>
+      <div class="stat-lbl">{item.label}</div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 36px;
+    margin: 20px 0 24px;
+    padding: 14px 18px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface-subtle);
+  }
+
+  .stat-num {
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--color-text);
+  }
+
+  .stat-lbl {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .stats-row {
+      gap: 12px 24px;
+    }
+  }
+</style>

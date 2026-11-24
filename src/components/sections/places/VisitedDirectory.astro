@@ -1,0 +1,234 @@
+---
+import type { PlacesContent } from "@data/en/places";
+import {
+  getSubdivisionDisplayName,
+  getSubdivisionSummaryMeta,
+  getVisitCountLabel,
+  normalizeIso,
+} from "@lib/places/explorer";
+
+interface Props {
+  content: PlacesContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section aria-labelledby="directory-heading">
+  <div class="directory-header">
+    <h2 id="directory-heading">{content.directoryHeading}</h2>
+    <span class="directory-sub">{content.directorySub}</span>
+  </div>
+
+  <div class="directory-list" id="directory-list">
+    {content.countries.map((country) => {
+      const iso = normalizeIso(country.isoNumeric);
+      return (
+        <article class="dir-country">
+          <div class="dir-country-top">
+            <div class="dir-country-title">
+              <h3>{country.name}</h3>
+              <span class="status-pill">
+                {country.statusLabel ?? content.visitedBadge}
+              </span>
+            </div>
+            <button type="button" class="view-on-map-btn" data-dir-iso={iso}>
+              {content.viewOnMap}
+            </button>
+          </div>
+
+          <p class="small muted dir-country-summary">{country.summary}</p>
+
+          <div class="dir-sub-grid">
+            {country.subdivisions.map((sub) => {
+              const title = getSubdivisionDisplayName(sub);
+              const meta = getSubdivisionSummaryMeta(sub, content.presentLabel);
+              const countLabel = getVisitCountLabel(meta, content);
+              return (
+                <button
+                  type="button"
+                  class="dir-sub-item"
+                  data-dir-iso={iso}
+                  data-dir-sub={sub.name}
+                >
+                  <div class="dir-sub-top">
+                    <span class="dir-sub-name">{title}</span>
+                    {countLabel && (
+                      <span class="dir-sub-count">{countLabel}</span>
+                    )}
+                  </div>
+                  {meta.spanText && (
+                    <span class="dir-sub-period">{meta.spanText}</span>
+                  )}
+                  {meta.cities.length > 0 && (
+                    <span class="dir-sub-cities">
+                      {meta.cities.join(" · ")}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .directory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 40px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .directory-header h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .directory-sub {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
+  .directory-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .dir-country {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    transition: border-color var(--transition-fast);
+  }
+
+  .dir-country:hover {
+    border-color: var(--color-accent);
+  }
+
+  .dir-country-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+
+  .dir-country-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .dir-country-title h3 {
+    font-size: 1.12rem;
+    margin: 0;
+  }
+
+  .status-pill {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  .dir-country-summary {
+    margin-bottom: 4px;
+  }
+
+  .view-on-map-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-accent);
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .view-on-map-btn:hover {
+    background: var(--color-accent-soft);
+    border-color: var(--color-accent);
+  }
+
+  .dir-sub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .dir-sub-item {
+    text-align: left;
+    background: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 9px 11px;
+    cursor: pointer;
+    transition:
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .dir-sub-item:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+
+  .dir-sub-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .dir-sub-name {
+    font-family: var(--font-serif);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .dir-sub-count {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    color: var(--color-accent);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .dir-sub-period {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  .dir-sub-cities {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    color: var(--color-text-muted);
+    margin-top: 1px;
+  }
+</style>

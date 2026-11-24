@@ -1,27 +1,30 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { SITE } from "@config/site";
 import { getContent } from "@data";
-import { getLocaleStaticPaths, type Locale } from "@i18n/config";
-import VisitedMap from "@components/sections/places/VisitedMap.astro";
+import { LOCALES, type Locale } from "@i18n/config";
+import PlacesExplorer from "@components/sections/places/PlacesExplorer.astro";
 
 export function getStaticPaths() {
-  return getLocaleStaticPaths();
+  return LOCALES.map((lang) => ({
+    params: { lang: lang === "en" ? undefined : lang },
+    props: { lang },
+  }));
 }
 
-const { lang } = Astro.props as { lang: Locale };
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
 const content = getContent(lang).places;
 ---
 
 <BaseLayout
-  lang={lang}
-  title={
-    lang === "en" ? `Places — ${SITE.name}` : `${content.title} — ${SITE.name}`
-  }
+  title={`${content.title} — Owen Li Murphy`}
   description={content.subtitle}
+  lang={lang}
 >
   <h1>{content.title}</h1>
   <p class="muted">{content.subtitle}</p>
-
-  <VisitedMap content={content} />
+  <PlacesExplorer content={content} />
 </BaseLayout>

@@ -134,6 +134,9 @@ importers:
       '@types/d3':
         specifier: ^7.4.3
         version: 7.4.3
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
       '@types/topojson-client':
         specifier: ^3.1.5
         version: 3.1.5
