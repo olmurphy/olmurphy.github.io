@@ -95,6 +95,95 @@ export const PLACES_CONTENT: PlacesContent = {
   },
   countries: [
     {
+      isoNumeric: "124",
+      name: "Canada",
+      statusLabel: "Visited · Travel",
+      period: "Jul 2025",
+      summary:
+        "Traveled to Toronto in July 2025 to visit a friend and explore the city.",
+      subdivisionsUrl:
+        "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/canada.geojson",
+      subdivisions: [
+        {
+          name: "Ontario",
+          displayName: "Ontario",
+          visits: [
+            {
+              start: "Jul 12, 2025",
+              end: "Jul 20, 2025",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Toronto"],
+              note: "Visited a friend in Toronto and explored the city.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      isoNumeric: "044",
+      name: "The Bahamas",
+      statusLabel: "Visited · Travel",
+      period: "Dec 2024",
+      summary: "Spent the Christmas holidays in The Bahamas in December 2024.",
+      subdivisions: [
+        {
+          name: "New Providence",
+          displayName: "New Providence (Nassau)",
+          visits: [
+            {
+              start: "Dec 22, 2024",
+              end: "Dec 28, 2024",
+              kind: "trip",
+              role: "Holiday Travel",
+              cities: ["Nassau"],
+              note: "Christmas holiday trip to The Bahamas.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      isoNumeric: "826",
+      name: "United Kingdom",
+      statusLabel: "Visited · Travel",
+      period: "Feb 2020",
+      summary:
+        "Visited London and Guildford in February 2020 to see my brother perform in Oklahoma! at the Guildford School of Acting.",
+      subdivisionsUrl:
+        "https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/eng/lad.json",
+      subdivisions: [
+        {
+          name: "Guildford",
+          displayName: "Guildford (Surrey)",
+          visits: [
+            {
+              start: "Feb 19, 2020",
+              end: "Feb 23, 2020",
+              kind: "trip",
+              role: "Family & Travel",
+              cities: ["Guildford"],
+              note: "Visited Guildford School of Acting (University of Surrey) to watch my brother perform in the musical Oklahoma!.",
+            },
+          ],
+        },
+        {
+          name: "City of London",
+          displayName: "London",
+          visits: [
+            {
+              start: "Feb 19, 2020",
+              end: "Feb 23, 2020",
+              kind: "trip",
+              role: "Travel",
+              cities: ["London"],
+              note: "Explored London during a trip to the UK.",
+            },
+          ],
+        },
+      ],
+    },
+    {
       isoNumeric: "484",
       name: "Mexico",
       statusLabel: "Visited · Travel",
@@ -184,19 +273,6 @@ export const PLACES_CONTENT: PlacesContent = {
           ],
         },
         {
-          name: "Georgia",
-          visits: [
-            {
-              start: "Aug 2025",
-              isCurrent: true,
-              kind: "stay",
-              role: "Graduate Studies",
-              cities: ["Atlanta"],
-              note: "Georgia Tech M.S. in Computer Science (Machine Learning specialization).",
-            },
-          ],
-        },
-        {
           name: "California",
           visits: [
             {
@@ -222,6 +298,28 @@ export const PLACES_CONTENT: PlacesContent = {
         "https://cdn.jsdelivr.net/gh/longwosion/geojson-map-china@master/china.json",
       subdivisions: [
         {
+          name: "广东省",
+          displayName: "Guangdong",
+          visits: [
+            {
+              start: "Nov 22, 2026",
+              end: "Nov 22, 2026",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Shenzhen"],
+              note: "Visited Shenzhen and spent time with Li Kun (Mac Li), his wife, and his family.",
+            },
+            {
+              start: "Nov 19, 2026",
+              end: "Nov 22, 2026",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Guangzhou"],
+              note: "Traveled to Guangzhou to visit Canton Tower and catch up with Li Kun (Mac Li), his wife, and his family.",
+            },
+          ],
+        },
+        {
           name: "上海市",
           displayName: "Shanghai",
           visits: [
@@ -235,18 +333,105 @@ export const PLACES_CONTENT: PlacesContent = {
             },
           ],
         },
+
+        {
+          name: "湖北省",
+          displayName: "Hubei",
+          visits: [
+            {
+              start: "Oct 4, 2026",
+              end: "Oct 4, 2026",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Yichang"],
+              note: "Visited the Three Gorges Dam spanning the Yangtze River in Yichang.",
+            },
+            {
+              start: "Oct 1, 2026",
+              end: "Oct 5, 2026",
+              kind: "trip",
+              role: "Family & Travel",
+              cities: ["Wuhan"],
+              note: "Visited my partner's family and explored Wuhan during the National Day holiday.",
+            },
+          ],
+        },
+        {
+          name: "江苏省",
+          displayName: "Jiangsu",
+          visits: [
+            {
+              start: "Nov 15, 2025",
+              end: "Nov 16, 2025",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Suzhou"],
+              note: "Weekend trip to Suzhou.",
+            },
+          ],
+        },
+
+        {
+          name: "香港特别行政区",
+          displayName: "Hong Kong",
+          visits: [
+            {
+              start: "Feb 19, 2026",
+              end: "Feb 22, 2026",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Hong Kong"],
+              note: "Traveled to Hong Kong.",
+            },
+          ],
+        },
+        {
+          name: "澳门特别行政区",
+          displayName: "Macau",
+          visits: [
+            {
+              start: "Feb 22, 2026",
+              end: "Feb 22, 2026",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Macau"],
+              note: "Day trip to Macau.",
+            },
+          ],
+        },
+        {
+          name: "浙江省",
+          displayName: "Zhejiang",
+          visits: [
+            {
+              start: "Mar 14, 2026",
+              end: "Mar 14, 2026",
+              kind: "trip",
+              role: "Sourcing & Trade",
+              cities: ["Yiwu"],
+              note: "Visited Yiwu International Trade City (District 2) for cross-border product sourcing and supplier research.",
+            },
+          ],
+        },
+
+        {
+          name: "山西省",
+          displayName: "Shanxi",
+          visits: [
+            {
+              start: "Sep 1, 2024",
+              end: "Sep 8, 2024",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Taiyuan"],
+              note: "Traveled to Taiyuan with a friend and visited her family.",
+            },
+          ],
+        },
         {
           name: "北京市",
           displayName: "Beijing",
           visits: [
-            {
-              start: "Aug 2025",
-              end: "Aug 2025",
-              kind: "trip",
-              role: "Travel",
-              cities: ["Beijing"],
-              note: "Returned to Beijing to hike the Great Wall and tour the Temple of Heaven.",
-            },
             {
               start: "Aug 2024",
               end: "Aug 2024",
@@ -254,20 +439,6 @@ export const PLACES_CONTENT: PlacesContent = {
               role: "Language Immersion",
               cities: ["Beijing"],
               note: "Completed a one-month intensive Chinese language program at Beijing Language and Culture University (BLCU).",
-            },
-          ],
-        },
-        {
-          name: "湖北省",
-          displayName: "Hubei Province",
-          visits: [
-            {
-              start: "Oct 2026",
-              end: "Oct 2026",
-              kind: "trip",
-              role: "Travel",
-              cities: ["Yichang"],
-              note: "Visited the Three Gorges Dam spanning the Yangtze River in Yichang.",
             },
           ],
         },

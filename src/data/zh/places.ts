@@ -33,6 +33,94 @@ export const PLACES_CONTENT: PlacesContent = {
   },
   countries: [
     {
+      isoNumeric: "124",
+      name: "加拿大",
+      statusLabel: "到访过 · 旅行",
+      period: "2025年7月",
+      summary: "2025年7月前往加拿大多伦多探望朋友并游览当地。",
+      subdivisionsUrl:
+        "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/canada.geojson",
+      subdivisions: [
+        {
+          name: "Ontario",
+          displayName: "安大略省",
+          visits: [
+            {
+              start: "2025年7月12日",
+              end: "2025年7月20日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["多伦多"],
+              note: "前往多伦多看望朋友并游览当地。",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      isoNumeric: "044",
+      name: "巴哈马",
+      statusLabel: "到访过 · 旅行",
+      period: "2024年12月",
+      summary: "2024年12月圣诞假期前往巴哈马旅行。",
+      subdivisions: [
+        {
+          name: "New Providence",
+          displayName: "新普罗维登斯岛（拿骚）",
+          visits: [
+            {
+              start: "2024年12月22日",
+              end: "2024年12月28日",
+              kind: "trip",
+              role: "圣诞假期旅行",
+              cities: ["拿骚"],
+              note: "圣诞节期间前往巴哈马度假旅行。",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      isoNumeric: "826",
+      name: "英国",
+      statusLabel: "到访过 · 旅行",
+      period: "2020年2月",
+      summary:
+        "2020年2月前往英国伦敦与吉尔福德，观看哥哥在吉尔福德演艺学院出演的音乐剧《俄克拉荷马！》。",
+      subdivisionsUrl:
+        "https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/eng/lad.json",
+      subdivisions: [
+        {
+          name: "Guildford",
+          displayName: "吉尔福德（萨里郡）",
+          visits: [
+            {
+              start: "2020年2月19日",
+              end: "2020年2月23日",
+              kind: "trip",
+              role: "探亲与旅行",
+              cities: ["吉尔福德"],
+              note: "前往萨里大学吉尔福德演艺学院（Guildford School of Acting），观看哥哥出演的音乐剧《俄克拉荷马！》（Oklahoma!）。",
+            },
+          ],
+        },
+        {
+          name: "City of London",
+          displayName: "伦敦",
+          visits: [
+            {
+              start: "2020年2月19日",
+              end: "2020年2月23日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["伦敦"],
+              note: "在英国旅行期间游览伦敦。",
+            },
+          ],
+        },
+      ],
+    },
+    {
       isoNumeric: "484",
       name: "墨西哥",
       statusLabel: "到访过 · 旅行",
@@ -97,7 +185,7 @@ export const PLACES_CONTENT: PlacesContent = {
         },
         {
           name: "New York",
-          displayName: "纽约州 (New York)",
+          displayName: "纽约州",
           visits: [
             {
               start: "2022年6月",
@@ -120,20 +208,6 @@ export const PLACES_CONTENT: PlacesContent = {
               role: "居住",
               cities: ["联合市"],
               note: "迁居上海前居住于哈德逊河畔的联合市。",
-            },
-          ],
-        },
-        {
-          name: "Georgia",
-          displayName: "佐治亚州",
-          visits: [
-            {
-              start: "2025年8月",
-              isCurrent: true,
-              kind: "stay",
-              role: "研究生学习",
-              cities: ["亚特兰大"],
-              note: "佐治亚理工学院计算机科学硕士项目（机器学习方向）。",
             },
           ],
         },
@@ -164,6 +238,28 @@ export const PLACES_CONTENT: PlacesContent = {
         "https://cdn.jsdelivr.net/gh/longwosion/geojson-map-china@master/china.json",
       subdivisions: [
         {
+          name: "广东省",
+          displayName: "广东省",
+          visits: [
+            {
+              start: "2026年11月22日",
+              end: "2026年11月22日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["深圳"],
+              note: "到访深圳，与好友李堃、李堃的妻子及家人相聚。",
+            },
+            {
+              start: "2026年11月19日",
+              end: "2026年11月22日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["广州"],
+              note: "前往广州游览广州塔，并与好友李堃、李堃的妻子及家人相聚。",
+            },
+          ],
+        },
+        {
           name: "上海市",
           displayName: "上海市",
           visits: [
@@ -177,18 +273,105 @@ export const PLACES_CONTENT: PlacesContent = {
             },
           ],
         },
+
+        {
+          name: "湖北省",
+          displayName: "湖北省",
+          visits: [
+            {
+              start: "2026年10月4日",
+              end: "2026年10月4日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["宜昌"],
+              note: "前往宜昌参观横跨长江的三峡大坝。",
+            },
+            {
+              start: "2026年10月1日",
+              end: "2026年10月5日",
+              kind: "trip",
+              role: "探亲与旅行",
+              cities: ["武汉"],
+              note: "国庆假期在武汉拜访伴侣家人并游览当地。",
+            },
+          ],
+        },
+        {
+          name: "浙江省",
+          displayName: "浙江省",
+          visits: [
+            {
+              start: "2026年3月14日",
+              end: "2026年3月14日",
+              kind: "trip",
+              role: "商务考察",
+              cities: ["义乌"],
+              note: "前往义乌国际商贸城（二区）实地考察跨境电商选品与供应链。",
+            },
+          ],
+        },
+
+        {
+          name: "香港特别行政区",
+          displayName: "香港特别行政区",
+          visits: [
+            {
+              start: "2026年2月19日",
+              end: "2026年2月22日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["香港"],
+              note: "前往香港旅游。",
+            },
+          ],
+        },
+        {
+          name: "澳门特别行政区",
+          displayName: "澳门特别行政区",
+          visits: [
+            {
+              start: "2026年2月22日",
+              end: "2026年2月22日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["澳门"],
+              note: "前往澳门一日游。",
+            },
+          ],
+        },
+
+        {
+          name: "江苏省",
+          displayName: "江苏省",
+          visits: [
+            {
+              start: "2025年11月15日",
+              end: "2025年11月16日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["苏州"],
+              note: "周末前往苏州旅游。",
+            },
+          ],
+        },
+        {
+          name: "山西省",
+          displayName: "山西省",
+          visits: [
+            {
+              start: "2024年9月1日",
+              end: "2024年9月8日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["太原"],
+              note: "与朋友一同前往太原旅行并看望她的家人。",
+            },
+          ],
+        },
         {
           name: "北京市",
           displayName: "北京市",
           visits: [
-            {
-              start: "2025年8月",
-              end: "2025年8月",
-              kind: "trip",
-              role: "旅行",
-              cities: ["北京"],
-              note: "重访北京，徒步长城并参观天坛祈年殿。",
-            },
             {
               start: "2024年8月",
               end: "2024年8月",
@@ -196,20 +379,6 @@ export const PLACES_CONTENT: PlacesContent = {
               role: "语言沉浸",
               cities: ["北京"],
               note: "于北京语言大学参加为期一个月的汉语强化项目。",
-            },
-          ],
-        },
-        {
-          name: "湖北省",
-          displayName: "湖北省",
-          visits: [
-            {
-              start: "2026年10月",
-              end: "2026年10月",
-              kind: "trip",
-              role: "旅行",
-              cities: ["宜昌"],
-              note: "参观横跨长江的三峡大坝。",
             },
           ],
         },
