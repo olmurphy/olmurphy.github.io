@@ -17,6 +17,11 @@ const photoTranslations: Record<
     captionParts?: LifeContent["photos"][number]["captionParts"];
   }
 > = {
+  "Standing in front of Canton Tower in Guangzhou": {
+    alt: "在广州塔前的留影",
+    caption: "广州塔前留影",
+    meta: "广州 · 2026年11月",
+  },
   "Spending time with Li Kun and his family in Guangzhou": {
     alt: "在广州与李堃及其家人相聚",
     caption: "在广州拜访李堃及其家人",
