@@ -81,6 +81,31 @@ export const PLACES_CONTENT: PlacesContent = {
       ],
     },
     {
+      isoNumeric: "578",
+      name: "挪威",
+      statusLabel: "到访过 · 旅行",
+      period: "2024年7月",
+      summary: "2024年7月前往挪威奥斯陆游览一日。",
+      subdivisionsUrl:
+        "https://raw.githubusercontent.com/robhop/fylker-og-kommuner/main/Fylker-S.geojson",
+      subdivisions: [
+        {
+          name: "Oslo",
+          displayName: "奥斯陆",
+          visits: [
+            {
+              start: "2024年7月30日",
+              end: "2024年7月30日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["奥斯陆"],
+              note: "在奥斯陆观光游览一日。",
+            },
+          ],
+        },
+      ],
+    },
+    {
       isoNumeric: "826",
       name: "英国",
       statusLabel: "到访过 · 旅行",
@@ -124,8 +149,9 @@ export const PLACES_CONTENT: PlacesContent = {
       isoNumeric: "484",
       name: "墨西哥",
       statusLabel: "到访过 · 旅行",
-      period: "2019年3月、2020年3月",
-      summary: "2019年和2020年春假期间两次前往边境城市蒂华纳旅行。",
+      period: "2019年3月、2019年12月、2020年3月",
+      summary:
+        "2019年圣诞节与家人前往洛斯卡沃斯度假，并于2019年和2020年春假期间两次到访边境城市蒂华纳。",
       subdivisionsUrl:
         "https://raw.githubusercontent.com/angelnmara/geojson/master/mexicoHigh.json",
       subdivisions: [
@@ -148,6 +174,20 @@ export const PLACES_CONTENT: PlacesContent = {
               role: "春假旅行",
               cities: ["蒂华纳"],
               note: "贝勒大学本科期间春假前往蒂华纳旅行。",
+            },
+          ],
+        },
+        {
+          name: "Baja California Sur",
+          displayName: "南下加利福尼亚州",
+          visits: [
+            {
+              start: "2019年12月23日",
+              end: "2019年12月29日",
+              kind: "trip",
+              role: "圣诞假期旅行",
+              cities: ["洛斯卡沃斯"],
+              note: "圣诞节期间与家人前往洛斯卡沃斯度假。",
             },
           ],
         },

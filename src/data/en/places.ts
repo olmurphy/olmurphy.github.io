@@ -144,6 +144,31 @@ export const PLACES_CONTENT: PlacesContent = {
       ],
     },
     {
+      isoNumeric: "578",
+      name: "Norway",
+      statusLabel: "Visited · Travel",
+      period: "Jul 2024",
+      summary: "Spent a day exploring Oslo in July 2024.",
+      subdivisionsUrl:
+        "https://raw.githubusercontent.com/robhop/fylker-og-kommuner/main/Fylker-S.geojson",
+      subdivisions: [
+        {
+          name: "Oslo",
+          displayName: "Oslo",
+          visits: [
+            {
+              start: "Jul 30, 2024",
+              end: "Jul 30, 2024",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Oslo"],
+              note: "Spent a day sightseeing in Oslo.",
+            },
+          ],
+        },
+      ],
+    },
+    {
       isoNumeric: "826",
       name: "United Kingdom",
       statusLabel: "Visited · Travel",
@@ -187,9 +212,9 @@ export const PLACES_CONTENT: PlacesContent = {
       isoNumeric: "484",
       name: "Mexico",
       statusLabel: "Visited · Travel",
-      period: "Mar 2019, Mar 2020",
+      period: "Mar 2019, Dec 2019, Mar 2020",
       summary:
-        "Visited Tijuana across the border for spring break trips in 2019 and 2020.",
+        "Spent Christmas with family in Los Cabos in 2019 and visited Tijuana for spring break trips in 2019 and 2020.",
       subdivisionsUrl:
         "https://raw.githubusercontent.com/angelnmara/geojson/master/mexicoHigh.json",
       subdivisions: [
@@ -212,6 +237,20 @@ export const PLACES_CONTENT: PlacesContent = {
               role: "Spring Break",
               cities: ["Tijuana"],
               note: "Spring break trip to Tijuana during undergraduate studies at Baylor.",
+            },
+          ],
+        },
+        {
+          name: "Baja California Sur",
+          displayName: "Baja California Sur",
+          visits: [
+            {
+              start: "Dec 23, 2019",
+              end: "Dec 29, 2019",
+              kind: "trip",
+              role: "Holiday Travel",
+              cities: ["Los Cabos"],
+              note: "Spent the Christmas holidays with family in Los Cabos.",
             },
           ],
         },
