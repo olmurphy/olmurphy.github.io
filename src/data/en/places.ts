@@ -144,6 +144,29 @@ export const PLACES_CONTENT: PlacesContent = {
       ],
     },
     {
+      isoNumeric: "428",
+      name: "Latvia",
+      statusLabel: "Visited · Travel",
+      period: "Jul 2024",
+      summary: "Spent a morning exploring Riga in July 2024.",
+      subdivisions: [
+        {
+          name: "Riga",
+          displayName: "Riga",
+          visits: [
+            {
+              start: "Jul 31, 2024",
+              end: "Jul 31, 2024",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Riga"],
+              note: "Spent a morning walking around Riga.",
+            },
+          ],
+        },
+      ],
+    },
+    {
       isoNumeric: "578",
       name: "Norway",
       statusLabel: "Visited · Travel",
@@ -168,6 +191,7 @@ export const PLACES_CONTENT: PlacesContent = {
         },
       ],
     },
+
     {
       isoNumeric: "826",
       name: "United Kingdom",
@@ -313,6 +337,7 @@ export const PLACES_CONTENT: PlacesContent = {
         },
         {
           name: "California",
+          displayName: "California",
           visits: [
             {
               start: "Dec 2026",
@@ -321,6 +346,22 @@ export const PLACES_CONTENT: PlacesContent = {
               role: "Travel",
               cities: ["Los Angeles"],
               note: "Visited Los Angeles and transited through LAX.",
+            },
+            {
+              start: "May 16, 2025",
+              end: "May 18, 2025",
+              kind: "trip",
+              role: "Retreat & Camp",
+              cities: ["Mount Hermon"],
+              note: "Attended a Chinese Christian retreat camp at Mount Hermon in the Santa Cruz Mountains.",
+            },
+            {
+              start: "May 5, 2025",
+              end: "Jun 1, 2025",
+              kind: "stay",
+              role: "Remote Work & Travel",
+              cities: ["San Francisco", "San Jose", "Silicon Valley"],
+              note: "Worked remotely across San Francisco, San Jose, and cities throughout Silicon Valley for nearly a month, catching up with friends and exploring the Bay Area.",
             },
           ],
         },

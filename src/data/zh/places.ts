@@ -81,6 +81,29 @@ export const PLACES_CONTENT: PlacesContent = {
       ],
     },
     {
+      isoNumeric: "428",
+      name: "拉脱维亚",
+      statusLabel: "到访过 · 旅行",
+      period: "2024年7月",
+      summary: "2024年7月到访拉脱维亚，在里加度过了一个上午。",
+      subdivisions: [
+        {
+          name: "Riga",
+          displayName: "里加",
+          visits: [
+            {
+              start: "2024年7月31日",
+              end: "2024年7月31日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["里加"],
+              note: "在里加市区漫步游览了一个上午。",
+            },
+          ],
+        },
+      ],
+    },
+    {
       isoNumeric: "578",
       name: "挪威",
       statusLabel: "到访过 · 旅行",
@@ -262,6 +285,22 @@ export const PLACES_CONTENT: PlacesContent = {
               role: "旅行",
               cities: ["洛杉矶"],
               note: "到访洛杉矶并经洛杉矶国际机场中转。",
+            },
+            {
+              start: "2025年5月16日",
+              end: "2025年5月18日",
+              kind: "trip",
+              role: "营会与退修",
+              cities: ["黑门山"],
+              note: "前往圣克鲁兹山脉的黑门山营地参加华人夏令营。",
+            },
+            {
+              start: "2025年5月5日",
+              end: "2025年6月1日",
+              kind: "stay",
+              role: "远程办公与旅行",
+              cities: ["旧金山", "圣何塞", "硅谷"],
+              note: "在旧金山、圣何塞及硅谷沿线多个城市远程办公与探索近一个月，期间看望朋友并游览湾区。",
             },
           ],
         },
