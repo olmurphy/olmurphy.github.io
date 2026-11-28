@@ -1,3 +1,8 @@
+<div align="left">
+
+[![Repo Size](https://img.shields.io/github/repo-size/olmurphy/olmurphy.github.io?style=for-the-badge&logo=github&label=Repo%20Size&color=1f4e79)](https://github.com/olmurphy/olmurphy.github.io)
+
+</div>
 # Astro Starter Kit: Minimal
 
 ```sh
