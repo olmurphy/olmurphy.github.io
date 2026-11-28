@@ -63,7 +63,21 @@ const { content } = Astro.props;
       (usAtlas as any).objects.states,
     ) as unknown as GeoJSON.FeatureCollection;
 
-    const allWorldCountries = buildWorldCountryIndex(worldGeo, visitedByIso);
+    // 获取当前语言（从 <html lang="zh-Hans"> 判断）
+    const currentLang: "en" | "zh" = document.documentElement.lang.startsWith(
+      "zh",
+    )
+      ? "zh"
+      : "en";
+
+    const allWorldCountries = buildWorldCountryIndex(
+      worldGeo,
+      visitedByIso,
+      currentLang,
+    );
+    const countryNameByIso = new Map(
+      allWorldCountries.map((c) => [c.iso, c.name]),
+    );
     const subGeoCache = new Map<string, GeoJSON.FeatureCollection>();
 
     // Explorer State
@@ -511,7 +525,11 @@ const { content } = Astro.props;
       .on("mousemove", (event: MouseEvent, d) => {
         const id = normalizeIso(d.id);
         const visited = visitedByIso.get(id);
-        const name = visited?.name ?? (d.properties as any)?.name ?? "";
+        const name =
+          visited?.name ??
+          countryNameByIso.get(id) ??
+          (d.properties as any)?.name ??
+          "";
         if (name) {
           showTooltip(
             event,

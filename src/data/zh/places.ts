@@ -34,7 +34,7 @@ export const PLACES_CONTENT: PlacesContent = {
   countries: [
     {
       isoNumeric: "840",
-      name: "美国 (United States)",
+      name: "美国",
       statusLabel: "成长与求学 · 常住地",
       period: "1999 – 2025",
       summary:
@@ -42,14 +42,14 @@ export const PLACES_CONTENT: PlacesContent = {
       subdivisions: [
         {
           name: "Texas",
-          displayName: "德克萨斯州 (Texas)",
+          displayName: "德克萨斯州",
           visits: [
             {
               start: "2026年12月",
               end: "2026年12月",
               kind: "trip",
               role: "旅行",
-              cities: ["达拉斯 (Dallas)"],
+              cities: ["达拉斯"],
               note: "假期经达拉斯重返德克萨斯州。",
             },
             {
@@ -57,7 +57,7 @@ export const PLACES_CONTENT: PlacesContent = {
               end: "2022年5月",
               kind: "stay",
               role: "本科求学",
-              cities: ["韦科 (Waco)"],
+              cities: ["韦科"],
               note: "贝勒大学数学与计算机科学理学学士（GPA 3.9），担任《数学基础》课程本科助教并入选院长荣誉名单。",
             },
           ],
@@ -71,49 +71,49 @@ export const PLACES_CONTENT: PlacesContent = {
               end: "2025年9月",
               kind: "stay",
               role: "职业生涯",
-              cities: ["纽约 (New York City)"],
+              cities: ["纽约市"],
               note: "在 IBM Consulting 担任软件工程师，负责高吞吐企业后端系统与分布式服务。",
             },
           ],
         },
         {
           name: "New Jersey",
-          displayName: "新泽西州 (New Jersey)",
+          displayName: "新泽西州",
           visits: [
             {
               start: "2024年",
               end: "2025年9月",
               kind: "stay",
               role: "居住",
-              cities: ["联合市 (Union City)"],
+              cities: ["联合市"],
               note: "迁居上海前居住于哈德逊河畔的联合市。",
             },
           ],
         },
         {
           name: "Georgia",
-          displayName: "佐治亚州 (Georgia)",
+          displayName: "佐治亚州",
           visits: [
             {
               start: "2025年8月",
               isCurrent: true,
               kind: "stay",
               role: "研究生学习",
-              cities: ["亚特兰大 (Atlanta)"],
+              cities: ["亚特兰大"],
               note: "佐治亚理工学院计算机科学硕士项目（机器学习方向）。",
             },
           ],
         },
         {
           name: "California",
-          displayName: "加利福尼亚州 (California)",
+          displayName: "加利福尼亚州",
           visits: [
             {
               start: "2026年12月",
               end: "2026年12月",
               kind: "trip",
               role: "旅行",
-              cities: ["洛杉矶 (Los Angeles)"],
+              cities: ["洛杉矶"],
               note: "到访洛杉矶并经洛杉矶国际机场中转。",
             },
           ],
@@ -122,7 +122,7 @@ export const PLACES_CONTENT: PlacesContent = {
     },
     {
       isoNumeric: "156",
-      name: "中国 (China)",
+      name: "中国",
       statusLabel: "当前常驻 · 学习与工作",
       period: "2024年8月，2025年9月 – 至今",
       summary:

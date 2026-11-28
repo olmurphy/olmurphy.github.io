@@ -189,7 +189,7 @@ export const PLACES_CONTENT: PlacesContent = {
       subdivisions: [
         {
           name: "上海市",
-          displayName: "Shanghai (上海市)",
+          displayName: "Shanghai",
           visits: [
             {
               start: "Sep 2025",
@@ -203,7 +203,7 @@ export const PLACES_CONTENT: PlacesContent = {
         },
         {
           name: "北京市",
-          displayName: "Beijing (北京市)",
+          displayName: "Beijing",
           visits: [
             {
               start: "Aug 2025",
@@ -225,7 +225,7 @@ export const PLACES_CONTENT: PlacesContent = {
         },
         {
           name: "湖北省",
-          displayName: "Hubei (湖北省)",
+          displayName: "Hubei Province",
           visits: [
             {
               start: "Oct 2026",
