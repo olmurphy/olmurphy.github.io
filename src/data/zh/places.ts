@@ -244,6 +244,22 @@ export const PLACES_CONTENT: PlacesContent = {
               cities: ["韦科"],
               note: "贝勒大学数学与计算机科学理学学士（GPA 3.9），担任《数学基础》课程本科助教并入选院长荣誉名单。",
             },
+            {
+              start: "2021年4月9日",
+              end: "2021年4月11日",
+              kind: "trip",
+              role: "户外与旅行",
+              cities: ["Concan", "Garner State Park"],
+              note: "与本科室友及其他朋友前往加纳州立公园（Garner State Park）徒步与周末放松。",
+            },
+            {
+              start: "2020年10月2日",
+              end: "2020年10月5日",
+              kind: "trip",
+              role: "旅行",
+              cities: ["Hallsville"],
+              note: "前往东德克萨斯州 Hallsville，拜访本科室友 Cade 的家人。",
+            },
           ],
         },
         {

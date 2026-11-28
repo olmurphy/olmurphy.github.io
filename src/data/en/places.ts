@@ -307,6 +307,22 @@ export const PLACES_CONTENT: PlacesContent = {
               cities: ["Waco"],
               note: "B.S. in Mathematics & Computer Science at Baylor University (3.9 GPA), undergraduate TA for Foundations of Mathematics, and Dean's Honor List.",
             },
+            {
+              start: "Apr 9, 2021",
+              end: "Apr 11, 2021",
+              kind: "trip",
+              role: "Outdoor & Travel",
+              cities: ["Concan", "Garner State Park"],
+              note: "Weekend hiking and relaxation trip to Garner State Park with undergraduate roommates and friends.",
+            },
+            {
+              start: "Oct 2, 2020",
+              end: "Oct 5, 2020",
+              kind: "trip",
+              role: "Travel",
+              cities: ["Hallsville"],
+              note: "Visited roommate Cade's family in Hallsville in East Texas.",
+            },
           ],
         },
         {
