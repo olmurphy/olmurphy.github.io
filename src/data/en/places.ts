@@ -95,6 +95,40 @@ export const PLACES_CONTENT: PlacesContent = {
   },
   countries: [
     {
+      isoNumeric: "484",
+      name: "Mexico",
+      statusLabel: "Visited · Travel",
+      period: "Mar 2019, Mar 2020",
+      summary:
+        "Visited Tijuana across the border for spring break trips in 2019 and 2020.",
+      subdivisionsUrl:
+        "https://raw.githubusercontent.com/angelnmara/geojson/master/mexicoHigh.json",
+      subdivisions: [
+        {
+          name: "Baja California",
+          displayName: "Baja California",
+          visits: [
+            {
+              start: "Mar 2020",
+              end: "Mar 2020",
+              kind: "trip",
+              role: "Spring Break",
+              cities: ["Tijuana"],
+              note: "Second spring break trip to Tijuana right before the COVID-19 pandemic lockdowns began.",
+            },
+            {
+              start: "Mar 2019",
+              end: "Mar 2019",
+              kind: "trip",
+              role: "Spring Break",
+              cities: ["Tijuana"],
+              note: "Spring break trip to Tijuana during undergraduate studies at Baylor.",
+            },
+          ],
+        },
+      ],
+    },
+    {
       isoNumeric: "840",
       name: "United States",
       statusLabel: "Home Country · Lived & Studied",

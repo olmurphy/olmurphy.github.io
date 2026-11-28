@@ -33,6 +33,39 @@ export const PLACES_CONTENT: PlacesContent = {
   },
   countries: [
     {
+      isoNumeric: "484",
+      name: "墨西哥",
+      statusLabel: "到访过 · 旅行",
+      period: "2019年3月、2020年3月",
+      summary: "2019年和2020年春假期间两次前往边境城市蒂华纳旅行。",
+      subdivisionsUrl:
+        "https://raw.githubusercontent.com/angelnmara/geojson/master/mexicoHigh.json",
+      subdivisions: [
+        {
+          name: "Baja California",
+          displayName: "下加利福尼亚州",
+          visits: [
+            {
+              start: "2020年3月",
+              end: "2020年3月",
+              kind: "trip",
+              role: "春假旅行",
+              cities: ["蒂华纳"],
+              note: "疫情全面暴发前夕，春假第二次到访蒂华纳。",
+            },
+            {
+              start: "2019年3月",
+              end: "2019年3月",
+              kind: "trip",
+              role: "春假旅行",
+              cities: ["蒂华纳"],
+              note: "贝勒大学本科期间春假前往蒂华纳旅行。",
+            },
+          ],
+        },
+      ],
+    },
+    {
       isoNumeric: "840",
       name: "美国",
       statusLabel: "成长与求学 · 常住地",
