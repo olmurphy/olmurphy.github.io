@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生活随记 — Owen Li Murphy</title>
+<style>
+  /* ---------- 设计变量：与现有网站一致 ---------- */
+  :root {
+    --bg:#fcfcfa; --text:#1f2328; --muted:#5d6570; --line:#e3e3de;
+    --accent:#1f4e79; --soft:#eaf1f8; --max:760px;
+    --serif: Georgia,"Times New Roman","Songti SC","Noto Serif CJK SC",serif;
+    --sans: -apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  :root[data-theme="dark"] { --bg:#15181c; --text:#e6e8ea; --muted:#9aa3ad; --line:#2a2f35; --accent:#7fb2e5; --soft:#1e2530; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg:#15181c; --text:#e6e8ea; --muted:#9aa3ad; --line:#2a2f35; --accent:#7fb2e5; --soft:#1e2530; }
+  }
+  * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  body { margin:0; background:var(--bg); color:var(--text); font:17px/1.65 var(--serif); }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  button, select { font-family:var(--sans); }
+  button { cursor:pointer; }
+  button:focus-visible, select:focus-visible, a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .wrap { max-width:var(--max); margin:0 auto; padding:0 20px; }
+
+  /* ---------- 页眉（仅为预览，正式版沿用 Header.astro） ---------- */
+  .demo { background:var(--soft); font:13px/1.5 var(--sans); color:var(--muted); padding:8px 0; }
+  .demo .wrap { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  header { border-bottom:1px solid var(--line); padding:20px 0 0; }
+  .site-name { font-size:1.35rem; font-weight:700; }
+  .tagline { color:var(--muted); font-size:.95rem; margin:0 0 10px; }
+  nav { display:flex; flex-wrap:wrap; gap:4px 20px; align-items:center; font:.9rem/1.5 var(--sans); }
+  nav span { color:var(--muted); padding:8px 0 10px; border-bottom:2px solid transparent; }
+  nav span.on { color:var(--accent); border-color:var(--accent); font-weight:600; }
+  nav .controls { margin-left:auto; display:flex; gap:8px; padding-bottom:6px; }
+
+  /* ---------- 通用按钮 ---------- */
+  .chip { background:none; border:1px solid var(--line); color:var(--muted); border-radius:999px; padding:3px 12px; font-size:.8rem; white-space:nowrap; }
+  .chip:hover { color:var(--text); border-color:var(--muted); }
+  .chip[aria-pressed="true"] { background:var(--soft); color:var(--accent); border-color:transparent; font-weight:600; }
+
+  main { padding-top:44px; }
+  h1 { font-size:1.7rem; margin:0 0 4px; line-height:1.25; }
+  .sub { color:var(--muted); margin:0 0 14px; }
+
+  /* ---------- 月份索引：行是年，列是月 ---------- */
+  .index { margin:26px 0 22px; font-family:var(--sans); }
+  .index-row { display:grid; grid-template-columns:52px repeat(12,minmax(0,1fr)); gap:3px; margin-bottom:3px; align-items:center; }
+  .index-head span { text-align:center; font-size:.7rem; color:var(--muted); }
+  .yr { background:none; border:0; padding:0; text-align:left; color:var(--text); font-size:.82rem; font-weight:600; }
+  .yr:hover, .yr.on { color:var(--accent); text-decoration:underline; }
+  .cell { height:26px; border:0; border-radius:3px; padding:0; font-size:.68rem; color:var(--text); background:color-mix(in srgb,var(--accent) var(--lv),var(--bg)); }
+  .cell:disabled { cursor:default; background:transparent; box-shadow:inset 0 0 0 1px var(--line); opacity:.65; }
+  .cell:not(:disabled):hover, .cell.on { box-shadow:0 0 0 2px var(--accent); }
+  .cell.hi { color:var(--bg); font-weight:600; }
+  .index-note { font-size:.78rem; color:var(--muted); margin:8px 0 0; }
+
+  /* ---------- 吸顶工具栏 ---------- */
+  .bar { position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line); padding:10px 0; }
+  .years { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding:3px; }
+  .months { display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; padding:6px 3px 0; }
+  .months button { background:none; border:0; border-bottom:2px solid transparent; color:var(--muted); font-size:.8rem; padding:2px 9px; white-space:nowrap; }
+  .months button:hover { color:var(--text); }
+  .months button.on { color:var(--accent); border-color:var(--accent); font-weight:600; }
+  .tools { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:16px 0 0; }
+  .tools .push { margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
+  select { background:var(--bg); color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:3px 8px; font-size:.8rem; }
+  .status { font:.8rem var(--sans); color:var(--muted); margin:12px 0 0; }
+
+  /* ---------- 按时间浏览 ---------- */
+  .year-title { display:flex; align-items:baseline; gap:12px; margin:36px 0 0; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  .year-title h2 { margin:0; font-size:1.5rem; }
+  .meta { font:.82rem var(--sans); color:var(--muted); }
+  .month { scroll-margin-top:100px; }
+  .month-title { display:flex; align-items:baseline; gap:10px; margin:22px 0 12px; }
+  .month-title h3 { margin:0; font-size:1.08rem; }
+  .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px 14px; }
+  .photo { margin:0; min-width:0; }
+  .thumb { display:block; width:100%; aspect-ratio:4/3; border:1px solid var(--line); border-radius:6px; padding:0; overflow:hidden; background:var(--soft); cursor:zoom-in; position:relative; }
+  .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+  .ph { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:8px; font-size:.75rem; color:#29333f; }
+  .ph.real { color:var(--muted); }
+  figcaption { margin-top:7px; line-height:1.35; }
+  .cap { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-size:.95rem; font-weight:600; }
+  figcaption .meta { display:block; }
+  .dense .grid { grid-template-columns:repeat(6,minmax(0,1fr)); gap:4px; }
+  .dense figcaption { display:none; }
+  .dense .thumb { aspect-ratio:1; border-radius:3px; }
+  .dense .ph { font-size:.62rem; }
+  .more { margin-top:12px; }
+  .pager { display:flex; justify-content:space-between; gap:12px; margin-top:44px; padding-top:16px; border-top:1px solid var(--line); }
+  .empty { margin:40px 0; color:var(--muted); }
+
+  /* ---------- 年份相册 ---------- */
+  .albums { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:30px 18px; margin-top:24px; }
+  .album { background:none; border:0; padding:0; text-align:left; color:var(--text); }
+  .mosaic { display:grid; grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; gap:3px; aspect-ratio:16/10; border-radius:8px; overflow:hidden; }
+  .mosaic > div { position:relative; background:var(--soft); min-height:0; overflow:hidden; }
+  .mosaic > div:first-child { grid-row:1 / 3; }
+  .mosaic img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .mosaic.n1 > div:first-child { grid-column:1 / 3; }
+  .mosaic.n2 > div:nth-child(2) { grid-row:1 / 3; }
+  .album strong { display:block; font:700 1.3rem var(--serif); margin-top:8px; }
+  .album:hover strong { color:var(--accent); }
+
+  /* ---------- 大图查看 ---------- */
+  .lightbox { position:fixed; inset:0; z-index:50; background:rgba(10,12,14,.94); color:#e6e8ea; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:52px 56px 20px; }
+  .stage { position:relative; width:min(1000px,100%); height:68vh; border-radius:6px; overflow:hidden; }
+  .stage img { width:100%; height:100%; object-fit:contain; }
+  .lb-text { text-align:center; margin-top:12px; max-width:640px; }
+  .lb-text a { color:#7fb2e5; }
+  .lb-text small { display:block; font:.8rem var(--sans); color:#aab2bc; }
+  .lb-text .chip { margin-top:8px; color:#e6e8ea; border-color:#555c66; }
+  .lb-btn { position:absolute; background:none; border:0; color:#e6e8ea; font-size:2.2rem; line-height:1; padding:10px; }
+  #lb-close { top:8px; right:12px; }
+  #lb-prev { left:4px; top:42%; } #lb-next { right:4px; top:42%; }
+
+  @media (max-width:640px) {
+    .grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 10px; }
+    .dense .grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:3px; }
+    .albums { grid-template-columns:1fr; }
+    .index-row { grid-template-columns:40px repeat(12,minmax(0,1fr)); gap:2px; }
+    .cell { height:24px; font-size:0; }
+    .tools .push { margin-left:0; }
+    .lightbox { padding:52px 8px 16px; }
+    #lb-prev, #lb-next { top:auto; bottom:6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo">
+  <div class="wrap">
+    <span>设计预览：</span>
+    <button class="chip" data-source="real" aria-pressed="true">现有 8 张照片</button>
+    <button class="chip" data-source="mock" aria-pressed="false">模拟约 1000 张</button>
+    <span id="demo-note">模拟模式用色块代替照片，只用来测试布局。</span>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <div class="site-name">Owen Li Murphy · 李晓党</div>
+    <p class="tagline">深度学习 · 计算生物学 · 多智能体系统</p>
+    <nav aria-label="导航示意">
+      <span>首页</span><span class="on">概览 ▾</span><span>科研与项目 ▾</span><span>背景经历 ▾</span><span>联系方式</span>
+      <div class="controls"><button class="chip" id="theme">切换深浅色</button></div>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>生活随记</h1>
+  <p class="sub">实验室之外的影像：旅途、运动、创作与日常生活。</p>
+  <p>工作和课程之外，我大多在周末与 Move Crew 沿上海滨江跑步、骑公路车，或折腾硬件与 3D 打印作品。这些照片记录了沿途的城市、训练日常与朋友。</p>
+
+  <section class="index" aria-label="按年月查找照片">
+    <div id="index"></div>
+    <p class="index-note">点年份看全年，点格子直达那个月。颜色越明显，照片越多。</p>
+  </section>
+
+</main>
+
+<!-- 年份栏放在内容容器外层，这样向下滚动时可以一直吸顶 -->
+<div class="bar">
+  <div class="wrap">
+    <div class="years" id="years" aria-label="选择年份"></div>
+    <div class="months" id="months" aria-label="跳到月份"></div>
+  </div>
+</div>
+
+<div class="wrap" style="padding-bottom:80px">
+  <div class="tools">
+    <button class="chip" data-view="time" aria-pressed="true">按时间</button>
+    <button class="chip" data-view="albums" aria-pressed="false">年份相册</button>
+    <div class="push">
+      <select id="cat" aria-label="类别"></select>
+      <select id="city" aria-label="城市"></select>
+      <button class="chip" id="dense" aria-pressed="false">紧凑小图</button>
+      <button class="chip" id="random">随机看一张</button>
+    </div>
+  </div>
+  <p class="status" id="status" aria-live="polite"></p>
+  <div id="content"></div>
+</div>
+
+<div class="lightbox" id="lb" role="dialog" aria-modal="true" aria-label="照片查看器" hidden>
+  <button class="lb-btn" id="lb-close" aria-label="关闭">×</button>
+  <button class="lb-btn" id="lb-prev" aria-label="上一张">‹</button>
+  <div class="stage" id="stage"></div>
+  <div class="lb-text">
+    <div id="lb-cap"></div>
+    <small id="lb-meta"></small>
+    <button class="chip" id="lb-month">查看同一时期的照片</button>
+  </div>
+  <button class="lb-btn" id="lb-next" aria-label="下一张">›</button>
+</div>
+
+<script>
+(function () {
+  /* ================= 数据 =================
+     每张照片只需要一个可排序的 date："YYYY-MM-DD" 或 "YYYY-MM"，
+     只知道年份时写 "YYYY"。年、月分组全部由它自动生成。 */
+  var R2 = 'https://pub-b7950172d9d042b69806db4a4b2ef5bb.r2.dev/life/';
+  var REAL = [
+    { date:'2026-11', cat:'places', city:'广州', cap:'广州塔前留影', file:'places/guanzhou-tower-2026-november.webp' },
+    { date:'2026-11', cat:'everyday', city:'广州', cap:'在广州拜访李堃及其家人', file:'everyday/li_kun_family_guangzhou_2026.webp',
+      link:{ text:'李堃', href:'https://www.linkedin.com/in/mac-li-16789b175/' } },
+    { date:'2026-10', cat:'places', city:'宜昌', cap:'三峡大坝：全球最大的水电站，32 台主力机组总装机容量达 22,500 兆瓦', file:'places/three-gorges-dam-october-2026.webp' },
+    { date:'2026-06', cat:'active', city:'上海', cap:'与 Move Crew 的周日跑步', file:'active/running-move-crew-june-2026.webp' },
+    { date:'2026-03', cat:'places', city:'上海', cap:'与 Daniel Kaijzer 和 Iris 共赏外滩夜景', file:'places/shanghai-bund-daniel-iris.webp',
+      link:{ text:'Daniel Kaijzer', href:'https://www.linkedin.com/in/danielkaijzer/' } },
+    { date:'2024-08', cat:'places', city:'北京', cap:'语言沉浸学习期间徒步长城', file:'places/great-wall-of-china-aug-2025.webp' },
+    { date:'2024-08', cat:'places', city:'北京', cap:'语言沉浸学习期间参观天坛', file:'places/temple-of-heaven-2025.webp' },
+    { date:'2024', cat:'everyday', city:'纽约', cap:'在纽约为 Hendry 庆祝生日', file:'everyday/friends-nyc-hendry-2024.webp',
+      link:{ text:'Hendry', href:'https://www.linkedin.com/in/hendrychendrawan/' } }
+  ].map(function (p) { p.src = R2 + p.file; return p; });
+
+  var CATS = { places:'旅行', active:'运动', making:'创作', everyday:'日常' };
+
+  /* 模拟数据：固定算法生成，每次结果相同 */
+  function mockData() {
+    var out = [], seed = 7;
+    function rnd(n) { seed = (seed * 48271) % 2147483647; return seed % n; }
+    for (var y = 2018; y <= 2026; y++) {
+      for (var m = 1; m <= 12; m++) {
+        if ((y === 2018 && m < 8) || (y === 2026 && m > 11)) continue;
+        var n = rnd(10) === 0 ? 0 : 3 + rnd(15);
+        if (rnd(9) === 0) n += 18;
+        for (var i = 0; i < n; i++) {
+          out.push({ date: y + '-' + String(m).padStart(2,'0') + '-' + String(1 + rnd(28)).padStart(2,'0'),
+            cat: Object.keys(CATS)[rnd(4)], city: ['城市 A','城市 B','城市 C','城市 D'][rnd(4)],
+            cap: '示例照片 ' + (out.length + 1), hue: rnd(360) });
+        }
+      }
+    }
+    return out;
+  }
+
+  var PREVIEW = { normal:6, dense:12 };   // “全部年份”下每月先显示几张
+  var PAGE = 48;                           // 单一年份下每月每批加载几张
+  var all = REAL, source = 'real';
+  var S = { year:'all', month:null, view:'time', cat:'all', city:'all', dense:false, shown:{} };
+  var $ = function (id) { return document.getElementById(id); };
+
+  function yearOf(p) { return +p.date.slice(0,4); }
+  function monthOf(p) { return p.date.length >= 7 ? +p.date.slice(5,7) : 0; }
+  function when(p) {
+    var s = yearOf(p) + '年';
+    if (monthOf(p)) s += monthOf(p) + '月';
+    if (p.date.length === 10) s += (+p.date.slice(8)) + '日';
+    return s;
+  }
+  function filtered() {
+    return all.filter(function (p) {
+      return (S.cat === 'all' || p.cat === S.cat) && (S.city === 'all' || p.city === S.city);
+    }).sort(function (a,b) { return b.date.localeCompare(a.date); });
+  }
+  function uniq(a) { return a.filter(function (v,i) { return a.indexOf(v) === i; }); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function btn(cls, text, fn) { var b = el('button', cls, text); b.type = 'button'; b.onclick = fn; return b; }
+
+  /* 图片（真实照片加载失败时显示文字，而不是空白框） */
+  function picture(box, p, big) {
+    if (!p.src) {
+      box.style.background = 'hsl(' + p.hue + ' 28% 74%)';
+      box.appendChild(el('span','ph', '示例'));
+      return;
+    }
+    var img = new Image();
+    img.alt = p.cap; if (!big) img.loading = 'lazy'; img.decoding = 'async';
+    img.onerror = function () { img.remove(); box.appendChild(el('span','ph real', '照片暂时无法加载：' + p.cap)); };
+    img.src = p.src;
+    box.appendChild(img);
+  }
+
+  /* 地址栏记录位置，方便分享 #2018 或 #2018-03 */
+  function saveHash() {
+    var h = S.year === 'all' ? '' : '#' + S.year + (S.month ? '-' + String(S.month).padStart(2,'0') : '');
+    try { history.replaceState(null, '', h || location.pathname + location.search); } catch (e) {}
+  }
+
+  function go(year, month) {
+    S.year = year; S.month = month || null; S.view = 'time'; S.shown = {};
+    render(); saveHash();
+    var target = month ? $('m-' + year + '-' + month) : $('status');
+    if (target) target.scrollIntoView({ block:'start' });
+    if (!month) window.scrollBy(0, -110);
+  }
+
+  function renderIndex(list) {
+    var box = $('index'); box.textContent = '';
+    var ys = uniq(all.map(yearOf)).sort();
+    if (!ys.length) return;
+    var head = el('div','index-row index-head'); head.appendChild(el('span'));
+    for (var m = 1; m <= 12; m++) head.appendChild(el('span', null, m));
+    box.appendChild(head);
+    var counts = {}, max = 1;
+    list.forEach(function (p) {
+      var k = yearOf(p) + '-' + monthOf(p);
+      counts[k] = (counts[k] || 0) + 1;
+      if (monthOf(p)) max = Math.max(max, counts[k]);
+    });
+    for (var y = ys[ys.length-1]; y >= ys[0]; y--) {
+      (function (y) {
+        var row = el('div','index-row');
+        var label = btn('yr' + (S.year === y ? ' on' : ''), y, function () { go(y); });
+        label.disabled = !list.some(function (p) { return yearOf(p) === y; });
+        row.appendChild(label);
+        for (var m = 1; m <= 12; m++) {
+          (function (m) {
+            var n = counts[y + '-' + m] || 0, lv = n ? 18 + Math.round(70 * Math.sqrt(n / max)) : 0;
+            var c = btn('cell' + (lv > 55 ? ' hi' : '') + (S.year === y && S.month === m ? ' on' : ''), n || '', function () { go(y, m); });
+            c.disabled = !n; c.style.setProperty('--lv', lv + '%');
+            c.setAttribute('aria-label', y + '年' + m + '月，' + n + ' 张');
+            c.title = y + '年' + m + '月 · ' + n + ' 张';
+            row.appendChild(c);
+          })(m);
+        }
+        box.appendChild(row);
+      })(y);
+    }
+  }
+
+  function renderBar(list) {
+    var ys = uniq(list.map(yearOf));
+    var box = $('years'); box.textContent = '';
+    var a = btn('chip', '全部年份 ' + list.length, function () { go('all'); });
+    a.setAttribute('aria-pressed', S.year === 'all'); box.appendChild(a);
+    ys.forEach(function (y) {
+      var b = btn('chip', y + ' · ' + list.filter(function (p) { return yearOf(p) === y; }).length, function () { go(y); });
+      b.setAttribute('aria-pressed', S.year === y); b.dataset.year = y; box.appendChild(b);
+    });
+    var mb = $('months'); mb.textContent = '';
+    mb.hidden = S.year === 'all' || S.view !== 'time';
+    if (mb.hidden) return;
+    uniq(list.filter(function (p) { return yearOf(p) === S.year; }).map(monthOf)).forEach(function (m) {
+      var b = btn(S.month === m ? 'on' : '', m ? m + '月' : '未标月份', function () { go(S.year, m); });
+      b.dataset.month = m; mb.appendChild(b);
+    });
+  }
+
+  function tile(p, scope) {
+    var f = el('figure','photo');
+    var t = btn('thumb', null, function () { openLb(scope, scope.indexOf(p)); });
+    t.setAttribute('aria-label', '查看大图：' + p.cap);
+    picture(t, p); f.appendChild(t);
+    var c = el('figcaption');
+    c.appendChild(el('span','cap', p.cap));
+    c.appendChild(el('span','meta', p.city + ' · ' + when(p)));
+    f.appendChild(c);
+    return f;
+  }
+
+  function renderTime(list, root) {
+    var scope = S.year === 'all' ? list : list.filter(function (p) { return yearOf(p) === S.year; });
+    uniq(scope.map(yearOf)).forEach(function (y) {
+      var inYear = scope.filter(function (p) { return yearOf(p) === y; });
+      var sec = el('section'); sec.dataset.year = y; sec.className = 'year-sec';
+      var title = el('div','year-title');
+      title.appendChild(el('h2', null, y + '年'));
+      var cities = uniq(inYear.map(function (p) { return p.city; }));
+      title.appendChild(el('span','meta', inYear.length + ' 张照片，' + cities.length + ' 座城市'));
+      sec.appendChild(title);
+      uniq(inYear.map(monthOf)).forEach(function (m) {
+        var items = inYear.filter(function (p) { return monthOf(p) === m; });
+        var key = y + '-' + m;
+        var limit = S.year === 'all' ? PREVIEW[S.dense ? 'dense' : 'normal'] : (S.shown[key] || PAGE);
+        var block = el('div','month'); block.id = 'm-' + key;
+        var h = el('div','month-title');
+        h.appendChild(el('h3', null, m ? m + '月' : '未标月份'));
+        h.appendChild(el('span','meta', uniq(items.map(function (p) { return p.city; })).join('、') + '，' + items.length + ' 张'));
+        block.appendChild(h);
+        var grid = el('div','grid');
+        items.slice(0, limit).forEach(function (p) { grid.appendChild(tile(p, scope)); });
+        block.appendChild(grid);
+        if (items.length > limit) {
+          var rest = items.length - limit;
+          block.appendChild(btn('chip more', S.year === 'all' ? '查看本月全部 ' + items.length + ' 张' : '再显示 ' + Math.min(PAGE, rest) + ' 张', function () {
+            if (S.year === 'all') { go(y, m); return; }
+            S.shown[key] = limit + PAGE;
+            var top = window.scrollY; render(); window.scrollTo(0, top);
+          }));
+        }
+        sec.appendChild(block);
+      });
+      root.appendChild(sec);
+    });
+    if (S.year !== 'all') {
+      var ys = uniq(list.map(yearOf)), older = ys.filter(function (y) { return y < S.year; })[0],
+          newer = ys.filter(function (y) { return y > S.year; }).pop();
+      var pager = el('div','pager');
+      pager.appendChild(newer ? btn('chip', '← ' + newer + '年', function () { go(newer); }) : el('span'));
+      pager.appendChild(older ? btn('chip', older + '年 →', function () { go(older); }) : el('span'));
+      root.appendChild(pager);
+    }
+  }
+
+  function renderAlbums(list, root) {
+    var wrap = el('div','albums');
+    uniq(list.map(yearOf)).forEach(function (y) {
+      var items = list.filter(function (p) { return yearOf(p) === y; });
+      var a = btn('album', null, function () { go(y); });
+      var covers = items.slice().sort(function (p,q) { return (q.featured ? 1 : 0) - (p.featured ? 1 : 0); }).slice(0,3);
+      var mo = el('div','mosaic n' + covers.length);
+      covers.forEach(function (p) { var d = el('div'); picture(d, p); mo.appendChild(d); });
+      a.appendChild(mo);
+      a.appendChild(el('strong', null, y + '年'));
+      var cities = uniq(items.map(function (p) { return p.city; }));
+      a.appendChild(el('span','meta', items.length + ' 张：' + cities.slice(0,4).join('、')));
+      wrap.appendChild(a);
+    });
+    root.appendChild(wrap);
+  }
+
+  function render() {
+    var list = filtered(), root = $('content');
+    if (S.year !== 'all' && !list.some(function (p) { return yearOf(p) === S.year; })) { S.year = 'all'; S.month = null; }
+    root.textContent = ''; root.className = S.dense ? 'dense' : '';
+    renderIndex(list); renderBar(list);
+    var n = S.year === 'all' ? list.length : list.filter(function (p) { return yearOf(p) === S.year; }).length;
+    $('status').textContent = (S.year === 'all' ? '全部年份' : S.year + '年') + '，共 ' + n + ' 张';
+    if (!list.length) {
+      root.appendChild(el('p','empty','没有同时符合这两个条件的照片。请把类别或城市改回“全部”。'));
+    } else if (S.view === 'albums') renderAlbums(list, root);
+    else renderTime(list, root);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function (b) { b.setAttribute('aria-pressed', b.dataset.view === S.view); });
+    $('dense').setAttribute('aria-pressed', S.dense);
+  }
+
+  function fillSelects() {
+    function fill(sel, first, pairs) {
+      sel.textContent = '';
+      [['all', first]].concat(pairs).forEach(function (o) { var e = el('option', null, o[1]); e.value = o[0]; sel.appendChild(e); });
+    }
+    var used = uniq(all.map(function (p) { return p.cat; }));
+    fill($('cat'), '全部类别', Object.keys(CATS).filter(function (k) { return used.indexOf(k) > -1; }).map(function (k) { return [k, CATS[k]]; }));
+    fill($('city'), '全部城市', uniq(all.map(function (p) { return p.city; })).map(function (c) { return [c, c]; }));
+  }
+
+  /* ---------- 大图查看 ---------- */
+  var lbList = [], lbI = 0, lastFocus = null;
+  function showLb() {
+    var p = lbList[lbI];
+    $('stage').textContent = ''; $('stage').style.background = ''; picture($('stage'), p, true);
+    var cap = $('lb-cap'); cap.textContent = '';
+    if (p.link && p.cap.indexOf(p.link.text) > -1) {
+      var parts = p.cap.split(p.link.text), a = el('a', null, p.link.text);
+      a.href = p.link.href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      cap.append(parts[0], a, parts[1]);
+    } else cap.textContent = p.cap;
+    $('lb-meta').textContent = p.city + ' · ' + when(p) + '　' + (lbI + 1) + ' / ' + lbList.length;
+  }
+  function openLb(list, i) {
+    lbList = list; lbI = i; lastFocus = document.activeElement;
+    $('lb').hidden = false; document.body.style.overflow = 'hidden'; showLb(); $('lb-close').focus();
+  }
+  function closeLb() { $('lb').hidden = true; document.body.style.overflow = ''; if (lastFocus && lastFocus.isConnected) lastFocus.focus(); }
+  function step(d) { lbI = (lbI + d + lbList.length) % lbList.length; showLb(); }
+  $('lb-close').onclick = closeLb;
+  $('lb-prev').onclick = function () { step(-1); };
+  $('lb-next').onclick = function () { step(1); };
+  $('lb-month').onclick = function () { var p = lbList[lbI]; closeLb(); go(yearOf(p), monthOf(p)); };
+  $('lb').onclick = function (e) { if (e.target === $('lb')) closeLb(); };
+  document.addEventListener('keydown', function (e) {
+    if ($('lb').hidden) return;
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+    if (e.key === 'Tab') {   // 焦点保持在查看器内
+      var f = Array.prototype.slice.call($('lb').querySelectorAll('button, a'));
+      var i = f.indexOf(document.activeElement);
+      e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+    }
+  });
+  var touchX = null;
+  $('lb').addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive:true });
+  $('lb').addEventListener('touchend', function (e) {
+    var d = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(d) > 50) step(d > 0 ? -1 : 1);
+  }, { passive:true });
+
+  /* ---------- 控件 ---------- */
+  $('cat').onchange = function () { S.cat = this.value; S.shown = {}; S.month = null; render(); saveHash(); };
+  $('city').onchange = function () { S.city = this.value; S.shown = {}; S.month = null; render(); saveHash(); };
+  $('dense').onclick = function () { S.dense = !S.dense; render(); };
+  $('random').onclick = function () { var l = filtered(); if (l.length) openLb(l, Math.floor(Math.random() * l.length)); };
+  Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function (b) {
+    b.onclick = function () { S.view = b.dataset.view; if (S.view === 'albums') { S.year = 'all'; S.month = null; saveHash(); } render(); };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-source]'), function (b) {
+    b.onclick = function () {
+      source = b.dataset.source; all = source === 'real' ? REAL : mockData();
+      S = { year:'all', month:null, view:'time', cat:'all', city:'all', dense:S.dense, shown:{} };
+      Array.prototype.forEach.call(document.querySelectorAll('[data-source]'), function (x) { x.setAttribute('aria-pressed', x === b); });
+      fillSelects(); render(); saveHash();
+    };
+  });
+  $('theme').onclick = function () {
+    var r = document.documentElement;
+    var cur = r.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    r.dataset.theme = cur === 'dark' ? 'light' : 'dark';
+  };
+
+  /* 浏览“全部年份”时，滚动到哪一年，工具栏就标出哪一年 */
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      if (S.year !== 'all' || S.view !== 'time') return;
+      var cur = null;
+      Array.prototype.forEach.call(document.querySelectorAll('.year-sec'), function (s) { if (s.getBoundingClientRect().top < 140) cur = s.dataset.year; });
+      Array.prototype.forEach.call($('years').children, function (b) {
+        b.setAttribute('aria-pressed', cur ? b.dataset.year === cur : !b.dataset.year);
+      });
+    });
+  }, { passive:true });
+
+  fillSelects();
+  var m = /^#(\d{4})(?:-(\d{2}))?$/.exec(location.hash);
+  if (m) go(+m[1], m[2] ? +m[2] : null); else render();
+})();
+</script>
+</body>
+</html>
